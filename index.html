@@ -1,0 +1,915 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
+<meta name="apple-mobile-web-app-capable" content="yes"/>
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent"/>
+<meta name="apple-mobile-web-app-title" content="Covenant"/>
+<meta name="theme-color" content="#4a0e4f"/>
+<title>Covenant 🕊️</title>
+
+<!-- PWA Manifest inline -->
+<link rel="manifest" href="data:application/manifest+json,{
+  %22name%22:%22Covenant%22,
+  %22short_name%22:%22Covenant%22,
+  %22description%22:%22Tito+Boi+%2B+Jay+Eternal+Streak%22,
+  %22start_url%22:%22.%22,
+  %22display%22:%22standalone%22,
+  %22background_color%22:%22%234a0e4f%22,
+  %22theme_color%22:%22%234a0e4f%22,
+  %22orientation%22:%22portrait%22,
+  %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%234a0e4f'/%3E%3Cellipse cx='96' cy='105' rx='38' ry='28' fill='%23d4af37'/%3E%3Cellipse cx='96' cy='95' rx='22' ry='20' fill='%23f0cc55'/%3E%3Ccircle cx='96' cy='82' r='13' fill='%23f0cc55'/%3E%3Ccircle cx='101' cy='79' r='2.5' fill='%234a0e4f'/%3E%3Cellipse cx='83' cy='97' rx='18' ry='8' fill='%23d4af37' transform='rotate(-30 83 97)'/%3E%3Cellipse cx='109' cy='97' rx='18' ry='8' fill='%23d4af37' transform='rotate(30 109 97)'/%3E%3Crect x='88' y='115' width='16' height='8' rx='2' fill='%23c8a020'/%3E%3Cellipse cx='88' cy='127' rx='10' ry='5' fill='%234a7c2f'/%3E%3Cellipse cx='100' cy='130' rx='8' ry='4' fill='%235a9c3f'/%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]
+}"/>
+
+<style>
+  :root {
+    --purple: #4a0e4f;
+    --purple2: #6b1a72;
+    --gold: #d4af37;
+    --gold2: #f0cc55;
+    --pink: #ff69b4;
+    --pink2: #ff9cc8;
+    --cream: #fff8f0;
+    --green: #4a7c2f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+
+  html, body {
+    width: 100%; height: 100%;
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--purple);
+    color: var(--cream);
+    overflow: hidden;
+    position: fixed;
+  }
+
+  /* ── MAIN APP ── */
+  #app {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    background: linear-gradient(160deg, #2a0630 0%, #4a0e4f 40%, #6b1a72 70%, #3d0a4a 100%);
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* ── TOP BANNER ── */
+  #topBanner {
+    background: linear-gradient(90deg, rgba(212,175,55,0.2), rgba(255,105,180,0.2), rgba(212,175,55,0.2));
+    border-bottom: 1px solid rgba(212,175,55,0.3);
+    padding: env(safe-area-inset-top, 12px) 16px 10px;
+    text-align: center;
+  }
+  #dayCounter {
+    font-size: 0.7rem;
+    letter-spacing: 0.2em;
+    color: var(--gold2);
+    text-transform: uppercase;
+    margin-bottom: 3px;
+  }
+  #dayBig {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--gold);
+    text-shadow: 0 0 20px rgba(212,175,55,0.6);
+  }
+  #dayBig span { color: rgba(255,255,255,0.4); font-size: 0.9rem; }
+
+  /* ── PROGRESS RING ── */
+  #ringSection {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 16px 0 8px;
+    position: relative;
+  }
+  #ringWrap {
+    position: relative;
+    width: 220px; height: 220px;
+  }
+  #ringWrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
+  #ringBg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
+  #ringFill {
+    fill: none;
+    stroke: url(#ringGrad);
+    stroke-width: 10;
+    stroke-linecap: round;
+    transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);
+  }
+
+  /* ── PET ── */
+  #petWrap {
+    position: absolute;
+    top: 50%; left: 50%;
+    transform: translate(-50%, -50%);
+    text-align: center;
+    cursor: pointer;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+  #petEmoji {
+    font-size: 5.5em;
+    display: block;
+    transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
+    filter: drop-shadow(0 4px 20px rgba(212,175,55,0.5));
+    animation: petFloat 4s ease-in-out infinite;
+  }
+  @keyframes petFloat {
+    0%,100% { transform: translateY(0); }
+    50% { transform: translateY(-8px); }
+  }
+  #petEmoji.loved {
+    animation: none;
+    transform: scale(1.15) !important;
+    filter: drop-shadow(0 0 30px rgba(255,105,180,0.9));
+  }
+  #petEmoji.sad { animation: petSad 1s ease-in-out infinite; filter: drop-shadow(0 4px 15px rgba(100,50,150,0.4)) grayscale(0.3); }
+  @keyframes petSad {
+    0%,100% { transform: translateY(0) rotate(-3deg); }
+    50% { transform: translateY(3px) rotate(3deg); }
+  }
+  #petLabel {
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    color: rgba(212,175,55,0.7);
+    text-transform: uppercase;
+    margin-top: 4px;
+  }
+  #pct {
+    font-size: 0.65rem;
+    color: rgba(255,255,255,0.4);
+    letter-spacing: 0.1em;
+  }
+
+  /* ── HEARTS ── */
+  .heart-particle {
+    position: fixed;
+    font-size: 1.5rem;
+    pointer-events: none;
+    animation: heartUp 3s ease-out forwards;
+    z-index: 999;
+  }
+  @keyframes heartUp {
+    0%   { opacity: 1; transform: translateY(0) scale(0.5) rotate(var(--r)); }
+    20%  { opacity: 1; transform: translateY(-40px) scale(1.2) rotate(var(--r)); }
+    100% { opacity: 0; transform: translateY(-200px) scale(0.8) rotate(calc(var(--r) + 30deg)); }
+  }
+
+  /* ── VERSE CARD ── */
+  #verseCard {
+    margin: 4px 20px 8px;
+    background: rgba(212,175,55,0.08);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 16px;
+    padding: 14px 18px;
+    text-align: center;
+    cursor: pointer;
+    transition: transform 0.2s, background 0.3s;
+  }
+  #verseCard:active { transform: scale(0.98); }
+  #verseText {
+    font-style: italic;
+    font-size: 0.82rem;
+    line-height: 1.7;
+    color: rgba(255,255,255,0.85);
+    margin-bottom: 6px;
+  }
+  #verseRef {
+    font-size: 0.65rem;
+    letter-spacing: 0.12em;
+    color: var(--gold2);
+    text-transform: uppercase;
+  }
+
+  /* ── MISSED MESSAGE ── */
+  #missedBanner {
+    display: none;
+    margin: 0 20px 8px;
+    background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(212,175,55,0.15));
+    border: 1px solid rgba(255,105,180,0.35);
+    border-radius: 14px;
+    padding: 12px 16px;
+    text-align: center;
+  }
+  #missedBanner .miss-emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
+  #missedBanner .miss-text { font-size: 0.82rem; color: var(--pink2); line-height: 1.5; font-style: italic; }
+
+  /* ── STREAK INFO ── */
+  #streakRow {
+    display: flex;
+    gap: 10px;
+    margin: 0 20px 10px;
+  }
+  .stat-box {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 12px;
+    padding: 10px 8px;
+    text-align: center;
+  }
+  .stat-box .val {
+    font-size: 1.3rem;
+    font-weight: bold;
+    color: var(--gold);
+    display: block;
+  }
+  .stat-box .lbl {
+    font-size: 0.55rem;
+    letter-spacing: 0.12em;
+    color: rgba(255,255,255,0.45);
+    text-transform: uppercase;
+  }
+
+  /* ── TOMORROW TEASER ── */
+  #teaser {
+    margin: 0 20px 8px;
+    text-align: center;
+    font-size: 0.72rem;
+    color: rgba(212,175,55,0.6);
+    font-style: italic;
+    line-height: 1.6;
+  }
+
+  /* ── TAP HINT ── */
+  #tapHint {
+    text-align: center;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    color: rgba(255,255,255,0.25);
+    text-transform: uppercase;
+    padding-bottom: 16px;
+    animation: hint 2s ease-in-out infinite;
+  }
+  @keyframes hint { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
+
+  /* ── BIRTHDAY BANNER ── */
+  #bdayBanner {
+    display: none;
+    margin: 0 20px 10px;
+    background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(255,105,180,0.2));
+    border: 2px solid var(--gold);
+    border-radius: 16px;
+    padding: 14px;
+    text-align: center;
+    animation: bdayGlow 2s ease-in-out infinite;
+  }
+  @keyframes bdayGlow {
+    0%,100% { box-shadow: 0 0 10px rgba(212,175,55,0.3); }
+    50%      { box-shadow: 0 0 30px rgba(212,175,55,0.7), 0 0 60px rgba(255,105,180,0.3); }
+  }
+  #bdayText { font-size: 0.85rem; color: var(--gold2); line-height: 1.6; font-weight: bold; }
+
+  /* ── MILESTONE POPUP ── */
+  #milestonePopup {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 500;
+    background: rgba(0,0,0,0.75);
+    align-items: center; justify-content: center;
+    flex-direction: column;
+  }
+  #milestonePopup.show { display: flex; }
+  .milestone-box {
+    background: linear-gradient(160deg, #3d0a4a, #6b1a72);
+    border: 2px solid var(--gold);
+    border-radius: 24px;
+    padding: 2.5rem 3rem;
+    text-align: center;
+    max-width: 320px; width: 88%;
+    animation: milePop 0.5s cubic-bezier(.36,.07,.19,.97) both;
+    box-shadow: 0 0 40px rgba(212,175,55,0.4), 0 0 80px rgba(212,175,55,0.1);
+  }
+  @keyframes milePop {
+    0%  { transform: scale(0.3) rotate(-5deg); opacity: 0; }
+    70% { transform: scale(1.08) rotate(1deg); }
+    100%{ transform: scale(1) rotate(0deg); opacity: 1; }
+  }
+  .milestone-emoji { font-size: 3.5rem; display: block; margin-bottom: 0.8rem; }
+  .milestone-title { font-size: 1.1rem; color: var(--gold); font-weight: bold; margin-bottom: 0.5rem; }
+  .milestone-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 1.2rem; }
+  .milestone-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--purple);
+    border: none; border-radius: 100px;
+    padding: 0.7rem 2rem;
+    font-family: Georgia, serif;
+    font-size: 0.85rem;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+  /* ── LORD'S PRAYER MODAL ── */
+  #prayerModal {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 600;
+    background: linear-gradient(160deg, #1a0330 0%, #2d0640 100%);
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    overflow-y: auto;
+    padding: env(safe-area-inset-top, 20px) 24px 40px;
+  }
+  #prayerModal.show { display: flex; }
+  .prayer-header { text-align: center; margin-bottom: 1.5rem; padding-top: 20px; }
+  .prayer-header .dove { font-size: 3rem; display: block; margin-bottom: 0.5rem; animation: petFloat 3s ease-in-out infinite; }
+  .prayer-header h2 { font-size: 1rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
+  .prayer-header p { font-size: 0.7rem; color: rgba(255,255,255,0.45); letter-spacing: 0.1em; }
+  .prayer-text {
+    font-size: 1rem;
+    line-height: 2.2;
+    color: rgba(255,255,255,0.9);
+    text-align: center;
+    font-style: italic;
+    max-width: 380px;
+    margin-bottom: 1.5rem;
+  }
+  .prayer-text strong { color: var(--gold2); font-style: normal; }
+  .prayer-names { text-align: center; color: rgba(212,175,55,0.7); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 2rem; }
+  .prayer-continue {
+    background: linear-gradient(135deg, var(--purple2), var(--gold));
+    color: var(--cream);
+    border: 1px solid var(--gold);
+    border-radius: 100px;
+    padding: 0.85rem 2.5rem;
+    font-family: Georgia, serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    letter-spacing: 0.08em;
+  }
+  /* cross hearts */
+  #crossHearts {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 700;
+    background: rgba(0,0,0,0.85);
+    align-items: center; justify-content: center;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  #crossHearts.show { display: flex; }
+  .cross-grid {
+    display: grid;
+    grid-template-columns: repeat(3,44px);
+    grid-template-rows: repeat(5,44px);
+    gap: 4px;
+  }
+  .cross-cell { display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
+  .cross-cell.on { animation: heartPulse 1s ease-in-out infinite; }
+  @keyframes heartPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.2);} }
+  #crossCaption { color: var(--gold2); font-size: 0.75rem; letter-spacing: 0.12em; text-align: center; margin-top: 0.8rem; }
+  #crossClose { margin-top: 1.2rem; background: none; border: 1px solid rgba(212,175,55,0.4); color: var(--gold2); border-radius: 100px; padding: 0.6rem 2rem; font-family: Georgia,serif; font-size: 0.8rem; cursor: pointer; }
+
+  /* ── FINAL SCREEN ── */
+  #finalScreen {
+    display: none;
+    position: fixed; inset: 0;
+    z-index: 800;
+    background: linear-gradient(160deg, #0d0115, #2a0040, #4a0e4f);
+    flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 2rem;
+    gap: 1rem;
+  }
+  #finalScreen.show { display: flex; }
+  .final-dove { font-size: 5rem; display: block; animation: phoenixRise 3s ease-in-out infinite; }
+  @keyframes phoenixRise {
+    0%  { transform: translateY(0) scale(1); filter: drop-shadow(0 0 10px #d4af37); }
+    50% { transform: translateY(-20px) scale(1.1); filter: drop-shadow(0 0 40px #ff6900) drop-shadow(0 0 80px #d4af37); }
+    100%{ transform: translateY(0) scale(1); filter: drop-shadow(0 0 10px #d4af37); }
+  }
+  .final-title { font-size: 1.4rem; color: var(--gold); font-weight: bold; line-height: 1.4; }
+  .final-verse { font-style: italic; font-size: 0.8rem; color: rgba(255,255,255,0.7); max-width: 320px; line-height: 1.8; }
+
+  /* ── CONFETTI ── */
+  .confetti { position: fixed; pointer-events: none; z-index: 400; border-radius: 3px; animation: confettiFall var(--d) var(--delay) ease-in forwards; }
+  @keyframes confettiFall {
+    0%  { opacity:1; transform: translateY(-10px) rotate(0deg); }
+    100%{ opacity:0; transform: translateY(105vh) rotate(720deg); }
+  }
+</style>
+</head>
+<body>
+
+<div id="app">
+
+  <!-- TOP BANNER -->
+  <div id="topBanner">
+    <div id="dayCounter">✝ Covenant Streak ✝</div>
+    <div id="dayBig">Day <span id="dayNum">1</span> <span>/ 3652</span></div>
+  </div>
+
+  <!-- BIRTHDAY BANNER -->
+  <div id="bdayBanner">
+    <div id="bdayText"></div>
+  </div>
+
+  <!-- MISSED MESSAGE -->
+  <div id="missedBanner">
+    <span class="miss-emoji" id="missEmoji">💕</span>
+    <div class="miss-text" id="missText"></div>
+  </div>
+
+  <!-- PROGRESS RING + PET -->
+  <div id="ringSection">
+    <div id="ringWrap">
+      <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%"   stop-color="#4a7c2f"/>
+            <stop offset="50%"  stop-color="#d4af37"/>
+            <stop offset="100%" stop-color="#ff69b4"/>
+          </linearGradient>
+        </defs>
+        <circle class="ringBg" cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="10"/>
+        <circle id="ringFill" cx="110" cy="110" r="100" fill="none" stroke="url(#ringGrad)" stroke-width="10" stroke-linecap="round"
+          stroke-dasharray="628" stroke-dashoffset="628"/>
+      </svg>
+
+      <div id="petWrap" id="pet">
+        <span id="petEmoji">🥚</span>
+        <div id="petLabel">Golden Egg</div>
+        <div id="pct">0.0%</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- VERSE CARD -->
+  <div id="verseCard" onclick="nextVerse()">
+    <div id="verseText">"My beloved is mine and I am his..."</div>
+    <div id="verseRef">Song of Solomon 2:16 · tap to change</div>
+  </div>
+
+  <!-- STREAK STATS -->
+  <div id="streakRow">
+    <div class="stat-box">
+      <span class="val" id="streakDays">1</span>
+      <span class="lbl">Day Streak</span>
+    </div>
+    <div class="stat-box">
+      <span class="val" id="daysLeft">3651</span>
+      <span class="lbl">Days Left</span>
+    </div>
+    <div class="stat-box">
+      <span class="val" id="yearsLeft">10.0</span>
+      <span class="lbl">Years Left</span>
+    </div>
+  </div>
+
+  <!-- TOMORROW TEASER -->
+  <div id="teaser"></div>
+
+  <!-- TAP HINT -->
+  <div id="tapHint">tap pet · long-press to pray · tap verse to change</div>
+
+</div>
+
+<!-- ═══ LORD'S PRAYER MODAL ═══ -->
+<div id="prayerModal">
+  <div class="prayer-header">
+    <span class="dove">🕊️</span>
+    <h2>Lord's Prayer</h2>
+    <p>Tito Boi + Jay · Praying As One</p>
+  </div>
+  <div class="prayer-text">
+    <strong>Our Father,</strong> who art in heaven,<br/>
+    hallowed be Thy name.<br/>
+    Thy kingdom come,<br/>
+    Thy will be done,<br/>
+    on earth as it is in heaven.<br/><br/>
+    Give us this day our daily bread,<br/>
+    and forgive us our trespasses,<br/>
+    as we forgive those who trespass against us.<br/><br/>
+    And lead us not into temptation,<br/>
+    but deliver us from evil.<br/><br/>
+    For Thine is the kingdom,<br/>
+    the power and the glory,<br/>
+    forever and ever.<br/><br/>
+    <strong>Amen. 🕊️</strong>
+  </div>
+  <div class="prayer-names">✝ Tito Boi + Jay · Praying Together ✝</div>
+  <button class="prayer-continue" onclick="closePrayer()">Continue in Love 💕</button>
+</div>
+
+<!-- ═══ CROSS HEARTS ═══ -->
+<div id="crossHearts">
+  <div class="cross-grid" id="crossGrid"></div>
+  <div id="crossCaption">Tito Boi + Jay · United in Christ 💍✝️</div>
+  <button id="crossClose" onclick="closeCross()">Amen 🙏</button>
+</div>
+
+<!-- ═══ MILESTONE POPUP ═══ -->
+<div id="milestonePopup">
+  <div class="milestone-box">
+    <span class="milestone-emoji" id="mileEmoji">👑</span>
+    <div class="milestone-title" id="mileTitle">Week 1 Legend!</div>
+    <div class="milestone-sub" id="mileSub">You showed up. That's love.</div>
+    <button class="milestone-btn" onclick="closeMilestone()">Keep Going 💕</button>
+  </div>
+</div>
+
+<!-- ═══ FINAL SCREEN ═══ -->
+<div id="finalScreen">
+  <span class="final-dove">🔥🕊️🔥</span>
+  <div class="final-title">TITO BOI + JAY<br/>= ETERNAL 💍✝️</div>
+  <div class="final-verse">
+    "Egg → Dove → Phoenix"<br/>
+    Dec 30 + Dec 31 = New Year Forever<br/>
+    Like Christ rose — Tito Boi + Jay rise eternal.<br/><br/>
+    <em>"Many waters cannot quench love."</em><br/>
+    Song of Solomon 8:7
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  DATA
+// ═══════════════════════════════════════════════
+
+const VERSES = [
+  { text: '"My beloved is mine and I am his; he grazes among the lilies."', ref: 'Song of Solomon 2:16' },
+  { text: '"Love is patient, love is kind. It does not envy, it does not boast, it is not proud... it always protects, always trusts, always hopes, always perseveres."', ref: '1 Corinthians 13:4–7' },
+  { text: '"Place me like a seal over your heart... for love is as strong as death, its jealousy unyielding as the grave."', ref: 'Song of Solomon 8:6–7' },
+  { text: '"Where you go I will go, and where you stay I will stay. Your people will be my people and your God my God."', ref: 'Ruth 1:16' },
+  { text: '"You are altogether beautiful, my darling; there is no flaw in you."', ref: 'Song of Solomon 4:7' },
+  { text: '"Joseph son of David, do not be afraid to take Mary home as your wife, because what is conceived in her is from the Holy Spirit."', ref: 'Matthew 1:20' },
+  { text: '"I am the Lord\'s servant. May your word to me be fulfilled."', ref: 'Luke 1:38' },
+];
+
+const MISSED_MSGS = [
+  // 1-2 days
+  { days:[1,2], emoji:'😏', text:'Missed me, Jay? 😏 I kept the light on for you.' },
+  { days:[1,2], emoji:'🌸', text:'Look who\'s back! Welcome home, Jay 🌸' },
+  { days:[1,2], emoji:'💌', text:'One day away felt like forever, Jay 💌' },
+  { days:[1,2], emoji:'✨', text:'You always come back. That\'s why I love you, Jay ✨' },
+  { days:[1,2], emoji:'🕊️', text:'The dove waited. The dove is happy now, Jay 🕊️' },
+  // 3-6 days
+  { days:[3,6], emoji:'💕', text:'Heart kept your spot warm, Jay. It\'s still yours 💕' },
+  { days:[3,6], emoji:'🌙', text:'I counted the nights, Jay. Every single one 🌙' },
+  { days:[3,6], emoji:'💛', text:'A few days gone but my love didn\'t move an inch, Jay 💛' },
+  { days:[3,6], emoji:'🌿', text:'Like an olive branch, I still offer peace, Jay 🌿' },
+  { days:[3,6], emoji:'🙏', text:'Prayed for you every day you were gone, Jay 🙏' },
+  // 7+ days
+  { days:[7,9999], emoji:'💍', text:'I\'d wait 10 years. A few days was just practice, Jay 💍' },
+  { days:[7,9999], emoji:'✝️', text:'"Love endures all things." — We endure, Jay. Always 💕' },
+  { days:[7,9999], emoji:'🕊️', text:'The dove doesn\'t leave. She circles back. Like you, Jay 🕊️' },
+  { days:[7,9999], emoji:'🌹', text:'Worth the wait. Always. Come back whenever, Jay 🌹' },
+  { days:[7,9999], emoji:'👑', text:'Queens don\'t quit. And neither do I, Jay 👑' },
+];
+
+const MILESTONES = {
+  7:    { emoji:'👑', title:'Week 1 Legend!',         sub:'7 days of showing up. That\'s real love, Jay.' },
+  30:   { emoji:'🏆', title:'Month 1 Queen!',          sub:'30 days strong. The dove is so proud of you 🕊️' },
+  100:  { emoji:'💯', title:'Triple Digits!',          sub:'100 days. You\'re not just dating — you\'re building, Jay.' },
+  365:  { emoji:'🎉', title:'Year 1 Forever!',         sub:'365 days. One full year of choosing each other 💍' },
+  1000: { emoji:'💍', title:'3+ Years Legends',        sub:'1000 days. Tito Boi + Jay. Nothing stops this love 💕' },
+  3652: { emoji:'🔥', title:'TITO BOI + JAY = ETERNAL',sub:'10 years. The covenant is complete ✝️💍' },
+};
+
+// ═══════════════════════════════════════════════
+//  STATE
+// ═══════════════════════════════════════════════
+const TOTAL = 3652;
+
+function getState() {
+  const def = {
+    currentDay: 1,
+    lastLogin: null,
+    messageHistory: [],
+    verseIndex: 0,
+    shownMilestones: [],
+  };
+  try { return Object.assign(def, JSON.parse(localStorage.getItem('covenant_state') || '{}')); }
+  catch(e) { return def; }
+}
+function saveState(s) {
+  try { localStorage.setItem('covenant_state', JSON.stringify(s)); } catch(e){}
+}
+
+function todayStr() {
+  const d = new Date();
+  return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');
+}
+
+// ═══════════════════════════════════════════════
+//  INIT
+// ═══════════════════════════════════════════════
+let state = getState();
+let longPressTimer = null;
+let petMood = 'happy';
+let missedDays = 0;
+
+window.addEventListener('DOMContentLoaded', () => {
+  const today = todayStr();
+
+  if (!state.lastLogin) {
+    // First ever open
+    state.lastLogin = today;
+    state.currentDay = 1;
+    saveState(state);
+  } else if (state.lastLogin !== today) {
+    const last = new Date(state.lastLogin);
+    const now  = new Date(today);
+    const diff = Math.round((now - last) / 86400000);
+    missedDays = diff - 1;
+    state.currentDay = Math.min(state.currentDay + diff, TOTAL);
+    state.lastLogin = today;
+    saveState(state);
+  }
+
+  renderAll();
+  setupPet();
+  checkBirthday();
+  checkMilestone();
+});
+
+// ═══════════════════════════════════════════════
+//  RENDER
+// ═══════════════════════════════════════════════
+function renderAll() {
+  const day = state.currentDay;
+  document.getElementById('dayNum').textContent = day;
+
+  // Ring
+  const pct = day / TOTAL;
+  const circumference = 2 * Math.PI * 100; // r=100
+  const offset = circumference * (1 - pct);
+  document.getElementById('ringFill').style.strokeDashoffset = offset;
+  document.getElementById('pct').textContent = (pct * 100).toFixed(2) + '%';
+
+  // Pet stage
+  const { emoji, label } = getPetStage(day);
+  document.getElementById('petEmoji').textContent = emoji;
+  document.getElementById('petLabel').textContent = label;
+
+  // Stats
+  document.getElementById('streakDays').textContent = day;
+  document.getElementById('daysLeft').textContent = TOTAL - day;
+  document.getElementById('yearsLeft').textContent = ((TOTAL - day) / 365.2).toFixed(1);
+
+  // Verse
+  renderVerse();
+
+  // Teaser
+  const next = day + 1;
+  const teasers = [
+    `Day ${next} awaits, Dec 30 Queen 🌸`,
+    `Tomorrow is Day ${next}. One step closer 💕`,
+    `Day ${next}: another page in our story, Jay 📖`,
+    `${TOTAL - day} days left. Each one worth it 🕊️`,
+  ];
+  document.getElementById('teaser').textContent = teasers[day % teasers.length];
+
+  // Missed
+  if (missedDays > 0) {
+    showMissedMessage(missedDays);
+    petMood = 'sad';
+  }
+}
+
+function getPetStage(day) {
+  if (day <= 30)    return { emoji: '🥚',  label: 'Golden Egg' };
+  if (day <= 365)   return { emoji: '🐣',  label: 'Baby Dove' };
+  if (day <= 1000)  return { emoji: '🕊️', label: 'Teen Dove' };
+  if (day < 3652)   return { emoji: '🤍🕊️', label: 'Wedding Dove' };
+  return              { emoji: '🔥🕊️🔥', label: 'Phoenix' };
+}
+
+function renderVerse() {
+  const v = VERSES[state.verseIndex % VERSES.length];
+  document.getElementById('verseText').textContent = v.text;
+  document.getElementById('verseRef').textContent  = v.ref + ' · tap to change';
+}
+
+function nextVerse() {
+  state.verseIndex = (state.verseIndex + 1) % VERSES.length;
+  saveState(state);
+  renderVerse();
+  spawnHearts(document.getElementById('verseCard'), 3);
+}
+
+// ═══════════════════════════════════════════════
+//  MISSED MESSAGE
+// ═══════════════════════════════════════════════
+function showMissedMessage(missed) {
+  const pool = MISSED_MSGS.filter(m => missed >= m.days[0] && missed <= m.days[1]);
+  const history = state.messageHistory || [];
+  const filtered = pool.filter((_, i) => !history.slice(-5).includes(i));
+  const src = filtered.length ? filtered : pool;
+  const pick = src[Math.floor(Math.random() * src.length)];
+  const idx  = MISSED_MSGS.indexOf(pick);
+  state.messageHistory = [...history.slice(-9), idx];
+  saveState(state);
+
+  document.getElementById('missEmoji').textContent = pick.emoji;
+  document.getElementById('missText').textContent  = pick.text;
+  document.getElementById('missedBanner').style.display = 'block';
+}
+
+// ═══════════════════════════════════════════════
+//  PET INTERACTION
+// ═══════════════════════════════════════════════
+function setupPet() {
+  const wrap = document.getElementById('petWrap');
+
+  wrap.addEventListener('click', onPetTap);
+  wrap.addEventListener('touchend', e => { e.preventDefault(); clearTimeout(longPressTimer); onPetTap(e); });
+  wrap.addEventListener('mousedown', startLongPress);
+  wrap.addEventListener('touchstart', e => { e.preventDefault(); startLongPress(e); });
+  wrap.addEventListener('mouseup',   cancelLongPress);
+  wrap.addEventListener('mouseleave',cancelLongPress);
+  wrap.addEventListener('touchend',  cancelLongPress);
+  wrap.addEventListener('touchcancel',cancelLongPress);
+}
+
+function onPetTap(e) {
+  const el = document.getElementById('petEmoji');
+  el.classList.remove('sad');
+  el.classList.add('loved');
+  spawnHearts(el, 10);
+  nextVerse();
+  // ring bump visual
+  document.getElementById('ringFill').style.transition = 'stroke-dashoffset 0.3s ease-out';
+  setTimeout(() => {
+    el.classList.remove('loved');
+    petMood = 'happy';
+    document.getElementById('ringFill').style.transition = 'stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)';
+  }, 1200);
+}
+
+function startLongPress(e) {
+  longPressTimer = setTimeout(() => {
+    cancelLongPress();
+    openPrayer();
+  }, 700);
+}
+function cancelLongPress() { clearTimeout(longPressTimer); }
+
+// ═══════════════════════════════════════════════
+//  HEARTS
+// ═══════════════════════════════════════════════
+function spawnHearts(el, count) {
+  const rect = el.getBoundingClientRect();
+  const cx = rect.left + rect.width  / 2;
+  const cy = rect.top  + rect.height / 2;
+  const emojis = ['💖','💗','💕','💓','💝','🌸','✨'];
+  for (let i = 0; i < count; i++) {
+    const h = document.createElement('div');
+    h.className = 'heart-particle';
+    h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+    const spread = (Math.random() - 0.5) * 120;
+    h.style.left = (cx + spread) + 'px';
+    h.style.top  = cy + 'px';
+    h.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
+    h.style.animationDelay = (i * 80) + 'ms';
+    document.body.appendChild(h);
+    setTimeout(() => h.remove(), 3500);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  PRAYER
+// ═══════════════════════════════════════════════
+function openPrayer() {
+  document.getElementById('prayerModal').classList.add('show');
+}
+function closePrayer() {
+  document.getElementById('prayerModal').classList.remove('show');
+  // show cross hearts
+  buildCross();
+  document.getElementById('crossHearts').classList.add('show');
+}
+function buildCross() {
+  // 3×5 grid, cross pattern: col1 row2,3,4 + row2 all cols
+  const cross = [
+    false,true, false,
+    true, true, true,
+    false,true, false,
+    false,true, false,
+    false,true, false,
+  ];
+  const grid = document.getElementById('crossGrid');
+  grid.innerHTML = '';
+  cross.forEach(on => {
+    const cell = document.createElement('div');
+    cell.className = 'cross-cell' + (on ? ' on' : '');
+    cell.textContent = on ? '💖' : '';
+    grid.appendChild(cell);
+  });
+}
+function closeCross() {
+  document.getElementById('crossHearts').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════
+//  BIRTHDAY
+// ═══════════════════════════════════════════════
+function checkBirthday() {
+  const now = new Date();
+  const m = now.getMonth() + 1;
+  const d = now.getDate();
+  const banner = document.getElementById('bdayBanner');
+  const text   = document.getElementById('bdayText');
+
+  if (m === 12 && d === 30) {
+    banner.style.display = 'block';
+    text.innerHTML = '👑 HAPPY BIRTHDAY JAY! 👑<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">"I praise you because I am fearfully and wonderfully made." — Psalm 139:14</em><br/>🕊️ The dove crowns you today 🕊️';
+    confettiBurst();
+  } else if (m === 12 && d === 31) {
+    banner.style.display = 'block';
+    text.innerHTML = '🪵 TITO BOI DAY! 🪵<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Carpenter\'s hands, faithful heart. Jay celebrates you today 💕</em>';
+    confettiBurst();
+  } else if (m === 1 && d === 1) {
+    banner.style.display = 'block';
+    text.innerHTML = '🎊 Dec 30 + Dec 31 = NEW YEAR FOREVER 💍<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Two birthdays, one beginning. Tito Boi + Jay eternal ✝️</em>';
+    confettiBurst();
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  MILESTONE
+// ═══════════════════════════════════════════════
+function checkMilestone() {
+  const day = state.currentDay;
+  if (!MILESTONES[day]) return;
+  if ((state.shownMilestones || []).includes(day)) return;
+
+  state.shownMilestones = [...(state.shownMilestones || []), day];
+  saveState(state);
+
+  const m = MILESTONES[day];
+  document.getElementById('mileEmoji').textContent  = m.emoji;
+  document.getElementById('mileTitle').textContent  = m.title;
+  document.getElementById('mileSub').textContent    = m.sub;
+  document.getElementById('milestonePopup').classList.add('show');
+  confettiBurst();
+
+  if (day === 3652) {
+    setTimeout(() => {
+      document.getElementById('milestonePopup').classList.remove('show');
+      document.getElementById('finalScreen').classList.add('show');
+    }, 3000);
+  }
+}
+
+function closeMilestone() {
+  document.getElementById('milestonePopup').classList.remove('show');
+}
+
+// ═══════════════════════════════════════════════
+//  CONFETTI
+// ═══════════════════════════════════════════════
+function confettiBurst() {
+  const colors = ['#d4af37','#ff69b4','#c4b5fd','#6ee7b7','#fff','#f9c3d3'];
+  for (let i = 0; i < 80; i++) {
+    const el = document.createElement('div');
+    el.className = 'confetti';
+    el.style.cssText = `
+      left:${Math.random()*100}vw;
+      top:-8px;
+      width:${5+Math.random()*7}px;
+      height:${5+Math.random()*7}px;
+      background:${colors[Math.floor(Math.random()*colors.length)]};
+      --d:${1.2+Math.random()*1.5}s;
+      --delay:${Math.random()*1.5}s;
+      border-radius:${Math.random()>0.5?'50%':'2px'};
+    `;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3500);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  SERVICE WORKER (inline)
+// ═══════════════════════════════════════════════
+if ('serviceWorker' in navigator) {
+  const swCode = `
+    const CACHE='covenant-v1';
+    self.addEventListener('install',e=>{
+      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate',e=>{
+      e.waitUntil(clients.claim());
+    });
+    self.addEventListener('fetch',e=>{
+      e.respondWith(
+        caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
+          const clone=res.clone();
+          caches.open(CACHE).then(c=>c.put(e.request,clone));
+          return res;
+        }).catch(()=>caches.match('./'))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], { type: 'application/javascript' });
+  const swUrl = URL.createObjectURL(blob);
+  navigator.serviceWorker.register(swUrl).catch(() => {});
+}
+</script>
+</body>
+</html>
