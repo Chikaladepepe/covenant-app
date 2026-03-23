@@ -111,14 +111,12 @@
     position: fixed;
   }
 
+
   /* ── MAIN APP ── */
   #app {
     width: 100%; height: 100%;
-    display: flex; flex-direction: column;
     background: linear-gradient(160deg, #2a0630 0%, #4a0e4f 40%, #6b1a72 70%, #3d0a4a 100%);
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
+    position: relative;
   }
 
   /* ── TOP BANNER ── */
@@ -519,6 +517,210 @@
   #secretResult .secret-msg-from { font-size:0.7rem;color:var(--gold2);letter-spacing:0.1em; }
   #secretError { color:var(--pink);font-size:0.75rem;margin-top:0.5rem;display:none; }
 
+
+  /* ── BOTTOM NAV ── */
+  #bottomNav {
+    position: fixed; bottom: 0; left: 0; right: 0;
+    background: rgba(13,8,32,0.97);
+    border-top: 1px solid rgba(212,175,55,0.2);
+    display: flex; justify-content: space-around; align-items: center;
+    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
+    z-index: 90;
+  }
+  .nav-btn {
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    background: none; border: none; cursor: pointer;
+    color: rgba(255,255,255,0.35); font-family: Georgia, serif;
+    padding: 4px 12px; border-radius: 12px;
+    transition: color 0.2s, background 0.2s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .nav-btn.active { color: var(--gold); background: rgba(212,175,55,0.1); }
+  .nav-btn span:first-child { font-size: 1.3rem; }
+  .nav-btn span:last-child  { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* ── SCREENS ── */
+  .screen {
+    display: none;
+    flex-direction: column;
+    position: fixed;
+    inset: 0;
+    bottom: 60px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    -webkit-overflow-scrolling: touch;
+    background: linear-gradient(160deg, #2a0630 0%, #4a0e4f 40%, #6b1a72 70%, #3d0a4a 100%);
+    padding-bottom: 16px;
+  }
+  .screen.active { display: flex; }
+  #mainScreen { align-items: stretch; }
+
+  /* ── MEMORY JAR ── */
+  #jarScreen { padding: 16px 16px 80px; gap: 12px; }
+  .jar-header { text-align: center; padding: 8px 0 4px; }
+  .jar-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
+  .jar-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
+  .jar-input-wrap {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,175,55,0.25);
+    border-radius: 16px; padding: 14px;
+  }
+  #jarInput {
+    width: 100%; background: none; border: none; outline: none;
+    color: var(--cream); font-family: Georgia,serif; font-size: 0.9rem;
+    line-height: 1.7; resize: none; min-height: 80px;
+  }
+  #jarInput::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
+  .jar-input-footer { display: flex; flex-direction: column; margin-top: 8px; }
+  .mood-btn {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    padding: 6px 12px;
+    cursor: pointer;
+    transition: background 0.2s, border 0.2s, transform 0.15s;
+    display: flex; flex-direction: column; align-items: center; gap: 2px;
+    flex: 1;
+  }
+  .mood-btn:active { transform: scale(0.95); }
+  .mood-btn.selected {
+    background: rgba(212,175,55,0.18);
+    border-color: var(--gold);
+    box-shadow: 0 0 10px rgba(212,175,55,0.2);
+  }
+  .mood-emoji { font-size: 1.4rem; line-height: 1; }
+  .mood-label { font-size: 0.55rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.45); text-transform: uppercase; }
+  .mood-btn.selected .mood-label { color: var(--gold2); }
+  .jar-mood-row { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
+  .jar-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
+  .jar-photo-btn {
+    background: rgba(255,255,255,0.06);
+    border: 1px solid rgba(255,255,255,0.15);
+    border-radius: 100px;
+    color: rgba(255,255,255,0.6);
+    font-family: Georgia, serif;
+    font-size: 0.78rem;
+    padding: 7px 14px;
+    cursor: pointer;
+    transition: background 0.2s;
+  }
+  .jar-photo-btn:hover { background: rgba(255,255,255,0.1); }
+  .jar-save-btn {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--purple); font-family: Georgia,serif; font-size: 0.8rem;
+    font-weight: bold; border: none; border-radius: 100px;
+    padding: 7px 20px; cursor: pointer;
+  }
+  .memory-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,175,55,0.15);
+    border-radius: 14px; padding: 14px 16px;
+    animation: slideUp2 0.4s cubic-bezier(.16,1,.3,1) both;
+    position: relative;
+  }
+  .memory-card .mem-mood-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
+  .memory-card .mem-mood-emoji { font-size: 1.2rem; line-height: 1; }
+  .memory-card .mem-mood-lbl  { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(212,175,55,0.6); }
+  .memory-card .mem-text  { font-size: 0.85rem; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; }
+  .memory-card .mem-meta  { font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-top: 6px; letter-spacing: 0.08em; }
+  .memory-card .mem-del   {
+    position: absolute; top: 10px; right: 12px;
+    background: none; border: none; color: rgba(255,255,255,0.2);
+    font-size: 0.8rem; cursor: pointer;
+  }
+  .jar-empty { text-align: center; padding: 3rem 1rem; color: rgba(255,255,255,0.25); font-style: italic; font-size: 0.85rem; }
+
+  /* ── MINI GAMES SCREEN ── */
+  #gamesScreen { padding: 16px 16px 80px; gap: 12px; align-items: stretch; }
+  .games-header { text-align: center; padding: 8px 0 4px; }
+  .games-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
+  .games-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
+  .game-card {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 16px; padding: 14px 16px; cursor: pointer;
+    transition: transform 0.15s, background 0.2s;
+    display: flex; align-items: center; gap: 14px;
+  }
+  .game-card:active { transform: scale(0.98); background: rgba(212,175,55,0.08); }
+  .game-card .gc-icon { font-size: 2.2rem; flex-shrink: 0; }
+  .game-card .gc-info { flex: 1; }
+  .game-card .gc-title { font-size: 0.85rem; color: var(--gold2); font-weight: bold; margin-bottom: 2px; }
+  .game-card .gc-desc  { font-size: 0.72rem; color: rgba(255,255,255,0.4); line-height: 1.4; }
+  .game-card .gc-score { font-size: 0.65rem; color: rgba(212,175,55,0.5); margin-top: 4px; letter-spacing: 0.08em; }
+
+  .size-btn {
+    flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(212,175,55,0.25);
+    border-radius:10px; color:var(--gold2); font-family:Georgia,serif;
+    font-size:0.75rem; font-weight:bold; padding:7px 4px 5px;
+    cursor:pointer; transition:background 0.2s,border 0.2s,transform 0.15s;
+    display:flex; flex-direction:column; align-items:center; gap:1px;
+  }
+  .size-btn span { font-size:0.5rem; color:rgba(255,255,255,0.35); letter-spacing:0.06em; text-transform:uppercase; font-weight:normal; }
+  .size-btn:active { transform:scale(0.95); background:rgba(212,175,55,0.15); border-color:var(--gold); }
+
+  /* ── DEVOTIONAL SCREEN ── */
+  #devotScreen { padding: 16px 16px 80px; gap: 12px; align-items: stretch; }
+  .devot-header { text-align: center; padding: 8px 0 4px; }
+  .devot-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
+  .devot-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
+  .devot-card {
+    background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(255,105,180,0.06));
+    border: 1px solid rgba(212,175,55,0.3);
+    border-radius: 16px; padding: 20px 18px; text-align: center;
+  }
+  .devot-day   { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--gold2); text-transform: uppercase; margin-bottom: 8px; }
+  .devot-emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; }
+  .devot-title { font-size: 1rem; color: var(--cream); font-weight: bold; margin-bottom: 8px; }
+  .devot-body  { font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.8; font-style: italic; }
+  .devot-challenge {
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,105,180,0.2);
+    border-radius: 14px; padding: 14px 16px;
+  }
+  .devot-challenge .ch-label { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--pink2); text-transform: uppercase; margin-bottom: 6px; }
+  .devot-challenge .ch-text  { font-size: 0.85rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
+  .devot-done {
+    background: linear-gradient(135deg, var(--gold), var(--gold2));
+    color: var(--purple); font-family: Georgia,serif; font-weight: bold;
+    border: none; border-radius: 100px; padding: 0.8rem 2rem;
+    font-size: 0.85rem; cursor: pointer; width: 100%;
+  }
+  .devot-done:disabled { opacity: 0.4; cursor: default; }
+
+  /* ── GOODNIGHT SCREEN ── */
+  #goodnightScreen { padding: 16px 16px 80px; align-items: center; justify-content: center; gap: 16px; }
+  #goodnightScreen.active { display: flex; }
+  .gn-card {
+    background: linear-gradient(160deg, rgba(13,8,32,0.9), rgba(42,6,48,0.95));
+    border: 1px solid rgba(212,175,55,0.2);
+    border-radius: 24px; padding: 2.5rem 2rem;
+    max-width: 340px; width: 100%; text-align: center;
+  }
+  .gn-moon { font-size: 4rem; display: block; margin-bottom: 1rem; animation: petFloat 4s ease-in-out infinite; }
+  .gn-title { font-family: Georgia,serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 0.5rem; }
+  .gn-sub   { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem; line-height: 1.6; }
+  .gn-verse { font-style: italic; font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 1.4rem; padding: 12px 14px; background: rgba(212,175,55,0.07); border-radius: 12px; }
+  .gn-btn {
+    background: linear-gradient(135deg, #1a0535, #4a0e4f);
+    border: 1px solid rgba(212,175,55,0.4);
+    color: var(--gold2); font-family: Georgia,serif; font-size: 0.85rem;
+    border-radius: 100px; padding: 0.8rem 2rem; cursor: pointer; width: 100%;
+  }
+  .gn-status { font-size: 0.7rem; color: rgba(212,175,55,0.5); letter-spacing: 0.1em; }
+
+  /* ── GAME MODALS ── */
+  #gameModal {
+    display: none; position: fixed; inset: 0; z-index: 750;
+    background: rgba(0,0,0,0.92);
+    flex-direction: column; align-items: center; justify-content: center;
+    padding: 1rem;
+  }
+  #gameModal.show { display: flex; }
+  #gameModal .gm-title { font-family:'Press Start 2P',monospace; font-size:0.75rem; color:var(--gold); margin-bottom:0.8rem; text-align:center; }
+  #gameCanvas { border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; display: block; max-width: 100%; }
+  #gameScore  { font-family:'Press Start 2P',monospace; font-size:0.65rem; color:var(--gold2); margin: 6px 0; }
+  #gameClose  { margin-top: 8px; background: none; border: 1px solid rgba(212,175,55,0.3); color: rgba(212,175,55,0.6); border-radius: 100px; padding: 0.5rem 1.5rem; font-family:Georgia,serif; font-size:0.8rem; cursor: pointer; }
   /* ── CONFETTI ── */
   .confetti { position: fixed; pointer-events: none; z-index: 400; border-radius: 3px; animation: confettiFall var(--d) var(--delay) ease-in forwards; }
   @keyframes confettiFall {
@@ -530,6 +732,18 @@
 <body>
 
 <div id="app">
+
+<!-- ══ BOTTOM NAV ══ -->
+<div id="bottomNav">
+  <button class="nav-btn active" id="nav-home"    onclick="switchTab('home')"     ><span>🕊️</span><span>Home</span></button>
+  <button class="nav-btn"        id="nav-jar"     onclick="switchTab('jar')"      ><span>📸</span><span>Memory</span></button>
+  <button class="nav-btn"        id="nav-devot"   onclick="switchTab('devot')"    ><span>🙏</span><span>Devotion</span></button>
+  <button class="nav-btn"        id="nav-games"   onclick="switchTab('games')"    ><span>🎮</span><span>Games</span></button>
+  <button class="nav-btn"        id="nav-night"   onclick="switchTab('night')"    ><span>🌙</span><span>Night</span></button>
+</div>
+
+<!-- ══ MAIN SCREEN ══ -->
+<div class="screen active" id="mainScreen">
 
   <!-- TOP BANNER -->
   <div id="topBanner">
@@ -615,6 +829,109 @@
   <!-- TAP HINT -->
   <div id="tapHint">tap pet · long-press to pray · tap verse to change</div>
 
+</div>
+</div><!-- end mainScreen -->
+
+<!-- ══ MEMORY JAR SCREEN ══ -->
+<div class="screen" id="jarScreen">
+  <div class="jar-header"><h2>📸 Memory Jar</h2><p>your little notes live here forever</p></div>
+  <div class="jar-input-wrap">
+    <!-- Photo upload -->
+    <div id="photoPreviewWrap" style="display:none;margin-bottom:10px;text-align:center;position:relative;">
+      <img id="photoPreview" style="max-width:100%;max-height:160px;border-radius:10px;object-fit:cover;border:1px solid rgba(212,175,55,0.3);"/>
+      <button onclick="removePhoto()" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);border:none;color:#fff;border-radius:50%;width:24px;height:24px;font-size:0.75rem;cursor:pointer;line-height:1;">✕</button>
+    </div>
+    <textarea id="jarInput" placeholder="Write a memory, a feeling, something you want to remember... 🌸" maxlength="300"></textarea>
+    <div class="jar-input-footer">
+      <!-- Mood row with labels -->
+      <div class="jar-mood-row">
+        <button class="mood-btn" data-mood="😊" data-label="fun day" onclick="selectMood(this)">
+          <span class="mood-emoji">😊</span>
+          <span class="mood-label">fun day</span>
+        </button>
+        <button class="mood-btn selected" data-mood="😐" data-label="mid day" onclick="selectMood(this)">
+          <span class="mood-emoji">😐</span>
+          <span class="mood-label">mid day</span>
+        </button>
+        <button class="mood-btn" data-mood="😔" data-label="sad day" onclick="selectMood(this)">
+          <span class="mood-emoji">😔</span>
+          <span class="mood-label">sad day</span>
+        </button>
+      </div>
+    </div>
+    <div class="jar-actions">
+      <!-- Photo upload button -->
+      <label class="jar-photo-btn" for="photoInput">📷 Add Photo</label>
+      <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
+      <button class="jar-save-btn" onclick="saveMemory()">Save 💌</button>
+    </div>
+  </div>
+  <div id="memoriesList"></div>
+</div>
+
+<!-- ══ DEVOTIONAL SCREEN ══ -->
+<div class="screen" id="devotScreen">
+  <div class="devot-header"><h2>🙏 Daily Devotion</h2><p>Tito Boi + Jay · Faith First</p></div>
+  <div class="devot-card">
+    <div class="devot-day" id="devotDay">Day 1 Devotion</div>
+    <span class="devot-emoji" id="devotEmoji">✝️</span>
+    <div class="devot-title" id="devotTitle">Loading...</div>
+    <div class="devot-body"  id="devotBody"></div>
+  </div>
+  <div class="devot-challenge">
+    <div class="ch-label">✦ Today's Challenge</div>
+    <div class="ch-text" id="devotChallenge"></div>
+  </div>
+  <button class="devot-done" id="devotDoneBtn" onclick="markDevotDone()">I did it today 🙏</button>
+</div>
+
+<!-- ══ GAMES SCREEN ══ -->
+<div class="screen" id="gamesScreen">
+  <div class="games-header"><h2>🎮 Mini Games</h2><p>play · grow · love</p></div>
+  <div class="game-card" onclick="startGame('hearts')">
+    <div class="gc-icon">💖</div>
+    <div class="gc-info">
+      <div class="gc-title">Catch the Hearts</div>
+      <div class="gc-desc">Tap falling hearts before they hit the ground. Miss too many and the dove cries 🕊️</div>
+      <div class="gc-score" id="score-hearts">Best: 0</div>
+    </div>
+  </div>
+  <div class="game-card" onclick="startGame('dove')">
+    <div class="gc-icon">🕊️</div>
+    <div class="gc-info">
+      <div class="gc-title">Feed the Dove</div>
+      <div class="gc-desc">Tap the olive branches to feed the dove. Don't let it get hungry! 🫒</div>
+      <div class="gc-score" id="score-dove">Best: 0</div>
+    </div>
+  </div>
+  <div class="game-card" style="flex-direction:column;align-items:flex-start;cursor:default;">
+    <div style="display:flex;align-items:center;gap:14px;width:100%;">
+      <div class="gc-icon">🌸</div>
+      <div class="gc-info">
+        <div class="gc-title">Love Match</div>
+        <div class="gc-desc">Flip cards and match the pairs. A love letter unlocks when you win 💌</div>
+        <div class="gc-score" id="score-memory">Best: --</div>
+      </div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px;width:100%;">
+      <button class="size-btn" onclick="startGame('memory','2x2')">2×2<span>Easy</span></button>
+      <button class="size-btn" onclick="startGame('memory','3x4')">3×4<span>Normal</span></button>
+      <button class="size-btn" onclick="startGame('memory','4x4')">4×4<span>Hard</span></button>
+      <button class="size-btn" onclick="startGame('memory','4x5')">4×5<span>Insane</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ GOODNIGHT SCREEN ══ -->
+<div class="screen" id="goodnightScreen">
+  <div class="gn-card">
+    <span class="gn-moon" id="gnMoon">🌙</span>
+    <div class="gn-title">Goodnight, Jay 🕊️</div>
+    <div class="gn-sub">Before you sleep, let the dove tuck you in.<br/>Tito Boi is thinking of you right now.</div>
+    <div class="gn-verse" id="gnVerse"></div>
+    <button class="gn-btn" id="gnBtn" onclick="doGoodnight()">🌙 Tuck in the Dove</button>
+    <div class="gn-status" id="gnStatus"></div>
+  </div>
 </div>
 
 <!-- ═══ LORD'S PRAYER MODAL ═══ -->
@@ -1184,6 +1501,967 @@ document.getElementById('secretInput').addEventListener('keydown', function(e) {
   if (e.key === 'Enter') submitSecretCode();
 });
 
+
+// ═══════════════════════════════════════════════
+//  TAB NAVIGATION
+// ═══════════════════════════════════════════════
+const SCREENS = { home:'mainScreen', jar:'jarScreen', devot:'devotScreen', games:'gamesScreen', night:'goodnightScreen' };
+
+function switchTab(tab) {
+  Object.entries(SCREENS).forEach(([key, screenId]) => {
+    const screen = document.getElementById(screenId);
+    const btn    = document.getElementById('nav-' + key);
+    if (!screen || !btn) return;
+    if (key === tab) { screen.classList.add('active'); btn.classList.add('active'); }
+    else             { screen.classList.remove('active'); btn.classList.remove('active'); }
+  });
+  if (tab === 'jar')   renderMemories();
+  if (tab === 'devot') renderDevotion();
+  if (tab === 'night') renderGoodnight();
+  if (tab === 'games') renderGameScores();
+}
+
+// ═══════════════════════════════════════════════
+//  MEMORY JAR
+// ═══════════════════════════════════════════════
+let selectedMood = '😐';
+let selectedMoodLabel = 'mid day';
+let currentPhotoData = null;
+
+function selectMood(btn) {
+  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  selectedMood      = btn.dataset.mood;
+  selectedMoodLabel = btn.dataset.label;
+}
+
+function handlePhoto(e) {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (ev) => {
+    // Compress image to max 600px wide, jpeg 0.7 quality to save localStorage space
+    const img = new Image();
+    img.onload = () => {
+      const maxW = 600;
+      const scale = img.width > maxW ? maxW / img.width : 1;
+      const canvas = document.createElement('canvas');
+      canvas.width  = img.width  * scale;
+      canvas.height = img.height * scale;
+      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+      currentPhotoData = canvas.toDataURL('image/jpeg', 0.7);
+      document.getElementById('photoPreview').src = currentPhotoData;
+      document.getElementById('photoPreviewWrap').style.display = 'block';
+    };
+    img.src = ev.target.result;
+  };
+  reader.readAsDataURL(file);
+  e.target.value = '';
+}
+
+function removePhoto() {
+  currentPhotoData = null;
+  document.getElementById('photoPreview').src = '';
+  document.getElementById('photoPreviewWrap').style.display = 'none';
+}
+
+function saveMemory() {
+  const text = document.getElementById('jarInput').value.trim();
+  if (!text && !currentPhotoData) return;
+  const memories = getMemories();
+  const entry = {
+    id: Date.now(),
+    text,
+    mood: selectedMood,
+    moodLabel: selectedMoodLabel,
+    photo: currentPhotoData || null,
+    day: state.currentDay,
+    date: todayStr(),
+  };
+  memories.unshift(entry);
+  // Keep max 100 entries (photos are large)
+  try {
+    localStorage.setItem('covenant_memories', JSON.stringify(memories.slice(0, 100)));
+  } catch(e) {
+    // If storage full, remove oldest photo and retry
+    const trimmed = memories.slice(0, 100).map((m,i) => i > 50 ? {...m, photo: null} : m);
+    localStorage.setItem('covenant_memories', JSON.stringify(trimmed));
+  }
+  document.getElementById('jarInput').value = '';
+  removePhoto();
+  spawnHearts(document.getElementById('jarInput'), 6);
+  renderMemories();
+}
+
+function getMemories() {
+  try { return JSON.parse(localStorage.getItem('covenant_memories') || '[]'); }
+  catch(e) { return []; }
+}
+
+function deleteMemory(id) {
+  const memories = getMemories().filter(m => m.id !== id);
+  localStorage.setItem('covenant_memories', JSON.stringify(memories));
+  renderMemories();
+}
+
+function renderMemories() {
+  const list = document.getElementById('memoriesList');
+  if (!list) return;
+  const memories = getMemories();
+  if (!memories.length) {
+    list.innerHTML = '<div class="jar-empty">No memories yet...<br/>Write something or add a photo 🌸</div>';
+    return;
+  }
+  list.innerHTML = memories.map(m => `
+    <div class="memory-card">
+      <button class="mem-del" onclick="deleteMemory(${m.id})">✕</button>
+      ${m.photo ? `<img src="${m.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;object-fit:cover;max-height:200px;"/>` : ''}
+      <div class="mem-mood-row">
+        <span class="mem-mood-emoji">${m.mood}</span>
+        <span class="mem-mood-lbl">${m.moodLabel || ''}</span>
+      </div>
+      ${m.text ? `<div class="mem-text">"${m.text}"</div>` : ''}
+      <div class="mem-meta">Day ${m.day} · ${m.date}</div>
+    </div>
+  `).join('');
+}
+
+// ═══════════════════════════════════════════════
+//  DAILY DEVOTIONAL
+// ═══════════════════════════════════════════════
+const DEVOTIONS = [
+  { emoji:'✝️', title:'Faith Over Fear',       body:`"Do not fear, for I am with you." — Isaiah 41:10\n\nToday, lay down one worry at God's feet. He is already working it out.`, challenge:`Say out loud: "God is bigger than this." Then text Tito Boi one thing you are trusting God for today 💕` },
+  { emoji:'🌿', title:'Be Still',              body:`"Be still and know that I am God." — Psalm 46:10\n\nIn the middle of the noise, pause. Five deep breaths. Feel His peace wash over you.`, challenge:`Spend 5 quiet minutes today with no phone. Just you and God. 🙏` },
+  { emoji:'💕', title:'Love Is Patient',       body:`"Love is patient, love is kind." — 1 Cor 13:4\n\nPatience is a form of love. Today, practice it with someone who tests yours.`, challenge:`Find one moment today to choose patience over frustration. Tell Tito Boi how it went 😊` },
+  { emoji:'🌸', title:'You Are Chosen',        body:`"You did not choose me, but I chose you." — John 15:16\n\nGod chose you. Specifically. Intentionally. On purpose. You are not an accident.`, challenge:`Write one thing about yourself that you believe God loves. Keep it in your Memory Jar 💌` },
+  { emoji:'🕊️', title:'Peace Like a River',   body:`"Peace I leave with you; my peace I give you." — John 14:27\n\nHis peace is not the absence of trouble — it's calm in the middle of it.`, challenge:`Pray for peace for someone else today. Then enjoy the peace that comes back to you 🕊️` },
+  { emoji:'👑', title:'You Are Royalty',       body:`"You are a chosen people, a royal priesthood." — 1 Peter 2:9\n\nYou carry a crown you cannot always see. Walk like it today.`, challenge:`Do one thing today that honors the queen God made you to be 👑` },
+  { emoji:'🌙', title:'Rest Is Holy',          body:`"He grants sleep to those he loves." — Psalm 127:2\n\nRest is not laziness. It is trust. Trusting God enough to put things down.`, challenge:`Go to bed 30 minutes earlier tonight. Give that time back to God 🌙` },
+  { emoji:'🌹', title:'Love Covers All',       body:`"Above all, love each other deeply, because love covers a multitude of sins." — 1 Peter 4:8\n\nDeep love forgives. Deep love stays. Deep love covers.`, challenge:`Think of someone who hurt you. Pray for them today, even just one sentence 🌹` },
+  { emoji:'🙏', title:'Pray Without Ceasing',  body:`"Pray continually." — 1 Thessalonians 5:17\n\nPrayer is not a ritual. It is a conversation. Talk to Him like He is right there — because He is.`, challenge:`Pray three times today: morning, afternoon, before sleep. Even one sentence each time 🙏` },
+  { emoji:'💛', title:'Gratitude Changes Everything', body:`"Give thanks in all circumstances." — 1 Thessalonians 5:18\n\nGratitude is not denying pain. It is choosing to find God in it anyway.`, challenge:`List 5 things you are grateful for today and save them in your Memory Jar 💛` },
+  { emoji:'🔥', title:'Refined by Fire',       body:`"When you walk through the fire, you will not be burned." — Isaiah 43:2\n\nEvery hard season is making you stronger. You are not being destroyed — you are being refined.`, challenge:`Write about one hard thing that made you stronger. God used it 🔥` },
+  { emoji:'🤍', title:'Grace Upon Grace',      body:`"From his fullness we have all received grace upon grace." — John 1:16\n\nYou cannot run out of His grace. Not today. Not ever.`, challenge:`Extend grace to yourself today. One mistake does not define you 🤍` },
+];
+
+function renderDevotion() {
+  const doneKey = 'covenant_devot_' + todayStr();
+  const isDone  = localStorage.getItem(doneKey) === '1';
+  const idx     = state.currentDay % DEVOTIONS.length;
+  const d       = DEVOTIONS[idx];
+
+  document.getElementById('devotDay').textContent       = `Day ${state.currentDay} Devotion`;
+  document.getElementById('devotEmoji').textContent     = d.emoji;
+  document.getElementById('devotTitle').textContent     = d.title;
+  document.getElementById('devotBody').innerHTML        = d.body.replace(/\n/g, '<br/>');
+  document.getElementById('devotChallenge').textContent = d.challenge;
+
+  const btn = document.getElementById('devotDoneBtn');
+  btn.disabled    = isDone;
+  btn.textContent = isDone ? 'Done for today ✅' : 'I did it today 🙏';
+}
+
+function markDevotDone() {
+  const doneKey = 'covenant_devot_' + todayStr();
+  localStorage.setItem(doneKey, '1');
+  renderDevotion();
+  spawnHearts(document.getElementById('devotDoneBtn'), 10);
+  confettiBurst();
+}
+
+// ═══════════════════════════════════════════════
+//  GOODNIGHT MODE
+// ═══════════════════════════════════════════════
+const GN_VERSES = [
+  { text:`"He grants sleep to those he loves."`, ref:`Psalm 127:2` },
+  { text:`"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."`, ref:`Psalm 4:8` },
+  { text:`"When you lie down, you will not be afraid; when you lie down, your sleep will be sweet."`, ref:`Proverbs 3:24` },
+  { text:`"The Lord watches over you... the Lord will keep you from all harm."`, ref:`Psalm 121:5,7` },
+  { text:`"Cast all your anxiety on him because he cares for you."`, ref:`1 Peter 5:7` },
+  { text:`"My beloved is mine and I am his."`, ref:`Song of Solomon 2:16` },
+  { text:`"Peace I leave with you; my peace I give you."`, ref:`John 14:27` },
+];
+
+function renderGoodnight() {
+  const doneKey = 'covenant_gn_' + todayStr();
+  const isDone  = localStorage.getItem(doneKey) === '1';
+  const v       = GN_VERSES[state.currentDay % GN_VERSES.length];
+
+  document.getElementById('gnVerse').innerHTML = `<em>"${v.text}"</em><br/><small style="color:rgba(212,175,55,0.5);font-size:0.65rem;letter-spacing:0.1em">${v.ref}</small>`;
+  document.getElementById('gnMoon').textContent   = isDone ? '😴' : '🌙';
+  document.getElementById('gnBtn').disabled       = isDone;
+  document.getElementById('gnBtn').textContent    = isDone ? 'Dove is tucked in 😴' : '🌙 Tuck in the Dove';
+  document.getElementById('gnStatus').textContent = isDone ? 'Sweet dreams, Jay 🕊️ Tito Boi is praying for you tonight.' : 'Tap before you sleep each night 🌙';
+}
+
+function doGoodnight() {
+  const doneKey = 'covenant_gn_' + todayStr();
+  localStorage.setItem(doneKey, '1');
+  renderGoodnight();
+  spawnHearts(document.getElementById('gnBtn'), 12);
+  // show sleepy stars
+  for (let i = 0; i < 20; i++) {
+    const s = document.createElement('div');
+    s.style.cssText = `position:fixed;font-size:${0.8+Math.random()*1}rem;left:${Math.random()*100}vw;top:${Math.random()*60+20}vh;pointer-events:none;z-index:999;animation:heartUp ${2+Math.random()*2}s ease-out forwards;animation-delay:${Math.random()*1}s;opacity:0;`;
+    s.textContent = ['⭐','🌟','✨','💫','🌙'][Math.floor(Math.random()*5)];
+    document.body.appendChild(s);
+    setTimeout(() => s.remove(), 5000);
+  }
+}
+
+// ═══════════════════════════════════════════════
+//  MINI GAMES
+// ═══════════════════════════════════════════════
+let currentGame = null;
+let gameAnimFrame = null;
+
+function renderGameScores() {
+  const hs = key => parseInt(localStorage.getItem('covenant_hs_' + key) || '0');
+  document.getElementById('score-hearts').textContent = `Best: ${hs('hearts')}`;
+  document.getElementById('score-dove').textContent   = `Best: ${hs('dove')}`;
+  const sizes = ['2x2','3x4','4x4','4x5'];
+  const bests = sizes.map(s=>{ const v=localStorage.getItem(`covenant_hs_memory_${s}`); return v&&v!=='999'?`${s}:${v}m`:null; }).filter(Boolean);
+  document.getElementById('score-memory').textContent = bests.length ? `Best: ${bests.join(' · ')}` : 'Best: --';
+}
+
+function startGame(type, size) {
+  currentGame = type;
+  document.getElementById('gameModal').classList.add('show');
+  const titles = { hearts:'Catch the Hearts 💖', dove:'Feed the Dove 🕊️', memory:'Love Match 🌸' };
+  const sizeLabel = size ? ` (${size})` : '';
+  document.getElementById('gmTitle').textContent = titles[type] + sizeLabel;
+  if (type === 'hearts') initHeartsGame();
+  else if (type === 'dove')   initDoveGame();
+  else if (type === 'memory') initMemoryGame(size || '4x4');
+}
+
+function closeGame() {
+  if (gameAnimFrame) cancelAnimationFrame(gameAnimFrame);
+  gameAnimFrame = null;
+  currentGame = null;
+  document.getElementById('gameModal').classList.remove('show');
+  renderGameScores();
+}
+
+// ── HEARTS GAME ── (polished)
+function initHeartsGame() {
+  const canvas = document.getElementById('gameCanvas');
+  const W = 320, H = 460;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  let score = 0, lives = 3, gameOver = false;
+  let hearts = [], particles = [], floaters = [], lastSpawn = 0, speed = 1.8, frame = 0;
+  let prevBest = parseInt(localStorage.getItem('covenant_hs_hearts') || '0');
+  let newBest = false;
+
+  // Static starfield
+  const stars = Array.from({length:40}, () => ({
+    x: Math.random()*W, y: Math.random()*H,
+    r: Math.random()*1.2+0.3, op: Math.random()*0.5+0.2,
+    twinkle: Math.random()*Math.PI*2
+  }));
+
+  function spawnHeart(spd) {
+    const emojis = ['💖','💗','💕','💓','🌸','✨'];
+    const s = spd || 1.8;
+    hearts.push({
+      x: 28 + Math.random()*(W-56), y: -28,
+      vy: s + Math.random()*0.8,
+      vx: (Math.random()-0.5)*0.6,
+      emoji: emojis[Math.floor(Math.random()*emojis.length)],
+      r: 20, scale: 1, pop: 0, rot: (Math.random()-0.5)*0.3
+    });
+  }
+
+  function spawnParticles(x, y, color) {
+    for (let i = 0; i < 10; i++) {
+      const angle = (Math.PI*2/10)*i + Math.random()*0.5;
+      particles.push({
+        x, y,
+        vx: Math.cos(angle)*(2+Math.random()*3),
+        vy: Math.sin(angle)*(2+Math.random()*3),
+        life: 1, color,
+        r: 2+Math.random()*3
+      });
+    }
+  }
+
+  function spawnFloater(x, y, txt) {
+    floaters.push({ x, y, vy: -1.2, life: 1, txt });
+  }
+
+  // Difficulty tiers
+  const TIERS = [
+    { at:0,  label:null,            spawnMs:1100, speed:1.8,  maxOnScreen:3 },
+    { at:10, label:'Speeding up! 💨', spawnMs:900,  speed:2.4,  maxOnScreen:4 },
+    { at:20, label:'Getting fast! 🔥', spawnMs:720,  speed:3.0,  maxOnScreen:5 },
+    { at:35, label:'BLAZING! 🌟',    spawnMs:560,  speed:3.8,  maxOnScreen:6 },
+    { at:55, label:'INSANE!! 💫',    spawnMs:420,  speed:4.8,  maxOnScreen:7 },
+    { at:80, label:'GODMODE 👑',     spawnMs:300,  speed:6.0,  maxOnScreen:8 },
+  ];
+  let tier = 0, tierAnnounce = null, tierAnnounceTimer = 0;
+
+  function getCurrentTier() {
+    let t = TIERS[0];
+    for (const tier of TIERS) { if (score >= tier.at) t = tier; }
+    return t;
+  }
+
+  function update(ts) {
+    if (gameOver) return;
+    frame++;
+
+    const t = getCurrentTier();
+    // Check tier upgrade
+    const newTierIdx = TIERS.filter(x => score >= x.at).length - 1;
+    if (newTierIdx > tier && TIERS[newTierIdx].label) {
+      tier = newTierIdx;
+      tierAnnounce = TIERS[newTierIdx].label;
+      tierAnnounceTimer = 90;
+    }
+    if (tierAnnounceTimer > 0) tierAnnounceTimer--;
+
+    // Spawn — respect max on screen
+    if (hearts.length < t.maxOnScreen && ts - lastSpawn > t.spawnMs) {
+      spawnHeart(t.speed);
+      lastSpawn = ts;
+    }
+
+    hearts.forEach(h => { h.y += h.vy; h.x += h.vx; h.vy += 0.05; });
+
+    const missed = hearts.filter(h => h.y > H+30);
+    if (missed.length) {
+      lives -= missed.length;
+      missed.forEach(h => { for(let i=0;i<6;i++) particles.push({x:h.x,y:H-20,vx:(Math.random()-0.5)*4,vy:-(Math.random()*3+1),life:1,color:'rgba(255,80,80,',r:3}); });
+      hearts = hearts.filter(h => h.y <= H+30);
+      if (lives <= 0) { gameOver = true; endHeartsGame(score, prevBest); return; }
+    }
+
+    particles.forEach(p => { p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.life-=0.045; p.vx*=0.95; });
+    particles = particles.filter(p => p.life > 0);
+    floaters.forEach(f => { f.y+=f.vy; f.life-=0.03; });
+    floaters = floaters.filter(f => f.life > 0);
+
+    draw();
+    gameAnimFrame = requestAnimationFrame(update);
+  }
+
+  function draw() {
+    // Background gradient
+    const grad = ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#0d0820'); grad.addColorStop(1,'#1a0535');
+    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
+
+    // Starfield
+    stars.forEach(s => {
+      const op = s.op + Math.sin(frame*0.03 + s.twinkle)*0.15;
+      ctx.fillStyle = `rgba(255,255,255,${op})`;
+      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
+    });
+
+    // Ground line glow
+    const glow = ctx.createLinearGradient(0, H-3, 0, H);
+    glow.addColorStop(0, lives <= 1 ? 'rgba(255,80,80,0.6)' : 'rgba(212,175,55,0.4)');
+    glow.addColorStop(1, 'transparent');
+    ctx.fillStyle = glow; ctx.fillRect(0, H-3, W, 3);
+
+    // Hearts
+    ctx.save();
+    hearts.forEach(h => {
+      ctx.font = `${Math.round(34 * (h.scale||1))}px serif`;
+      ctx.textAlign = 'center';
+      ctx.save();
+      ctx.translate(h.x, h.y);
+      ctx.rotate(h.rot || 0);
+      // shadow glow
+      ctx.shadowColor = 'rgba(255,105,180,0.6)'; ctx.shadowBlur = 10;
+      ctx.fillText(h.emoji, 0, 0);
+      ctx.shadowBlur = 0;
+      ctx.restore();
+    });
+    ctx.restore();
+
+    // Particles
+    particles.forEach(p => {
+      ctx.fillStyle = p.color ? `${p.color}${p.life.toFixed(2)})` : `rgba(255,200,100,${p.life.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
+    });
+
+    // Floaters (+1 text)
+    ctx.textAlign = 'center';
+    floaters.forEach(f => {
+      ctx.fillStyle = `rgba(240,204,85,${f.life})`;
+      ctx.font = `bold 16px Georgia`;
+      ctx.fillText(f.txt, f.x, f.y);
+    });
+
+    // HUD — lives
+    ctx.font = '18px serif'; ctx.textAlign = 'left';
+    for(let i=0;i<3;i++) {
+      ctx.globalAlpha = i < lives ? 1 : 0.2;
+      ctx.fillText('💖', 8 + i*26, 28);
+    }
+    ctx.globalAlpha = 1;
+
+    // Score
+    ctx.fillStyle = '#f0cc55';
+    ctx.font = 'bold 15px Georgia'; ctx.textAlign = 'right';
+    ctx.fillText(`${score}`, W-10, 28);
+    ctx.fillStyle = 'rgba(255,255,255,0.3)';
+    ctx.font = '11px Georgia';
+    ctx.fillText(`best ${Math.max(score,prevBest)}`, W-10, 44);
+
+    // Tier announce banner
+    if (tierAnnounceTimer > 0) {
+      const alpha = Math.min(1, tierAnnounceTimer/20) * Math.min(1, (tierAnnounceTimer)/90*3);
+      ctx.fillStyle = `rgba(212,175,55,${alpha*0.15})`;
+      ctx.fillRect(0, H/2-28, W, 42);
+      ctx.fillStyle = `rgba(240,204,85,${alpha})`;
+      ctx.font = 'bold 17px Georgia'; ctx.textAlign = 'center';
+      ctx.fillText(tierAnnounce, W/2, H/2+6);
+    }
+
+    // Speed indicator dots
+    const t2 = getCurrentTier();
+    const dotColors = ['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
+    const tIdx = TIERS.indexOf(t2);
+    for(let i=0;i<TIERS.length;i++){
+      ctx.beginPath(); ctx.arc(W/2-25+i*10, 38, 4, 0, Math.PI*2);
+      ctx.fillStyle = i<=tIdx ? dotColors[i] : 'rgba(255,255,255,0.12)';
+      ctx.fill();
+    }
+
+    document.getElementById('gameScore').textContent = `Score: ${score}  ·  Best: ${Math.max(score,prevBest)}`;
+  }
+
+  canvas.ontouchstart = canvas.onmousedown = (e) => {
+    e.preventDefault();
+    if (gameOver) return;
+    const rect = canvas.getBoundingClientRect();
+    const scaleX = W/rect.width, scaleY = H/rect.height;
+    const src = e.touches ? e.touches[0] : e;
+    const tx = (src.clientX-rect.left)*scaleX;
+    const ty = (src.clientY-rect.top)*scaleY;
+    let hit = -1;
+    hearts.forEach((h,i) => { if(Math.hypot(h.x-tx,h.y-ty)<h.r+14) hit=i; });
+    if (hit !== -1) {
+      spawnParticles(hearts[hit].x, hearts[hit].y, 'rgba(255,105,180,');
+      spawnFloater(hearts[hit].x, hearts[hit].y-10, '+1 💕');
+      hearts.splice(hit,1);
+      score++;
+      if(score > prevBest) { newBest=true; }
+    }
+  };
+
+  requestAnimationFrame(update);
+}
+
+function endHeartsGame(score, prevBest) {
+  if (gameAnimFrame) { cancelAnimationFrame(gameAnimFrame); gameAnimFrame=null; }
+  const canvas = document.getElementById('gameCanvas');
+  const ctx = canvas.getContext('2d');
+  const best = Math.max(score, prevBest);
+  if (score >= prevBest && score > 0) {
+    localStorage.setItem('covenant_hs_hearts', best);
+    confettiBurst();
+  }
+
+  ctx.fillStyle = 'rgba(10,5,25,0.96)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.textAlign = 'center';
+
+  // Big emoji
+  ctx.font = '52px serif'; ctx.fillText(score > 15 ? '🌟' : '💖', canvas.width/2, 115);
+
+  // Title
+  ctx.fillStyle = '#d4af37';
+  ctx.font = 'bold 20px Georgia';
+  ctx.fillText(score > 15 ? 'Amazing! 🔥' : 'Game Over!', canvas.width/2, 162);
+
+  // Score
+  ctx.fillStyle = '#fff';
+  ctx.font = '15px Georgia';
+  ctx.fillText(`Score: ${score}`, canvas.width/2, 194);
+
+  // Best
+  if (score >= prevBest && score > 0) {
+    ctx.fillStyle = '#f0cc55';
+    ctx.font = 'bold 13px Georgia';
+    ctx.fillText(`✨ New Best: ${best}!`, canvas.width/2, 216);
+  } else {
+    ctx.fillStyle = 'rgba(255,255,255,0.4)';
+    ctx.font = '13px Georgia';
+    ctx.fillText(`Best: ${best}`, canvas.width/2, 216);
+  }
+
+  // Sweet message
+  ctx.fillStyle = 'rgba(249,195,211,0.85)';
+  ctx.font = 'italic 12px Georgia';
+  const msgs = ['Every heart you caught = love returned 💕','The dove is proud of you 🕊️','Tito Boi would have caught them all for you 😄'];
+  ctx.fillText(msgs[score % msgs.length], canvas.width/2, 255);
+
+  // Replay hint
+  ctx.fillStyle = 'rgba(255,255,255,0.25)';
+  ctx.font = '11px Georgia';
+  ctx.fillText('Close and tap again to replay', canvas.width/2, 290);
+}
+
+// ── DOVE FEED GAME ── (polished)
+function initDoveGame() {
+  const canvas = document.getElementById('gameCanvas');
+  const W = 320, H = 460;
+  canvas.width = W; canvas.height = H;
+  const ctx = canvas.getContext('2d');
+  let score = 0, hunger = 80, gameOver = false, lastDrop = 0, frame = 0;
+  let branches = [], particles = [], floaters = [], ripples = [];
+  let prevBest = parseInt(localStorage.getItem('covenant_hs_dove') || '0');
+  const DOVE_X = W/2, DOVE_Y = H - 100;
+
+  const stars = Array.from({length:35},()=>({x:Math.random()*W,y:Math.random()*H*0.7,r:Math.random()*1.2+0.2,twinkle:Math.random()*Math.PI*2}));
+
+  function spawnBranch(spd) {
+    const s = spd || 1.4;
+    branches.push({
+      x: 28+Math.random()*(W-56), y: -28,
+      vy: s+Math.random()*0.9,
+      vx: (Math.random()-0.5)*0.4,
+      rot: (Math.random()-0.5)*0.4,
+      r: 22, scale: 1
+    });
+  }
+
+  function spawnParticles(x,y) {
+    for(let i=0;i<8;i++) {
+      const a=(Math.PI*2/8)*i;
+      particles.push({x,y,vx:Math.cos(a)*(1.5+Math.random()*2.5),vy:Math.sin(a)*(1.5+Math.random()*2.5),life:1,r:3+Math.random()*2});
+    }
+  }
+
+  // Difficulty tiers for dove
+  const DOVE_TIERS = [
+    { at:0,  label:null,              spawnMs:1800, speed:1.4, hungerDrain:0.025, maxOnScreen:2 },
+    { at:8,  label:'Hungrier now! 🫒', spawnMs:1400, speed:1.9, hungerDrain:0.035, maxOnScreen:3 },
+    { at:18, label:'Branches faster! 🌿', spawnMs:1050, speed:2.5, hungerDrain:0.05, maxOnScreen:4 },
+    { at:32, label:'SO HUNGRY!! 🔥',   spawnMs:800,  speed:3.2, hungerDrain:0.07, maxOnScreen:5 },
+    { at:50, label:'FRENZY!! 💫',      spawnMs:580,  speed:4.0, hungerDrain:0.10, maxOnScreen:6 },
+    { at:75, label:'MAX HUNGER 👑',    spawnMs:400,  speed:5.0, hungerDrain:0.14, maxOnScreen:7 },
+  ];
+  let doveTier = 0, doveTierAnnounce = null, doveTierTimer = 0;
+
+  function getDoveTier() {
+    let t = DOVE_TIERS[0];
+    for (const dt of DOVE_TIERS) { if (score >= dt.at) t = dt; }
+    return t;
+  }
+
+  function update(ts) {
+    if(gameOver) return;
+    frame++;
+
+    const t = getDoveTier();
+    const newTierIdx = DOVE_TIERS.filter(x => score >= x.at).length - 1;
+    if (newTierIdx > doveTier && DOVE_TIERS[newTierIdx].label) {
+      doveTier = newTierIdx;
+      doveTierAnnounce = DOVE_TIERS[newTierIdx].label;
+      doveTierTimer = 90;
+    }
+    if (doveTierTimer > 0) doveTierTimer--;
+
+    hunger = Math.max(0, hunger - t.hungerDrain);
+
+    if(branches.length < t.maxOnScreen && ts - lastDrop > t.spawnMs) {
+      spawnBranch(t.speed);
+      lastDrop = ts;
+    }
+
+    branches.forEach(b => { b.y+=b.vy; b.x+=b.vx; b.rot+=0.02; });
+    const missed = branches.filter(b=>b.y>H+30).length;
+    if(missed) {
+      hunger = Math.max(0, hunger - missed*14);
+      branches = branches.filter(b=>b.y<=H+30);
+      if(hunger<=0) { gameOver=true; endDoveGame(score,prevBest); return; }
+    }
+
+    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.life-=0.04;p.vx*=0.94;});
+    particles=particles.filter(p=>p.life>0);
+    floaters.forEach(f=>{f.y+=f.vy;f.life-=0.025;});
+    floaters=floaters.filter(f=>f.life>0);
+    ripples.forEach(r=>{r.scale+=0.12;r.life-=0.06;});
+    ripples=ripples.filter(r=>r.life>0);
+
+    draw();
+    gameAnimFrame = requestAnimationFrame(update);
+  }
+
+  function draw() {
+    // Sky gradient — changes with hunger
+    const sky = ctx.createLinearGradient(0,0,0,H);
+    if(hunger > 50) { sky.addColorStop(0,'#0d1a30'); sky.addColorStop(1,'#1a0535'); }
+    else if(hunger > 25) { sky.addColorStop(0,'#1a1008'); sky.addColorStop(1,'#2a0535'); }
+    else { sky.addColorStop(0,'#200808'); sky.addColorStop(1,'#350510'); }
+    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
+
+    // Stars
+    stars.forEach(s=>{
+      const op=0.2+Math.sin(frame*0.025+s.twinkle)*0.15;
+      ctx.fillStyle=`rgba(255,255,255,${op})`;
+      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
+    });
+
+    // Ground
+    const ground = ctx.createLinearGradient(0,H-40,0,H);
+    ground.addColorStop(0,'rgba(74,124,47,0.3)'); ground.addColorStop(1,'rgba(74,124,47,0.05)');
+    ctx.fillStyle=ground; ctx.fillRect(0,H-40,W,40);
+
+    // Ripples on catch
+    ripples.forEach(r=>{
+      ctx.strokeStyle=`rgba(212,175,55,${r.life*0.5})`;
+      ctx.lineWidth=1.5;
+      ctx.beginPath();ctx.arc(r.x,r.y,r.scale*30,0,Math.PI*2);ctx.stroke();
+    });
+
+    // Dove (bobs up/down, tilts toward nearest branch)
+    const doveY = DOVE_Y + Math.sin(frame*0.05)*5;
+    let nearBranch = branches.length ? branches.reduce((a,b)=>Math.abs(b.x-DOVE_X)<Math.abs(a.x-DOVE_X)?b:a,branches[0]) : null;
+    const tilt = nearBranch ? Math.atan2(nearBranch.x-DOVE_X, 60)*0.2 : 0;
+    ctx.save(); ctx.translate(DOVE_X, doveY); ctx.rotate(tilt);
+    ctx.font='44px serif'; ctx.textAlign='center';
+    ctx.shadowColor='rgba(212,175,55,0.5)'; ctx.shadowBlur=16;
+    ctx.fillText('🕊️',0,0); ctx.shadowBlur=0;
+    ctx.restore();
+
+    // Branches falling
+    branches.forEach(b=>{
+      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot);
+      ctx.font='28px serif'; ctx.textAlign='center';
+      ctx.shadowColor='rgba(74,180,47,0.4)'; ctx.shadowBlur=8;
+      ctx.fillText('🫒',0,0); ctx.shadowBlur=0;
+      ctx.restore();
+    });
+
+    // Particles (gold on catch)
+    particles.forEach(p=>{
+      ctx.fillStyle=`rgba(212,175,55,${p.life.toFixed(2)})`;
+      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
+    });
+
+    // Floaters
+    floaters.forEach(f=>{
+      ctx.fillStyle=`rgba(240,204,85,${f.life.toFixed(2)})`;
+      ctx.font='bold 15px Georgia'; ctx.textAlign='center';
+      ctx.fillText(f.txt,f.x,f.y);
+    });
+
+    // Hunger bar
+    const barX=20, barY=H-22, barW=W-40, barH=10;
+    ctx.fillStyle='rgba(255,255,255,0.08)';
+    ctx.beginPath(); ctx.roundRect(barX,barY,barW,barH,5); ctx.fill();
+    const hColor = hunger>50?'#4af0a0':hunger>25?'#ffd166':'#ff4d6d';
+    ctx.fillStyle=hColor;
+    ctx.shadowColor=hColor; ctx.shadowBlur=hunger>25?0:8;
+    ctx.beginPath(); ctx.roundRect(barX,barY,barW*(hunger/100),barH,5); ctx.fill();
+    ctx.shadowBlur=0;
+
+    // Label
+    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='10px Georgia'; ctx.textAlign='left';
+    ctx.fillText(hunger>50?'well fed 🟢':hunger>25?'getting hungry 🟡':'HUNGRY! 🔴', barX, barY-4);
+
+    // Score HUD
+    ctx.fillStyle='#f0cc55'; ctx.font='bold 15px Georgia'; ctx.textAlign='right';
+    ctx.fillText(`${score}`, W-10, 28);
+    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='11px Georgia';
+    ctx.fillText(`best ${Math.max(score,prevBest)}`, W-10, 44);
+
+    // Tier announce
+    if (doveTierTimer > 0) {
+      const alpha = Math.min(1, doveTierTimer/20) * Math.min(1, (doveTierTimer)/90*3);
+      ctx.fillStyle = `rgba(212,175,55,${alpha*0.15})`;
+      ctx.fillRect(0, H/2-28, W, 42);
+      ctx.fillStyle = `rgba(240,204,85,${alpha})`;
+      ctx.font = 'bold 17px Georgia'; ctx.textAlign = 'center';
+      ctx.fillText(doveTierAnnounce, W/2, H/2+6);
+    }
+
+    // Speed dots
+    const dTierIdx = DOVE_TIERS.filter(x => score >= x.at).length - 1;
+    const dotColors2 = ['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
+    for(let i=0;i<DOVE_TIERS.length;i++){
+      ctx.beginPath(); ctx.arc(W/2-25+i*10, 38, 4, 0, Math.PI*2);
+      ctx.fillStyle = i<=dTierIdx ? dotColors2[i] : 'rgba(255,255,255,0.12)';
+      ctx.fill();
+    }
+
+    document.getElementById('gameScore').textContent=`Fed: ${score}  ·  Best: ${Math.max(score,prevBest)}`;
+  }
+
+  canvas.ontouchstart = canvas.onmousedown = (e) => {
+    e.preventDefault();
+    if(gameOver) return;
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=W/rect.width, scaleY=H/rect.height;
+    const src=e.touches?e.touches[0]:e;
+    const tx=(src.clientX-rect.left)*scaleX;
+    const ty=(src.clientY-rect.top)*scaleY;
+    let hit=-1;
+    branches.forEach((b,i)=>{ if(Math.hypot(b.x-tx,b.y-ty)<b.r+14) hit=i; });
+    if(hit!==-1){
+      spawnParticles(branches[hit].x, branches[hit].y);
+      floaters.push({x:branches[hit].x, y:branches[hit].y-10, vy:-1.2, life:1, txt:'+🫒 yum!'});
+      ripples.push({x:DOVE_X, y:DOVE_Y, scale:0.2, life:1});
+      branches.splice(hit,1);
+      score++;
+      hunger=Math.min(100,hunger+18);
+    }
+  };
+
+  requestAnimationFrame(update);
+}
+
+function endDoveGame(score, prevBest) {
+  if(gameAnimFrame){cancelAnimationFrame(gameAnimFrame);gameAnimFrame=null;}
+  const canvas=document.getElementById('gameCanvas');
+  const ctx=canvas.getContext('2d');
+  const best=Math.max(score,prevBest);
+  if(score>=prevBest && score>0) {
+    localStorage.setItem('covenant_hs_dove', best);
+    confettiBurst();
+  }
+
+  ctx.fillStyle='rgba(10,5,25,0.96)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+  ctx.textAlign='center';
+  ctx.font='52px serif'; ctx.fillText(score>20?'🌟':'🕊️', canvas.width/2, 115);
+  ctx.fillStyle='#d4af37'; ctx.font='bold 20px Georgia';
+  ctx.fillText(score>20?'The Dove is Thriving! 🌿':'Dove got hungry...', canvas.width/2, 162);
+  ctx.fillStyle='#fff'; ctx.font='15px Georgia';
+  ctx.fillText(`Fed: ${score} times`, canvas.width/2, 194);
+  if(score>=prevBest && score>0){
+    ctx.fillStyle='#f0cc55'; ctx.font='bold 13px Georgia';
+    ctx.fillText(`✨ New Best: ${best}!`, canvas.width/2, 216);
+  } else {
+    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='13px Georgia';
+    ctx.fillText(`Best: ${best}`, canvas.width/2, 216);
+  }
+  ctx.fillStyle='rgba(249,195,211,0.85)'; ctx.font='italic 12px Georgia';
+  const msgs=['Like you feed the dove, Tito Boi feeds your heart 💕','Even doves need love. So do you, Jay 🕊️','She ate well because of you today 🫒'];
+  ctx.fillText(msgs[score%msgs.length], canvas.width/2, 255);
+  ctx.fillStyle='rgba(255,255,255,0.25)'; ctx.font='11px Georgia';
+  ctx.fillText('Close and tap again to replay', canvas.width/2, 290);
+}
+
+// ── MEMORY MATCH GAME ── (polished)
+function initMemoryGame(gridSize) {
+  const canvas=document.getElementById('gameCanvas');
+  // Parse grid size
+  const [colsS, rowsS] = (gridSize||'4x4').split('x').map(Number);
+  const cols=colsS, rows=rowsS;
+  const totalCards = cols * rows; // must be even
+  const allEmojis=['💖','🕊️','🌸','💍','✝️','👑','🌹','💌','🌟','💒'];
+  const pairsNeeded = totalCards / 2;
+  const emojis = allEmojis.slice(0, pairsNeeded);
+  const deck=[...emojis,...emojis].sort(()=>Math.random()-0.5);
+
+  // Fit canvas: make cards fill nicely
+  const W=320;
+  const gap=6, ox=10;
+  const cw = Math.floor((W - ox*2 - gap*(cols-1)) / cols);
+  const ch = Math.round(cw * 1.28);
+  const oy=36;
+  const H = oy + rows*(ch+gap) + 16;
+  canvas.width=W; canvas.height=H;
+  const ctx=canvas.getContext('2d');
+
+  let flipped=[], matched=[], moves=0, gameWon=false, lockBoard=false, frame=0;
+  let flipAnim={}, particles=[], shakeCards=[];
+  const bestKey = `covenant_hs_memory_${gridSize||'4x4'}`;
+  let prevBest=parseInt(localStorage.getItem(bestKey)||'999');
+
+  function cardX(i){ return ox+(i%cols)*(cw+gap); }
+  function cardY(i){ return oy+Math.floor(i/cols)*(ch+gap); }
+
+  // Init flip anims
+  for(let i=0;i<totalCards;i++) flipAnim[i]={scaleX:1, flipping:false, progress:0};
+
+  function spawnMatchParticles(x,y){
+    for(let i=0;i<12;i++){
+      const a=(Math.PI*2/12)*i;
+      particles.push({x:x+cw/2,y:y+ch/2,vx:Math.cos(a)*(2+Math.random()*3),vy:Math.sin(a)*(2+Math.random()*3),life:1,r:3+Math.random()*3,color:'rgba(212,175,55,'});
+    }
+  }
+
+  function drawCard(i) {
+    const x=cardX(i), y=cardY(i);
+    const isFlipped=flipped.includes(i)||matched.includes(i);
+    const isMatched=matched.includes(i);
+    const anim=flipAnim[i];
+    const shake=shakeCards.includes(i)?Math.sin(frame*0.8)*3:0;
+
+    ctx.save();
+    ctx.translate(x+cw/2+shake, y+ch/2);
+    ctx.scale(anim.scaleX||1, 1);
+    ctx.translate(-cw/2, -ch/2);
+
+    // Card shadow
+    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=8; ctx.shadowOffsetY=3;
+
+    // Card bg
+    if(isMatched){
+      const g=ctx.createLinearGradient(0,0,cw,ch);
+      g.addColorStop(0,'rgba(74,160,47,0.25)'); g.addColorStop(1,'rgba(212,175,55,0.2)');
+      ctx.fillStyle=g;
+    } else if(isFlipped){
+      const g=ctx.createLinearGradient(0,0,cw,ch);
+      g.addColorStop(0,'rgba(212,175,55,0.25)'); g.addColorStop(1,'rgba(100,30,120,0.3)');
+      ctx.fillStyle=g;
+    } else {
+      const g=ctx.createLinearGradient(0,0,cw,ch);
+      g.addColorStop(0,'rgba(80,20,100,0.6)'); g.addColorStop(1,'rgba(40,8,60,0.8)');
+      ctx.fillStyle=g;
+    }
+    ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.fill();
+    ctx.shadowBlur=0;
+
+    // Border
+    ctx.strokeStyle=isMatched?'rgba(74,240,64,0.7)':isFlipped?'rgba(212,175,55,0.8)':'rgba(255,255,255,0.1)';
+    ctx.lineWidth=isMatched||isFlipped?1.8:1;
+    ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.stroke();
+
+    // Matched shimmer
+    if(isMatched){
+      ctx.fillStyle=`rgba(212,175,55,${0.06+Math.sin(frame*0.08+i)*0.04})`;
+      ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.fill();
+    }
+
+    // Content
+    ctx.textAlign='center';
+    if(isFlipped||isMatched){
+      ctx.font=`${isMatched?34:30}px serif`;
+      ctx.shadowColor='rgba(255,200,100,0.4)'; ctx.shadowBlur=isMatched?12:0;
+      ctx.fillText(deck[i], cw/2, ch/2+12);
+      ctx.shadowBlur=0;
+    } else {
+      // Back design
+      ctx.fillStyle='rgba(212,175,55,0.15)';
+      ctx.font='22px serif'; ctx.fillText('💛', cw/2, ch/2+8);
+      // Decorative corners
+      ctx.fillStyle='rgba(212,175,55,0.15)';
+      ctx.font='10px serif';
+      ctx.fillText('✦', 10, 14); ctx.fillText('✦', cw-10, 14);
+      ctx.fillText('✦', 10, ch-4); ctx.fillText('✦', cw-10, ch-4);
+    }
+    ctx.restore();
+  }
+
+  function draw() {
+    frame++;
+    const grad=ctx.createLinearGradient(0,0,0,H);
+    grad.addColorStop(0,'#0d0820'); grad.addColorStop(1,'#1a0535');
+    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
+
+    // Title bar
+    ctx.fillStyle='rgba(212,175,55,0.08)'; ctx.fillRect(0,0,W,30);
+    ctx.fillStyle='rgba(212,175,55,0.6)'; ctx.font='11px Georgia'; ctx.textAlign='center';
+    ctx.fillText(`Moves: ${moves}  ·  Pairs: ${matched.length/2}/${totalCards/2}  ·  Best: ${prevBest<999?prevBest+'m':'--'}`, W/2, 20);
+
+    for(let i=0;i<totalCards;i++) drawCard(i);
+
+    // Particles
+    particles.forEach(p=>{
+      ctx.fillStyle=`${p.color}${p.life.toFixed(2)})`;
+      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
+    });
+    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=0.04;p.vx*=0.93;});
+    particles=particles.filter(p=>p.life>0);
+
+    document.getElementById('gameScore').textContent=`Moves: ${moves}  ·  Pairs: ${matched.length/2}/8`;
+    if(!gameWon) gameAnimFrame=requestAnimationFrame(draw);
+  }
+
+  canvas.ontouchstart=canvas.onmousedown=(e)=>{
+    e.preventDefault();
+    if(lockBoard||gameWon) return;
+    const rect=canvas.getBoundingClientRect();
+    const scaleX=W/rect.width, scaleY=H/rect.height;
+    const src=e.touches?e.touches[0]:e;
+    const tx=(src.clientX-rect.left)*scaleX;
+    const ty=(src.clientY-rect.top)*scaleY;
+
+    for(let i=0;i<16;i++){
+      const x=cardX(i)+10, y=cardY(i);
+      if(tx>=x&&tx<=x+cw&&ty>=y&&ty<=y+ch){
+        if(flipped.includes(i)||matched.includes(i)||lockBoard) return;
+        // Flip animation
+        flipAnim[i]={scaleX:1,flipping:true};
+        let prog=0;
+        const flipIt=setInterval(()=>{
+          prog+=0.15;
+          flipAnim[i].scaleX=Math.cos(prog);
+          if(prog>=Math.PI/2){ clearInterval(flipIt); flipAnim[i].scaleX=1; flipAnim[i].flipping=false; }
+        },16);
+
+        flipped.push(i); moves++;
+
+        if(flipped.length===2){
+          lockBoard=true;
+          setTimeout(()=>{
+            if(deck[flipped[0]]===deck[flipped[1]]){
+              matched.push(...flipped);
+              spawnMatchParticles(cardX(flipped[0]), cardY(flipped[0]));
+              spawnMatchParticles(cardX(flipped[1]), cardY(flipped[1]));
+              if(matched.length===totalCards){ gameWon=true; endMemoryGame(moves,prevBest,bestKey,gridSize); }
+            } else {
+              // Shake wrong cards
+              shakeCards=[...flipped];
+              setTimeout(()=>shakeCards=[],400);
+            }
+            flipped=[]; lockBoard=false;
+          },750);
+        }
+        break;
+      }
+    }
+  };
+
+  draw();
+}
+
+function endMemoryGame(moves, prevBest, bestKey, gridSize) {
+  if(gameAnimFrame){cancelAnimationFrame(gameAnimFrame);gameAnimFrame=null;}
+  const canvas=document.getElementById('gameCanvas');
+  const ctx=canvas.getContext('2d');
+  const isNew=moves<prevBest;
+  const best=isNew?moves:prevBest;
+  const bk = bestKey || 'covenant_hs_memory_4x4';
+  if(best<999) localStorage.setItem(bk, best);
+  else localStorage.setItem(bk, moves);
+  confettiBurst();
+
+  setTimeout(()=>{
+    ctx.fillStyle='rgba(10,5,25,0.97)'; ctx.fillRect(0,0,canvas.width,canvas.height);
+    ctx.textAlign='center';
+    ctx.font='52px serif'; ctx.fillText('💌', canvas.width/2, 110);
+    ctx.fillStyle='#d4af37'; ctx.font='bold 20px Georgia';
+    ctx.fillText('You found them all! 🌸', canvas.width/2, 155);
+    ctx.fillStyle='#fff'; ctx.font='15px Georgia';
+    ctx.fillText(`Completed in ${moves} moves`, canvas.width/2, 182);
+    if(isNew){
+      ctx.fillStyle='#f0cc55'; ctx.font='bold 13px Georgia';
+      ctx.fillText(`✨ New Best: ${moves} moves!`, canvas.width/2, 204);
+    } else {
+      ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='13px Georgia';
+      ctx.fillText(`Best: ${best<999?best+'moves':'first win!'}`, canvas.width/2, 204);
+    }
+    // Love letter reveal
+    ctx.fillStyle='rgba(212,175,55,0.3)';
+    ctx.beginPath(); ctx.roundRect(30, 225, canvas.width-60, 90, 12); ctx.fill();
+    ctx.strokeStyle='rgba(212,175,55,0.4)'; ctx.lineWidth=1;
+    ctx.beginPath(); ctx.roundRect(30, 225, canvas.width-60, 90, 12); ctx.stroke();
+    ctx.fillStyle='rgba(249,195,211,0.95)'; ctx.font='italic 12px Georgia';
+    const lines=['Just like you matched every pair,','God matched Tito Boi with you.','You are each other\'s perfect pair. 💍'];
+    lines.forEach((l,i)=>ctx.fillText(l, canvas.width/2, 250+i*22));
+    ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='11px Georgia';
+    ctx.fillText('Close and tap again to replay', canvas.width/2, 340);
+  },400);
+}
+
 // ═══════════════════════════════════════════════
 //  SERVICE WORKER (inline)
 // ═══════════════════════════════════════════════
@@ -1212,5 +2490,12 @@ if ('serviceWorker' in navigator) {
   navigator.serviceWorker.register(swUrl).catch(() => {});
 }
 </script>
+<!-- ══ GAME MODAL ══ -->
+<div id="gameModal">
+  <div class="gm-title" id="gmTitle">Catch the Hearts 💖</div>
+  <div id="gameScore">Score: 0 | Best: 0</div>
+  <canvas id="gameCanvas" width="320" height="420"></canvas>
+  <button id="gameClose" onclick="closeGame()">✕ Close</button>
+</div>
 </body>
 </html>
