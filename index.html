@@ -262,6 +262,16 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 .cr-letter-text{font-family:Georgia,serif;font-size:0.82rem;color:rgba(240,230,208,0.9);line-height:1.8;font-style:italic;margin-bottom:8px;}
 .cr-letter-from{font-size:0.7rem;color:rgba(212,175,55,0.7);letter-spacing:0.08em;text-align:right;}
 .cr-divider{font-size:0.58rem;letter-spacing:0.2em;color:rgba(212,175,55,0.4);text-transform:uppercase;margin:4px 0 2px;}
+
+/* ── STORYLINE HEADERS ── */
+.sl-header{display:flex;align-items:center;gap:10px;padding:6px 4px 4px;}
+.sl-badge{font-family:'Press Start 2P',monospace;font-size:0.52rem;color:#d4af37;background:rgba(212,175,55,0.1);border:1px solid rgba(212,175,55,0.3);border-radius:100px;padding:4px 10px;white-space:nowrap;}
+.sl-badge-locked{color:rgba(255,255,255,0.25);background:rgba(255,255,255,0.04);border-color:rgba(255,255,255,0.1);}
+.sl-title{font-family:Georgia,serif;font-size:0.85rem;color:rgba(255,255,255,0.5);font-style:italic;}
+.sl-locked-header .sl-title{color:rgba(255,255,255,0.2);}
+.chapter-locked{opacity:0.5;cursor:not-allowed!important;}
+.chapter-locked:active{transform:none!important;}
+.ch-banner-locked{background:linear-gradient(90deg,#0a1628,rgba(255,255,255,0.1),#0a1628);}
 </style>
 </head>
 <body>
@@ -421,12 +431,6 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
     <div class="cr-letter-text" id="crLetterMsg"></div>
     <div class="cr-letter-from" id="crLetterFrom"></div>
   </div>
-  <div class="cr-divider">✦ Your unlock code ✦</div>
-  <div class="cr-code-box">
-    <div class="cr-code-label">Save this code</div>
-    <div class="cr-code" id="crCode">CHP1</div>
-  </div>
-  <div class="cr-hint">Go to Home → "Got a code from Tito Boi?" and enter it 💕</div>
   <button class="cr-btn" onclick="closeCodeReveal()">Got it! 💌</button>
 </div>
 
@@ -1567,42 +1571,35 @@ function closeHatch(){
 // ═══════════════════════════════════════════════
 
 var CHAPTERS = [
+  // ═══ STORYLINE 1 ═══
   {
     id: 1,
+    storyline: 1,
     title: "Where I Came From",
-    preview: "A place called HappyLand that was anything but happy...",
-    code: "Chp1",
+    preview: "I grew up in a place called HappyLand, Tondo...",
+    code: "CHP1",
     unlockKey: "story_ch1_unlocked",
     quizLockKey: "story_ch1_lock",
     content: [
-      {type:'narrator-intro'},
-      {type:'p', text:'Tito Boi\'s story started like this.'},
-      {type:'p', text:'There is a place in Tondo called <span class="highlight">HappyLand</span>. The name sounds like something out of a fairy tale. The reality was anything but.'},
-      {type:'p', text:'Growing up there meant walking past drug users every single day. The streets were their home, the corners their kingdom. It was the kind of place where making the wrong friends at the wrong time could cost you everything — your future, your freedom, your life.'},
-      {type:'quote', text:'"I am thankful that I picked the right choice."'},
-      {type:'p', text:'And he did. When the world around him made it easy to go the wrong way, he chose differently. That is not something to take lightly. That takes character.'},
-      {type:'p', text:'He grew up first with his <span class="highlight">Lola</span> — one of the most important people in his life. A woman he prays for every day, hoping that when the season of abundance finally comes, she will still be there to share it. That prayer alone tells you everything about his heart.'},
-      {type:'p', text:'Later he grew up with his <span class="highlight">Mom</span>. His family was gentle. They corrected him with love, not harshness. In a place like HappyLand, that kind of home was a rare and precious thing.'},
-      {type:'p', text:'He was the kind of kid who understood things faster than most. Outgoing, outstanding, sharp in a way that stood out. But he will tell you himself — it is a gift and a curse. To understand complex things easily means you also feel the weight of the world earlier than you should.'},
-      {type:'quote', text:'"Sometimes I wish I was dumber, to not understand a specific thing."'},
-      {type:'p', text:'The moment that shaped him most? He was <span class="highlight">five years old</span> sitting with his Dad, talking about life. Not cartoons. Not games. Life. And he understood. Every word.'},
-      {type:'p', text:'His father taught him that nothing should be taken for granted. That a single accident can change everything. That you carry yourself with awareness because the world does not owe you safety.'},
-      {type:'quote', text:'"Dad\'s advice is the main reason what made me who I am now — because without it, I doubt I\'d still be alive by now."'},
-      {type:'narrator-close', text:'That is where it all began. A hard place, a wise father, a gentle family — and a boy who chose right when he could have chosen wrong.'},
+      {type:'p', text:"I grew up in HappyLand, Tondo. It was a really dark place — basically all the drug users and dealers used the area I lived in as their hideout. You could go out and see drug users left and right, and being a rebel from your family was basically the norm. I'm thankful that I picked the right choice."},
+      {type:'p', text:"My family was lovely. They treated me with gentleness and corrected my wrongs the right way. I grew up with my Lola first, and later on with my Mom. My Lola is one of the most important people in my life, and I pray that when I finally make it, she's still here to see it."},
+      {type:'p', text:"I was the kind of kid who was outgoing and outstanding. I picked things up faster than average, and let me tell you — it's a gift and a curse to know a lot and understand complex things easily. It might sound great but I'd say otherwise, because sometimes I wish I was a little dumber just to not understand certain things."},
+      {type:'quote', text:'"Sometimes I wish I was dumber, just to not understand a specific thing."'},
+      {type:'p', text:"One thing that really shaped me was the times when me and my Dad talked about life. I was 5 years old at that time but I already understood how life worked. We never took anything for granted because we knew life was hard and a single accident could change everything. Dad's advice is the main reason I am who I am now — because without it, I honestly doubt I'd still be alive today."},
     ],
     questions: [
       {
-        q: "What is the name of the place in Tondo where Tito Boi grew up?",
+        q: "What is the name of the place in Tondo where I grew up?",
         opts: ["SunnyLand", "HappyLand", "GreenLand", "SafePlace"],
         ans: 1
       },
       {
-        q: "Who is one of the most important people in Tito Boi's life that he prays for every day?",
-        opts: ["His Mom", "His Dad", "His Lola", "His bestfriend"],
+        q: "Who is one of the most important people in my life that I pray for every day?",
+        opts: ["My Mom", "My Dad", "My Lola", "My bestfriend"],
         ans: 2
       },
       {
-        q: "How old was Tito Boi when he had that life-changing talk with his Dad about how the world works?",
+        q: "How old was I when my Dad and I had those life-changing talks?",
         opts: ["3 years old", "7 years old", "10 years old", "5 years old"],
         ans: 3
       }
@@ -1610,39 +1607,31 @@ var CHAPTERS = [
   },
   {
     id: 2,
+    storyline: 1,
     title: "The Faith That Shaped Me",
-    preview: "He ran to God when he had no one else to run to...",
+    preview: "Faith became real to me when Dad died...",
     code: "Chapter2completed",
     unlockKey: "story_ch2_unlocked",
     quizLockKey: "story_ch2_lock",
     content: [
-      {type:'narrator-intro'},
-      {type:'p', text:'This is the part of Tito Boi\'s story that required the most courage to tell.'},
-      {type:'p', text:'There is a version of faith that is inherited — passed down like a family name, worn like a uniform on Sundays. And then there is the kind that is forged in fire.'},
-      {type:'p', text:'For most of his life, Tito Boi was honest about where he stood. He believed there was a <span class="highlight">Creator</span> — something behind the universe, some force that set it all in motion. But he did not know who to believe in. He did not call himself religious. He called himself real.'},
-      {type:'p', text:'Then his <span class="highlight">Dad died</span>.'},
-      {type:'quote', text:'"I ran and cried to God when Dad died — because out of all the people, why Dad?"'},
-      {type:'p', text:'That question. <em>Why Dad?</em> It is the kind of question that breaks people. The kind that sends some running away from God entirely. But not him. He ran toward God. Not because he had the answers — but because he had nowhere else to go with the weight of it.'},
-      {type:'p', text:'That is what real faith looks like. Not the clean, comfortable kind. The kind born in the middle of the night when you are asking why and the silence is unbearable and you fall to your knees anyway.'},
-      {type:'p', text:'Even now, years later, the question still lives in him. <span class="highlight">"Why Dad?"</span> still echoes. He does not pretend to have made peace with it. He does not perform closure he has not reached. He carries it — honestly, openly, humanly.'},
-      {type:'quote', text:'"It\'s still something that bothers me everyday. A question left unanswered."'},
-      {type:'p', text:'And yet he still prays. Still believes. Still chases God. Not because everything makes sense — but because in the hardest moment of his life, God was the only one he could turn to. And something in that moment became unshakeable.'},
-      {type:'p', text:'He also carries the weight of the <span class="highlight">"what ifs."</span> What if his Dad had not died? What turns would his life have taken? These are questions he still seeks answers for — and maybe that seeking is itself a form of faith.'},
-      {type:'narrator-close', text:'His faith is not a performance. It is a wound that became a foundation. And that is the kind of faith that lasts.'},
+      {type:'p', text:"Faith became real to me when Dad died. Before that, I was basically an atheist who believed there was a Creator but wasn't quite sure who to believe in."},
+      {type:'p', text:"It changed how I live. I ran and cried to God when Dad died — because out of all people, why Dad? It's still something that bothers me every day. A question left unanswered."},
+      {type:'quote', text:'"Why Dad? Out of all people — why him?"'},
+      {type:'p', text:"And maybe — what if none of those events happened? Maybe some turns in my life would have been different. That's still something in me that I seek an answer for. I don't know if I'll ever get it. But I still believe. And I think that says something."},
     ],
     questions: [
       {
-        q: "Before his Dad died, how would you describe Tito Boi's belief?",
-        opts: ["He was a devout Christian", "He believed in a Creator but was not sure who", "He did not believe in anything", "He went to church every Sunday"],
+        q: "Before my Dad died, how would you describe my belief in God?",
+        opts: ["I was a devout Christian", "I believed in a Creator but wasn't sure who", "I didn't believe in anything", "I went to church every Sunday"],
         ans: 1
       },
       {
-        q: "What did Tito Boi do when his Dad died?",
-        opts: ["He lost his faith completely", "He ran and cried to God", "He became angry and distant", "He moved away from home"],
+        q: "What did I do when my Dad died?",
+        opts: ["I lost my faith completely", "I ran and cried to God", "I became angry and distant", "I moved away from home"],
         ans: 1
       },
       {
-        q: "What question still bothers Tito Boi every single day?",
+        q: "What question still bothers me every single day?",
         opts: ["Why did I grow up in Tondo?", "Why did God let me suffer?", "Why Dad — out of all people?", "Why didn't I say goodbye?"],
         ans: 2
       }
@@ -1650,43 +1639,76 @@ var CHAPTERS = [
   },
   {
     id: 3,
+    storyline: 1,
     title: "Before You",
-    preview: "Three names. Three lessons. One realization that changed everything...",
+    preview: "I had 3 past relationships. Each one taught me something...",
     code: "StorylineCompleted",
     unlockKey: "story_ch3_unlocked",
     quizLockKey: "story_ch3_lock",
     content: [
-      {type:'narrator-intro'},
-      {type:'p', text:'Before you, there were three. Tito Boi asked me to tell you this part honestly. So here it is.'},
-      {type:'p', text:'The first was <span class="highlight">Francheska</span>. She was great. Beautiful, same goals, the kind of person you could see a future with — if you were older, more grounded, more ready. But they were young. Too young to hold something that needed steadiness. She ghosted him. No explanation. Just silence where a person used to be.'},
-      {type:'p', text:'The second was <span class="highlight">Cassandra</span> — an LDR. What was remarkable about this one is that despite their age, they were both unusually mature. They understood how the world worked. It lasted a year. Then she found someone closer — a classmate. Distance won.'},
-      {type:'quote', text:'"We were both mature enough and we still were young, but we understood how the world works and how it revolves."'},
-      {type:'p', text:'The third was the hardest. <span class="highlight">Angel</span>. It seemed perfect at first. Until, slowly, he began to realize — he was a rebound. Not a choice. A placeholder for someone else\'s healing.'},
-      {type:'p', text:'That one left a mark. Not just hurt — but a quiet decision. To keep his circle small. To stop letting people in so easily. To guard his heart a little more carefully.'},
-      {type:'quote', text:'"Most people come and go. After that I try to not get attached to people."'},
-      {type:'p', text:'So he grew quieter around strangers. Distant. Careful. The kind of person who barely talks when you first meet him — but when he trusts you? When he feels <span class="highlight">safe</span> with you? His mouth can barely stop talking. His goofy side comes out. The real him shows up.'},
-      {type:'p', text:'After everything, he knew exactly what he wanted. Not a feeling. A <span class="highlight">choice</span>.'},
-      {type:'quote', text:'"Loving someone means choosing them everyday — no matter how hard it is, or no matter how unlovable they become."'},
-      {type:'p', text:'He wanted someone simple. Someone he can trust, lean on, be himself with. Someone who chases God with him. Someone who will love him for who he is — not who he is <em>with</em> them.'},
-      {type:'narrator-close', text:'He waited. He healed. He chose wisely. And then — he found you, Jay. 🕊️'},
+      {type:'p', text:"I had 3 past relationships. The first one was Francheska. She was great and all — we had the same goals, she was beautiful too, but we were too young to take things seriously. She ghosted me."},
+      {type:'p', text:"The second was Cassandra, my LDR. We were both mature enough — and funny enough, we were still young — but we both understood how the world works. It lasted about a year until she found someone better and more accessible, one of her classmates."},
+      {type:'p', text:"The hardest one was Angel. My third relationship. It was great and it seemed perfect — until I slowly realized I was being used as a rebound."},
+      {type:'quote', text:'"Most people come and go. After that, I try not to get too attached."'},
+      {type:'p', text:"What I learned is that most people come and go. After that I grew distant. Whenever I get to know someone, my goofy side only comes out when I feel like I can truly be ME with them. It's also one of the reasons I keep my circle small — not a lot of people understand me. When we're not close, I barely talk. But when I feel safe around you, my mouth can barely stop."},
+      {type:'p', text:"After all that, I realized I wanted someone mature enough to know that love isn't a game. That love is a choice — not just a feeling. Because I believe that loving someone means choosing them every day, no matter how hard it is, no matter how unlovable they become."},
+      {type:'quote', text:'"I wanted someone simple. Someone I can trust, lean on, be myself with. Someone who chases God with me. Someone who will love me for who I am — not who I am with them."'},
     ],
     questions: [
       {
-        q: "What was the name of Tito Boi's first relationship?",
+        q: "What was the name of my first relationship?",
         opts: ["Cassandra", "Angel", "Francheska", "Jay"],
         ans: 2
       },
       {
-        q: "Why did his relationship with Cassandra end?",
-        opts: ["They had different goals", "She found someone closer — a classmate", "He moved away", "They fought constantly"],
+        q: "Why did my relationship with Cassandra end?",
+        opts: ["We had different goals", "She found someone closer — a classmate", "I moved away", "We fought constantly"],
         ans: 1
       },
       {
-        q: "How does Tito Boi describe love?",
+        q: "How do I describe love?",
         opts: ["A feeling that comes and goes", "A choice you make every single day", "Something that happens naturally", "A game you have to win"],
         ans: 1
       }
     ]
+  },
+
+  // ═══ STORYLINE 2 — LOCKED ═══
+  {
+    id: 4,
+    storyline: 2,
+    locked: true,
+    title: "My Dreams & Where I'm Going",
+    preview: "There are things I want to build, places I want to go, and a version of myself I'm still becoming...",
+    code: null,
+    unlockKey: "story_ch4_unlocked",
+    quizLockKey: "story_ch4_lock",
+    content: [],
+    questions: []
+  },
+  {
+    id: 5,
+    storyline: 2,
+    locked: true,
+    title: "The Man I Want to Be",
+    preview: "Not just for me. For you. For us. For the family I want to build someday...",
+    code: null,
+    unlockKey: "story_ch5_unlocked",
+    quizLockKey: "story_ch5_lock",
+    content: [],
+    questions: []
+  },
+  {
+    id: 6,
+    storyline: 2,
+    locked: true,
+    title: "Why You, Jay",
+    preview: "Out of everyone — why you. I want you to know the answer to that...",
+    code: null,
+    unlockKey: "story_ch6_unlocked",
+    quizLockKey: "story_ch6_lock",
+    content: [],
+    questions: []
   }
 ];
 
@@ -1698,12 +1720,24 @@ var quizState = { chIdx:0, qIdx:0, strikes:0, answers:[] };
 function renderStory(){
   var el = document.getElementById('storyList');
   if(!el) return;
-  el.innerHTML = CHAPTERS.map(function(ch){
-    var unlocked = localStorage.getItem(ch.unlockKey) === '1';
+  var html = '';
+
+  // Storyline 1
+  html += '<div class="sl-header"><span class="sl-badge">Storyline 1</span><span class="sl-title">The Beginning</span></div>';
+  CHAPTERS.filter(function(ch){ return ch.storyline===1; }).forEach(function(ch){
+    var unlocked = localStorage.getItem(ch.unlockKey)==='1';
     var lockedToday = isQuizLockedToday(ch);
-    var statusTxt = unlocked ? '✓ Letter unlocked' : (lockedToday ? '🔒 Try again tomorrow' : '→ Read to unlock');
-    var statusCls = unlocked ? 'done' : (lockedToday ? 'lock' : 'open');
-    return '<div class="chapter-card '+(unlocked?'unlocked':'')+'" onclick="openChapter('+ch.id+')">'
+    // Check if previous chapter is unlocked (reading order)
+    var prevUnlocked = true;
+    if(ch.id > 1){
+      var prevKey = null;
+      for(var pi2=0;pi2<CHAPTERS.length;pi2++){ if(CHAPTERS[pi2].id===ch.id-1){ prevKey=CHAPTERS[pi2].unlockKey; break; } }
+      if(prevKey) prevUnlocked = localStorage.getItem(prevKey)==='1';
+    }
+    var orderLocked = ch.id > 1 && !prevUnlocked;
+    var statusTxt = unlocked ? '✓ Letter unlocked' : (orderLocked ? '🔒 Read previous chapter first' : (lockedToday ? '🔒 Try again tomorrow' : '→ Read to unlock'));
+    var statusCls = unlocked ? 'done' : (orderLocked || lockedToday ? 'lock' : 'open');
+    html += '<div class="chapter-card '+(unlocked?'unlocked':'')+(orderLocked?' chapter-locked':'')+'" onclick="openChapter('+ch.id+')">'
       +'<div class="ch-banner"></div>'
       +'<div class="ch-body">'
       +'<div class="ch-num">Chapter '+ch.id+'</div>'
@@ -1712,10 +1746,25 @@ function renderStory(){
       +'<div class="ch-footer">'
       +'<span class="ch-status '+statusCls+'">'+statusTxt+'</span>'
       +'<span class="ch-arrow">›</span>'
-      +'</div>'
-      +'</div>'
-      +'</div>';
-  }).join('');
+      +'</div></div></div>';
+  });
+
+  // Storyline 2 — locked section
+  html += '<div class="sl-header sl-locked-header"><span class="sl-badge sl-badge-locked">Storyline 2</span><span class="sl-title">🔒 Coming Soon</span></div>';
+  CHAPTERS.filter(function(ch){ return ch.storyline===2; }).forEach(function(ch){
+    html += '<div class="chapter-card chapter-locked">'
+      +'<div class="ch-banner ch-banner-locked"></div>'
+      +'<div class="ch-body">'
+      +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
+      +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
+      +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
+      +'<div class="ch-footer">'
+      +'<span class="ch-status lock">🔒 Locked — Storyline 2</span>'
+      +'<span class="ch-arrow" style="opacity:0.2">›</span>'
+      +'</div></div></div>';
+  });
+
+  el.innerHTML = html;
 }
 
 function isQuizLockedToday(ch){
@@ -1732,6 +1781,16 @@ function openChapter(id){
   var ch = null;
   for(var ci=0;ci<CHAPTERS.length;ci++){ if(CHAPTERS[ci].id===id){ ch=CHAPTERS[ci]; break; } }
   if(!ch) return;
+  if(ch.locked){ showToast('This chapter is part of Storyline 2 — coming soon! 🔒'); return; }
+  // Enforce reading order within Storyline 1
+  if(ch.storyline === 1 && ch.id > 1){
+    var prevCh = null;
+    for(var pi=0;pi<CHAPTERS.length;pi++){ if(CHAPTERS[pi].id===ch.id-1){ prevCh=CHAPTERS[pi]; break; } }
+    if(prevCh && localStorage.getItem(prevCh.unlockKey) !== '1'){
+      showToast('Read Chapter '+(ch.id-1)+' first! 📖');
+      return;
+    }
+  }
   currentChapter = ch;
   // Build reader
   document.getElementById('readerTitle').textContent = 'Chapter '+ch.id+' — '+ch.title;
