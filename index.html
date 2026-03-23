@@ -451,6 +451,74 @@
   .final-title { font-size: 1.4rem; color: var(--gold); font-weight: bold; line-height: 1.4; }
   .final-verse { font-style: italic; font-size: 0.8rem; color: rgba(255,255,255,0.7); max-width: 320px; line-height: 1.8; }
 
+  /* ── EGG BUBBLE ── */
+  @keyframes bubbleIn {
+    0%  { opacity:0; transform:translateX(-50%) scale(0.7) translateY(10px); }
+    100%{ opacity:1; transform:translateX(-50%) scale(1) translateY(0); }
+  }
+  @keyframes bubbleOut {
+    0%  { opacity:1; transform:translateX(-50%) scale(1); }
+    100%{ opacity:0; transform:translateX(-50%) scale(0.8) translateY(-10px); }
+  }
+
+  /* ── SECRET MESSAGE MODAL ── */
+  #secretModal {
+    display:none;
+    position:fixed;inset:0;
+    z-index:700;
+    background:rgba(0,0,0,0.85);
+    align-items:center;justify-content:center;
+    flex-direction:column;
+    padding:2rem;
+  }
+  #secretModal.show { display:flex; }
+  .secret-box {
+    background:linear-gradient(160deg,#2a0630,#4a0e4f);
+    border:2px solid var(--gold);
+    border-radius:24px;
+    padding:2rem 2.2rem;
+    max-width:340px;width:100%;
+    text-align:center;
+    animation:milePop 0.4s cubic-bezier(.36,.07,.19,.97) both;
+  }
+  .secret-box h3 { font-size:0.8rem; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1rem; }
+  .secret-box p  { font-size:0.75rem; color:rgba(255,255,255,0.45); margin-bottom:1rem; font-style:italic; }
+  #secretInput {
+    width:100%;
+    background:rgba(255,255,255,0.07);
+    border:1px solid rgba(212,175,55,0.4);
+    border-radius:100px;
+    color:#fff;
+    font-family:Georgia,serif;
+    font-size:1rem;
+    text-align:center;
+    letter-spacing:0.2em;
+    padding:0.7rem 1rem;
+    outline:none;
+    margin-bottom:0.8rem;
+    text-transform:uppercase;
+  }
+  #secretInput::placeholder { color:rgba(255,255,255,0.25); letter-spacing:0.1em; text-transform:none; }
+  #secretSubmit {
+    background:linear-gradient(135deg,var(--gold),var(--gold2));
+    color:var(--purple);font-weight:bold;
+    border:none;border-radius:100px;
+    padding:0.7rem 2rem;
+    font-family:Georgia,serif;font-size:0.85rem;
+    cursor:pointer;width:100%;margin-bottom:0.6rem;
+  }
+  #secretClose { background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.75rem;cursor:pointer;font-family:Georgia,serif; }
+  #secretResult {
+    margin-top:1rem;
+    display:none;
+  }
+  #secretResult .secret-msg-text {
+    font-size:0.95rem;color:var(--cream);line-height:1.8;
+    font-style:italic;margin-bottom:0.6rem;
+  }
+  #secretResult .secret-msg-from { font-size:0.7rem;color:var(--gold2);letter-spacing:0.1em; }
+  #secretError { color:var(--pink);font-size:0.75rem;margin-top:0.5rem;display:none; }
+
   /* ── CONFETTI ── */
   .confetti { position: fixed; pointer-events: none; z-index: 400; border-radius: 3px; animation: confettiFall var(--d) var(--delay) ease-in forwards; }
   @keyframes confettiFall {
@@ -529,6 +597,21 @@
   <!-- TOMORROW TEASER -->
   <div id="teaser"></div>
 
+  <!-- SECRET MESSAGE BUTTON -->
+  <div style="text-align:center;padding:4px 0 2px;">
+    <button onclick="openSecretModal()" style="
+      background:rgba(212,175,55,0.1);
+      border:1px solid rgba(212,175,55,0.3);
+      border-radius:100px;
+      color:rgba(212,175,55,0.8);
+      font-family:Georgia,serif;
+      font-size:0.75rem;
+      padding:0.5rem 1.5rem;
+      cursor:pointer;
+      letter-spacing:0.08em;
+    ">💌 Got a code from Tito Boi?</button>
+  </div>
+
   <!-- TAP HINT -->
   <div id="tapHint">tap pet · long-press to pray · tap verse to change</div>
 
@@ -578,6 +661,23 @@
   </div>
 </div>
 
+<!-- ═══ SECRET MESSAGE MODAL ═══ -->
+<div id="secretModal">
+  <div class="secret-box">
+    <h3>💌 Secret Message</h3>
+    <p>Enter the code Tito Boi sent you</p>
+    <input id="secretInput" type="text" maxlength="10" placeholder="Enter code..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+    <button id="secretSubmit" onclick="submitSecretCode()">Open Message 💌</button>
+    <div id="secretResult">
+      <div style="font-size:2.5rem;margin-bottom:0.5rem" id="secretMsgEmoji">💌</div>
+      <div class="secret-msg-text" id="secretMsgText"></div>
+      <div class="secret-msg-from" id="secretMsgFrom"></div>
+    </div>
+    <div id="secretError">❌ Wrong code... ask Tito Boi! 😄</div>
+    <button id="secretClose" onclick="closeSecretModal()">close</button>
+  </div>
+</div>
+
 <!-- ═══ FINAL SCREEN ═══ -->
 <div id="finalScreen">
   <span class="final-dove">🔥🕊️🔥</span>
@@ -606,34 +706,54 @@ const VERSES = [
   { text: '"I am the Lord\'s servant. May your word to me be fulfilled."', ref: 'Luke 1:38' },
 ];
 
+const EGG_MSGS = [
+  "Hi mom! I cannot hatch yet 🥚",
+  "Knock knock... not yet! 😄",
+  "I can hear you! I am still growing 🌱",
+  "Shhh I am sleeping... jk hi! 👋",
+  "It is warm in here, I do not wanna leave 🥚💕",
+  "Come back on Day 30, I promise I will be cute 🐣",
+  "Did someone say tap? That was me. Hi! 🥚",
+  "I am a golden egg. That means I am special 👑",
+  "Tito Boi says hi too btw 💌",
+  "Every tap makes me grow a little more 🌟",
+  "Almost there... Day 30 is the big day! 🎉",
+  "I heard you and Tito Boi are doing great 🥹",
+  "God is watching over us both in here 🙏",
+  "Patient heart, golden egg. Like you, Jay 💛",
+  "Saving my wings for the right moment 🕊️",
+  "Can you feel me wiggling? That means I love you 🥚💗",
+  "Still incubating... greatness takes time 👑",
+  "Day {{day}} of 30 until I hatch — almost there! 🐣",
+  "Every day you open this = one more feather growing 🪶",
+  "Two more taps and I might just crack a smile 😄",
+];
+
 const MISSED_MSGS = [
-  // 1-2 days
-  { days:[1,2], emoji:'😏', text:'Missed me, Jay? 😏 I kept the light on for you.' },
-  { days:[1,2], emoji:'🌸', text:'Look who\'s back! Welcome home, Jay 🌸' },
-  { days:[1,2], emoji:'💌', text:'One day away felt like forever, Jay 💌' },
-  { days:[1,2], emoji:'✨', text:'You always come back. That\'s why I love you, Jay ✨' },
-  { days:[1,2], emoji:'🕊️', text:'The dove waited. The dove is happy now, Jay 🕊️' },
-  // 3-6 days
-  { days:[3,6], emoji:'💕', text:'Heart kept your spot warm, Jay. It\'s still yours 💕' },
-  { days:[3,6], emoji:'🌙', text:'I counted the nights, Jay. Every single one 🌙' },
-  { days:[3,6], emoji:'💛', text:'A few days gone but my love didn\'t move an inch, Jay 💛' },
-  { days:[3,6], emoji:'🌿', text:'Like an olive branch, I still offer peace, Jay 🌿' },
-  { days:[3,6], emoji:'🙏', text:'Prayed for you every day you were gone, Jay 🙏' },
-  // 7+ days
-  { days:[7,9999], emoji:'💍', text:'I\'d wait 10 years. A few days was just practice, Jay 💍' },
-  { days:[7,9999], emoji:'✝️', text:'"Love endures all things." — We endure, Jay. Always 💕' },
-  { days:[7,9999], emoji:'🕊️', text:'The dove doesn\'t leave. She circles back. Like you, Jay 🕊️' },
-  { days:[7,9999], emoji:'🌹', text:'Worth the wait. Always. Come back whenever, Jay 🌹' },
-  { days:[7,9999], emoji:'👑', text:'Queens don\'t quit. And neither do I, Jay 👑' },
+  { days:[1,2], emoji:'😏', msg:`Missed me, Jay? 😏 I kept the light on for you.` },
+  { days:[1,2], emoji:'🌸', msg:`Look who's back! Welcome home, Jay 🌸` },
+  { days:[1,2], emoji:'💌', msg:`One day away felt like forever, Jay 💌` },
+  { days:[1,2], emoji:'✨', msg:`You always come back. That's why I love you, Jay ✨` },
+  { days:[1,2], emoji:'🕊️', msg:`The dove waited. The dove is happy now, Jay 🕊️` },
+  { days:[3,6], emoji:'💕', msg:`Heart kept your spot warm, Jay. It's still yours 💕` },
+  { days:[3,6], emoji:'🌙', msg:`I counted the nights, Jay. Every single one 🌙` },
+  { days:[3,6], emoji:'💛', msg:`A few days gone but my love didn't move an inch, Jay 💛` },
+  { days:[3,6], emoji:'🌿', msg:`Like an olive branch, I still offer peace, Jay 🌿` },
+  { days:[3,6], emoji:'🙏', msg:`Prayed for you every day you were gone, Jay 🙏` },
+  { days:[7,9999], emoji:'💍', msg:`I'd wait 10 years. A few days was just practice, Jay 💍` },
+  { days:[7,9999], emoji:'✝️', msg:`"Love endures all things." — We endure, Jay. Always 💕` },
+  { days:[7,9999], emoji:'🕊️', msg:`The dove doesn't leave. She circles back. Like you, Jay 🕊️` },
+  { days:[7,9999], emoji:'🌹', msg:`Worth the wait. Always. Come back whenever, Jay 🌹` },
+  { days:[7,9999], emoji:'👑', msg:`Queens don't quit. And neither do I, Jay 👑` },
 ];
 
 const MILESTONES = {
-  7:    { emoji:'👑', title:'Week 1 Legend!',         sub:'7 days of showing up. That\'s real love, Jay.' },
-  30:   { emoji:'🏆', title:'Month 1 Queen!',          sub:'30 days strong. The dove is so proud of you 🕊️' },
-  100:  { emoji:'💯', title:'Triple Digits!',          sub:'100 days. You\'re not just dating — you\'re building, Jay.' },
-  365:  { emoji:'🎉', title:'Year 1 Forever!',         sub:'365 days. One full year of choosing each other 💍' },
-  1000: { emoji:'💍', title:'3+ Years Legends',        sub:'1000 days. Tito Boi + Jay. Nothing stops this love 💕' },
-  3652: { emoji:'🔥', title:'TITO BOI + JAY = ETERNAL',sub:'10 years. The covenant is complete ✝️💍' },
+  7:    { emoji:'👑', title:'Week 1 Legend!',          sub:`7 days of showing up. That's real love, Jay.` },
+  30:   { emoji:'🏆', title:'Month 1 Queen!',           sub:`30 days strong. The dove is so proud of you 🕊️` },
+  100:  { emoji:'💯', title:'Triple Digits!',           sub:`100 days. You're not just dating — you're building, Jay.` },
+  365:  { emoji:'🎉', title:'Year 1 Forever!',          sub:`365 days. One full year of choosing each other 💍` },
+  1000: { emoji:'💍', title:'3+ Years Legends',         sub:`1000 days. Tito Boi + Jay. Nothing stops this love 💕` },
+  3652: { emoji:'🔥', title:'TITO BOI + JAY = ETERNAL', sub:`10 years. The covenant is complete ✝️💍` },
 };
 
 // ═══════════════════════════════════════════════
@@ -772,7 +892,7 @@ function showMissedMessage(missed) {
   saveState(state);
 
   document.getElementById('missEmoji').textContent = pick.emoji;
-  document.getElementById('missText').textContent  = pick.text;
+  document.getElementById('missText').textContent  = pick.msg;
   document.getElementById('missedBanner').style.display = 'block';
 }
 
@@ -797,7 +917,14 @@ function onPetTap(e) {
   el.classList.remove('sad');
   el.classList.add('loved');
   spawnHearts(el, 10);
-  nextVerse();
+
+  if (state.currentDay <= 30) {
+    // Egg stage — show speech bubble instead of verse
+    showEggBubble();
+  } else {
+    nextVerse();
+  }
+
   // ring bump visual
   document.getElementById('ringFill').style.transition = 'stroke-dashoffset 0.3s ease-out';
   setTimeout(() => {
@@ -805,6 +932,64 @@ function onPetTap(e) {
     petMood = 'happy';
     document.getElementById('ringFill').style.transition = 'stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)';
   }, 1200);
+}
+
+function showEggBubble() {
+  // pick random egg message, avoid last 3
+  const history = state.eggMsgHistory || [];
+  const pool = EGG_MSGS.map((m,i)=>i).filter(i => !history.slice(-3).includes(i));
+  const idx = pool[Math.floor(Math.random() * pool.length)];
+  state.eggMsgHistory = [...history.slice(-5), idx];
+  saveState(state);
+
+  let msg = EGG_MSGS[idx].replace('{{day}}', state.currentDay);
+
+  // Remove old bubble if any
+  const old = document.getElementById('eggBubble');
+  if (old) old.remove();
+
+  const bubble = document.createElement('div');
+  bubble.id = 'eggBubble';
+  bubble.textContent = msg;
+  bubble.style.cssText = `
+    position:fixed;
+    left:50%;
+    transform:translateX(-50%);
+    background:rgba(240,204,85,0.95);
+    color:#2a0630;
+    font-family:Georgia,serif;
+    font-size:0.85rem;
+    font-weight:bold;
+    padding:10px 18px;
+    border-radius:20px;
+    max-width:80vw;
+    text-align:center;
+    z-index:300;
+    box-shadow:0 4px 20px rgba(212,175,55,0.5);
+    animation:bubbleIn 0.3s cubic-bezier(.36,.07,.19,.97) both;
+    pointer-events:none;
+  `;
+  // Position above the ring section
+  const ring = document.getElementById('ringSection');
+  const ringTop = ring.getBoundingClientRect().top;
+  bubble.style.top = Math.max(80, ringTop - 20) + 'px';
+  document.body.appendChild(bubble);
+
+  // tail triangle
+  const tail = document.createElement('div');
+  tail.style.cssText = `
+    position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
+    width:0;height:0;
+    border-left:10px solid transparent;
+    border-right:10px solid transparent;
+    border-top:10px solid rgba(240,204,85,0.95);
+  `;
+  bubble.appendChild(tail);
+
+  setTimeout(() => {
+    bubble.style.animation = 'bubbleOut 0.4s ease-in forwards';
+    setTimeout(() => bubble.remove(), 400);
+  }, 2800);
 }
 
 function startLongPress(e) {
@@ -948,6 +1133,56 @@ function confettiBurst() {
     setTimeout(() => el.remove(), 3500);
   }
 }
+
+// ═══════════════════════════════════════════════
+//  SECRET MESSAGES (code → message)
+// ═══════════════════════════════════════════════
+// Add your secret codes and messages here!
+// Format: 'CODE': { emoji, msg, from }
+const SECRET_MESSAGES = {
+  'TITO01': { emoji:'💌', msg:`Hey Jay... just wanted you to know I think about you every single day. This egg is proof. 🥚✝️`, from:`— Tito Boi, always` },
+  'ILOVEU': { emoji:'💕', msg:`I love you, Jay. There. I said it. Now the app knows too. 🕊️`, from:`— Tito Boi 💍` },
+  'DEC30':  { emoji:'👑', msg:`Happy Birthday Queen. Dec 30 is the best day God ever made. You're proof of that. 🎂✨`, from:`— Your Tito Boi 👑` },
+  'PRAY':   { emoji:'🙏', msg:`I prayed for you today. I prayed for us. I prayed that God keeps you safe and brings us closer every day. 💕`, from:`— Tito Boi ✝️` },
+  'SORRY':  { emoji:'🌸', msg:`I'm sorry, Jay. Whatever it is — I'm sorry. You deserve nothing but kindness from me. Always. 🕊️`, from:`— Tito Boi 🤍` },
+  'GANDA':  { emoji:'🌟', msg:`You're so beautiful, Jay. I hope you know that. Like actually. The kind of beautiful that stays. 💛`, from:`— Tito Boi, not just saying it` },
+  'PROUD':  { emoji:'🏆', msg:`I'm so proud of you Jay. Everything you carry, everything you push through — it's extraordinary. 💪✝️`, from:`— Tito Boi 👑` },
+  'MISS':   { emoji:'🥺', msg:`I miss you, Jay. Even when you're near. Is that weird? Maybe. But it's true. 💗`, from:`— Tito Boi 🥺` },
+  'FAITH':  { emoji:'✝️', msg:`"For I know the plans I have for you" — Jeremiah 29:11. God planned you for something beautiful. I believe you're part of mine. 🕊️`, from:`— Tito Boi ✝️` },
+  'COURT':  { emoji:'🌹', msg:`It took me a month of courage to ask. And I'd wait a thousand more days just for the chance. Thank you for saying yes, Jay. 🌹💍`, from:`— Tito Boi, forever courting you` },
+};
+
+function openSecretModal() {
+  document.getElementById('secretInput').value = '';
+  document.getElementById('secretResult').style.display = 'none';
+  document.getElementById('secretError').style.display = 'none';
+  document.getElementById('secretModal').classList.add('show');
+  setTimeout(() => document.getElementById('secretInput').focus(), 300);
+}
+function closeSecretModal() {
+  document.getElementById('secretModal').classList.remove('show');
+}
+function submitSecretCode() {
+  const code = document.getElementById('secretInput').value.trim().toUpperCase();
+  const msg  = SECRET_MESSAGES[code];
+  document.getElementById('secretError').style.display = 'none';
+  if (msg) {
+    const result = document.getElementById('secretResult');
+    result.style.display = 'block';
+    document.getElementById('secretMsgEmoji').textContent = msg.emoji;
+    document.getElementById('secretMsgText').textContent  = msg.msg;
+    document.getElementById('secretMsgFrom').textContent  = msg.from;
+    spawnHearts(document.getElementById('secretResult'), 12);
+    confettiBurst();
+  } else {
+    document.getElementById('secretError').style.display = 'block';
+    document.getElementById('secretInput').value = '';
+  }
+}
+// allow Enter key to submit
+document.getElementById('secretInput').addEventListener('keydown', function(e) {
+  if (e.key === 'Enter') submitSecretCode();
+});
 
 // ═══════════════════════════════════════════════
 //  SERVICE WORKER (inline)
