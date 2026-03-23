@@ -8,2494 +8,590 @@
 <meta name="apple-mobile-web-app-title" content="Covenant"/>
 <meta name="theme-color" content="#4a0e4f"/>
 <title>Covenant 🕊️</title>
-
-<!-- PWA icon + manifest injected via script for max iOS/Android compatibility -->
-<script>
-(function(){
-  // Draw dove icon on canvas -> real PNG base64 (required for iOS home screen icon)
-  const sz=512;
-  const cv=document.createElement('canvas');
-  cv.width=sz;cv.height=sz;
-  const x=cv.getContext('2d');
-  // Rounded rect background
-  x.beginPath();
-  const rd=sz*0.18;
-  x.moveTo(rd,0);x.lineTo(sz-rd,0);x.quadraticCurveTo(sz,0,sz,rd);
-  x.lineTo(sz,sz-rd);x.quadraticCurveTo(sz,sz,sz-rd,sz);
-  x.lineTo(rd,sz);x.quadraticCurveTo(0,sz,0,sz-rd);
-  x.lineTo(0,rd);x.quadraticCurveTo(0,0,rd,0);x.closePath();
-  const bg=x.createLinearGradient(0,0,sz,sz);
-  bg.addColorStop(0,'#2a0630');bg.addColorStop(1,'#4a0e4f');
-  x.fillStyle=bg;x.fill();
-  const cx=sz/2,cy=sz/2+20;
-  // Body
-  x.fillStyle='#f0cc55';
-  x.beginPath();x.ellipse(cx,cy+10,95,68,-0.2,0,Math.PI*2);x.fill();
-  // Head
-  x.fillStyle='#f0cc55';
-  x.beginPath();x.arc(cx+50,cy-65,55,0,Math.PI*2);x.fill();
-  // Left wing
-  x.fillStyle='#d4af37';
-  x.beginPath();
-  x.moveTo(cx-10,cy-10);
-  x.bezierCurveTo(cx-130,cy-90,cx-170,cy+50,cx-80,cy+90);
-  x.bezierCurveTo(cx-40,cy+65,cx-5,cy+30,cx-10,cy-10);
-  x.fill();
-  // Right wing
-  x.fillStyle='#e8c040';
-  x.beginPath();
-  x.moveTo(cx+20,cy-20);
-  x.bezierCurveTo(cx+110,cy-100,cx+160,cy+20,cx+80,cy+75);
-  x.bezierCurveTo(cx+45,cy+55,cx+15,cy+15,cx+20,cy-20);
-  x.fill();
-  // Eye
-  x.fillStyle='#1a0820';x.beginPath();x.arc(cx+68,cy-72,10,0,Math.PI*2);x.fill();
-  x.fillStyle='#ffffff';x.beginPath();x.arc(cx+72,cy-76,3.5,0,Math.PI*2);x.fill();
-  // Beak
-  x.fillStyle='#c8a020';
-  x.beginPath();x.moveTo(cx+98,cy-60);x.lineTo(cx+135,cy-54);x.lineTo(cx+98,cy-46);x.closePath();x.fill();
-  // Olive branch
-  x.strokeStyle='#4a7c2f';x.lineWidth=6;
-  x.beginPath();x.moveTo(cx-30,cy+82);x.bezierCurveTo(cx-65,cy+62,cx-85,cy+95,cx-120,cy+78);x.stroke();
-  x.fillStyle='#5a9c3f';
-  [[cx-58,cy+68],[cx-75,cy+80],[cx-95,cy+74],[cx-115,cy+80]].forEach(function(p){
-    x.beginPath();x.ellipse(p[0],p[1],9,6,Math.PI/4,0,Math.PI*2);x.fill();
-  });
-  // Gold sparkles
-  x.fillStyle='rgba(255,220,80,0.7)';
-  [[cx+10,cy-40],[cx-35,cy+5],[cx+55,cy+15]].forEach(function(p){
-    x.beginPath();x.arc(p[0],p[1],5,0,Math.PI*2);x.fill();
-  });
-  const icon=cv.toDataURL('image/png');
-  // Apple touch icon (iOS)
-  var al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;
-  document.head.appendChild(al);
-  // Manifest with real PNG
-  var manifest={
-    name:'Covenant',short_name:'Covenant',
-    description:'Tito Boi + Jay Eternal Streak',
-    start_url:'./',display:'standalone',
-    background_color:'#4a0e4f',theme_color:'#4a0e4f',
-    orientation:'portrait',
-    icons:[
-      {src:icon,sizes:'512x512',type:'image/png',purpose:'any maskable'},
-      {src:icon,sizes:'192x192',type:'image/png',purpose:'any maskable'}
-    ]
-  };
-  var blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
-  var ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(blob);
-  document.head.appendChild(ml);
-})();
-</script>
-
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link rel="preload" as="style" onload="this.onload=null;this.rel='stylesheet'" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700&display=swap"/>
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=Nunito:wght@400;700&display=swap"/></noscript>
 <style>
-  :root {
-    --purple: #4a0e4f;
-    --purple2: #6b1a72;
-    --gold: #d4af37;
-    --gold2: #f0cc55;
-    --pink: #ff69b4;
-    --pink2: #ff9cc8;
-    --cream: #fff8f0;
-    --green: #4a7c2f;
-  }
-
-  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
-
-  html, body {
-    width: 100%; height: 100%;
-    font-family: Georgia, 'Times New Roman', serif;
-    background: var(--purple);
-    color: var(--cream);
-    overflow: hidden;
-    position: fixed;
-  }
-
-
-  /* ── MAIN APP ── */
-  #app {
-    width: 100%; height: 100%;
-    background: linear-gradient(160deg, #2a0630 0%, #4a0e4f 40%, #6b1a72 70%, #3d0a4a 100%);
-    position: relative;
-  }
-
-  /* ── TOP BANNER ── */
-  #topBanner {
-    background: linear-gradient(90deg, rgba(212,175,55,0.2), rgba(255,105,180,0.2), rgba(212,175,55,0.2));
-    border-bottom: 1px solid rgba(212,175,55,0.3);
-    padding: env(safe-area-inset-top, 12px) 16px 10px;
-    text-align: center;
-  }
-  #dayCounter {
-    font-size: 0.7rem;
-    letter-spacing: 0.2em;
-    color: var(--gold2);
-    text-transform: uppercase;
-    margin-bottom: 3px;
-  }
-  #dayBig {
-    font-size: 1.5rem;
-    font-weight: bold;
-    color: var(--gold);
-    text-shadow: 0 0 20px rgba(212,175,55,0.6);
-  }
-  #dayBig span { color: rgba(255,255,255,0.4); font-size: 0.9rem; }
-
-  /* ── PROGRESS RING ── */
-  #ringSection {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    padding: 16px 0 8px;
-    position: relative;
-  }
-  #ringWrap {
-    position: relative;
-    width: 220px; height: 220px;
-  }
-  #ringWrap svg { width: 100%; height: 100%; transform: rotate(-90deg); }
-  #ringBg { fill: none; stroke: rgba(255,255,255,0.08); stroke-width: 10; }
-  #ringFill {
-    fill: none;
-    stroke: url(#ringGrad);
-    stroke-width: 10;
-    stroke-linecap: round;
-    transition: stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1);
-  }
-
-  /* ── PET ── */
-  #petWrap {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    cursor: pointer;
-    user-select: none;
-    -webkit-user-select: none;
-  }
-  #petEmoji {
-    font-size: 5.5em;
-    display: block;
-    transition: transform 0.3s cubic-bezier(.36,.07,.19,.97);
-    filter: drop-shadow(0 4px 20px rgba(212,175,55,0.5));
-    animation: petFloat 4s ease-in-out infinite;
-  }
-  @keyframes petFloat {
-    0%,100% { transform: translateY(0); }
-    50% { transform: translateY(-8px); }
-  }
-  #petEmoji.loved {
-    animation: none;
-    transform: scale(1.15) !important;
-    filter: drop-shadow(0 0 30px rgba(255,105,180,0.9));
-  }
-  #petEmoji.sad { animation: petSad 1s ease-in-out infinite; filter: drop-shadow(0 4px 15px rgba(100,50,150,0.4)) grayscale(0.3); }
-  @keyframes petSad {
-    0%,100% { transform: translateY(0) rotate(-3deg); }
-    50% { transform: translateY(3px) rotate(3deg); }
-  }
-  #petLabel {
-    font-size: 0.6rem;
-    letter-spacing: 0.15em;
-    color: rgba(212,175,55,0.7);
-    text-transform: uppercase;
-    margin-top: 4px;
-  }
-  #pct {
-    font-size: 0.65rem;
-    color: rgba(255,255,255,0.4);
-    letter-spacing: 0.1em;
-  }
-
-  /* ── HEARTS ── */
-  .heart-particle {
-    position: fixed;
-    font-size: 1.5rem;
-    pointer-events: none;
-    animation: heartUp 3s ease-out forwards;
-    z-index: 999;
-  }
-  @keyframes heartUp {
-    0%   { opacity: 1; transform: translateY(0) scale(0.5) rotate(var(--r)); }
-    20%  { opacity: 1; transform: translateY(-40px) scale(1.2) rotate(var(--r)); }
-    100% { opacity: 0; transform: translateY(-200px) scale(0.8) rotate(calc(var(--r) + 30deg)); }
-  }
-
-  /* ── VERSE CARD ── */
-  #verseCard {
-    margin: 4px 20px 8px;
-    background: rgba(212,175,55,0.08);
-    border: 1px solid rgba(212,175,55,0.25);
-    border-radius: 16px;
-    padding: 14px 18px;
-    text-align: center;
-    cursor: pointer;
-    transition: transform 0.2s, background 0.3s;
-  }
-  #verseCard:active { transform: scale(0.98); }
-  #verseText {
-    font-style: italic;
-    font-size: 0.82rem;
-    line-height: 1.7;
-    color: rgba(255,255,255,0.85);
-    margin-bottom: 6px;
-  }
-  #verseRef {
-    font-size: 0.65rem;
-    letter-spacing: 0.12em;
-    color: var(--gold2);
-    text-transform: uppercase;
-  }
-
-  /* ── MISSED MESSAGE ── */
-  #missedBanner {
-    display: none;
-    margin: 0 20px 8px;
-    background: linear-gradient(135deg, rgba(255,105,180,0.15), rgba(212,175,55,0.15));
-    border: 1px solid rgba(255,105,180,0.35);
-    border-radius: 14px;
-    padding: 12px 16px;
-    text-align: center;
-  }
-  #missedBanner .miss-emoji { font-size: 1.4rem; display: block; margin-bottom: 4px; }
-  #missedBanner .miss-text { font-size: 0.82rem; color: var(--pink2); line-height: 1.5; font-style: italic; }
-
-  /* ── STREAK INFO ── */
-  #streakRow {
-    display: flex;
-    gap: 10px;
-    margin: 0 20px 10px;
-  }
-  .stat-box {
-    flex: 1;
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 12px;
-    padding: 10px 8px;
-    text-align: center;
-  }
-  .stat-box .val {
-    font-size: 1.3rem;
-    font-weight: bold;
-    color: var(--gold);
-    display: block;
-  }
-  .stat-box .lbl {
-    font-size: 0.55rem;
-    letter-spacing: 0.12em;
-    color: rgba(255,255,255,0.45);
-    text-transform: uppercase;
-  }
-
-  /* ── TOMORROW TEASER ── */
-  #teaser {
-    margin: 0 20px 8px;
-    text-align: center;
-    font-size: 0.72rem;
-    color: rgba(212,175,55,0.6);
-    font-style: italic;
-    line-height: 1.6;
-  }
-
-  /* ── TAP HINT ── */
-  #tapHint {
-    text-align: center;
-    font-size: 0.58rem;
-    letter-spacing: 0.15em;
-    color: rgba(255,255,255,0.25);
-    text-transform: uppercase;
-    padding-bottom: 16px;
-    animation: hint 2s ease-in-out infinite;
-  }
-  @keyframes hint { 0%,100%{opacity:0.3;} 50%{opacity:0.7;} }
-
-  /* ── BIRTHDAY BANNER ── */
-  #bdayBanner {
-    display: none;
-    margin: 0 20px 10px;
-    background: linear-gradient(135deg, rgba(212,175,55,0.25), rgba(255,105,180,0.2));
-    border: 2px solid var(--gold);
-    border-radius: 16px;
-    padding: 14px;
-    text-align: center;
-    animation: bdayGlow 2s ease-in-out infinite;
-  }
-  @keyframes bdayGlow {
-    0%,100% { box-shadow: 0 0 10px rgba(212,175,55,0.3); }
-    50%      { box-shadow: 0 0 30px rgba(212,175,55,0.7), 0 0 60px rgba(255,105,180,0.3); }
-  }
-  #bdayText { font-size: 0.85rem; color: var(--gold2); line-height: 1.6; font-weight: bold; }
-
-  /* ── MILESTONE POPUP ── */
-  #milestonePopup {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 500;
-    background: rgba(0,0,0,0.75);
-    align-items: center; justify-content: center;
-    flex-direction: column;
-  }
-  #milestonePopup.show { display: flex; }
-  .milestone-box {
-    background: linear-gradient(160deg, #3d0a4a, #6b1a72);
-    border: 2px solid var(--gold);
-    border-radius: 24px;
-    padding: 2.5rem 3rem;
-    text-align: center;
-    max-width: 320px; width: 88%;
-    animation: milePop 0.5s cubic-bezier(.36,.07,.19,.97) both;
-    box-shadow: 0 0 40px rgba(212,175,55,0.4), 0 0 80px rgba(212,175,55,0.1);
-  }
-  @keyframes milePop {
-    0%  { transform: scale(0.3) rotate(-5deg); opacity: 0; }
-    70% { transform: scale(1.08) rotate(1deg); }
-    100%{ transform: scale(1) rotate(0deg); opacity: 1; }
-  }
-  .milestone-emoji { font-size: 3.5rem; display: block; margin-bottom: 0.8rem; }
-  .milestone-title { font-size: 1.1rem; color: var(--gold); font-weight: bold; margin-bottom: 0.5rem; }
-  .milestone-sub { font-size: 0.8rem; color: rgba(255,255,255,0.7); line-height: 1.6; margin-bottom: 1.2rem; }
-  .milestone-btn {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--purple);
-    border: none; border-radius: 100px;
-    padding: 0.7rem 2rem;
-    font-family: Georgia, serif;
-    font-size: 0.85rem;
-    font-weight: bold;
-    cursor: pointer;
-  }
-
-  /* ── LORD'S PRAYER MODAL ── */
-  #prayerModal {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 600;
-    background: linear-gradient(160deg, #1a0330 0%, #2d0640 100%);
-    flex-direction: column;
-    align-items: center;
-    justify-content: flex-start;
-    overflow-y: auto;
-    padding: env(safe-area-inset-top, 20px) 24px 40px;
-  }
-  #prayerModal.show { display: flex; }
-  .prayer-header { text-align: center; margin-bottom: 1.5rem; padding-top: 20px; }
-  .prayer-header .dove { font-size: 3rem; display: block; margin-bottom: 0.5rem; animation: petFloat 3s ease-in-out infinite; }
-  .prayer-header h2 { font-size: 1rem; color: var(--gold); letter-spacing: 0.15em; text-transform: uppercase; margin-bottom: 0.3rem; }
-  .prayer-header p { font-size: 0.7rem; color: rgba(255,255,255,0.45); letter-spacing: 0.1em; }
-  .prayer-text {
-    font-size: 1rem;
-    line-height: 2.2;
-    color: rgba(255,255,255,0.9);
-    text-align: center;
-    font-style: italic;
-    max-width: 380px;
-    margin-bottom: 1.5rem;
-  }
-  .prayer-text strong { color: var(--gold2); font-style: normal; }
-  .prayer-names { text-align: center; color: rgba(212,175,55,0.7); font-size: 0.75rem; letter-spacing: 0.15em; margin-bottom: 2rem; }
-  .prayer-continue {
-    background: linear-gradient(135deg, var(--purple2), var(--gold));
-    color: var(--cream);
-    border: 1px solid var(--gold);
-    border-radius: 100px;
-    padding: 0.85rem 2.5rem;
-    font-family: Georgia, serif;
-    font-size: 0.9rem;
-    cursor: pointer;
-    letter-spacing: 0.08em;
-  }
-  /* cross hearts */
-  #crossHearts {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 700;
-    background: rgba(0,0,0,0.85);
-    align-items: center; justify-content: center;
-    flex-direction: column;
-    gap: 0.5rem;
-  }
-  #crossHearts.show { display: flex; }
-  .cross-grid {
-    display: grid;
-    grid-template-columns: repeat(3,44px);
-    grid-template-rows: repeat(5,44px);
-    gap: 4px;
-  }
-  .cross-cell { display: flex; align-items: center; justify-content: center; font-size: 1.4rem; }
-  .cross-cell.on { animation: heartPulse 1s ease-in-out infinite; }
-  @keyframes heartPulse { 0%,100%{transform:scale(1);}50%{transform:scale(1.2);} }
-  #crossCaption { color: var(--gold2); font-size: 0.75rem; letter-spacing: 0.12em; text-align: center; margin-top: 0.8rem; }
-  #crossClose { margin-top: 1.2rem; background: none; border: 1px solid rgba(212,175,55,0.4); color: var(--gold2); border-radius: 100px; padding: 0.6rem 2rem; font-family: Georgia,serif; font-size: 0.8rem; cursor: pointer; }
-
-  /* ── FINAL SCREEN ── */
-  #finalScreen {
-    display: none;
-    position: fixed; inset: 0;
-    z-index: 800;
-    background: linear-gradient(160deg, #0d0115, #2a0040, #4a0e4f);
-    flex-direction: column;
-    align-items: center; justify-content: center;
-    text-align: center;
-    padding: 2rem;
-    gap: 1rem;
-  }
-  #finalScreen.show { display: flex; }
-  .final-dove { font-size: 5rem; display: block; animation: phoenixRise 3s ease-in-out infinite; }
-  @keyframes phoenixRise {
-    0%  { transform: translateY(0) scale(1); filter: drop-shadow(0 0 10px #d4af37); }
-    50% { transform: translateY(-20px) scale(1.1); filter: drop-shadow(0 0 40px #ff6900) drop-shadow(0 0 80px #d4af37); }
-    100%{ transform: translateY(0) scale(1); filter: drop-shadow(0 0 10px #d4af37); }
-  }
-  .final-title { font-size: 1.4rem; color: var(--gold); font-weight: bold; line-height: 1.4; }
-  .final-verse { font-style: italic; font-size: 0.8rem; color: rgba(255,255,255,0.7); max-width: 320px; line-height: 1.8; }
-
-  /* ── EGG BUBBLE ── */
-  @keyframes bubbleIn {
-    0%  { opacity:0; transform:translateX(-50%) scale(0.7) translateY(10px); }
-    100%{ opacity:1; transform:translateX(-50%) scale(1) translateY(0); }
-  }
-  @keyframes bubbleOut {
-    0%  { opacity:1; transform:translateX(-50%) scale(1); }
-    100%{ opacity:0; transform:translateX(-50%) scale(0.8) translateY(-10px); }
-  }
-
-  /* ── SECRET MESSAGE MODAL ── */
-  #secretModal {
-    display:none;
-    position:fixed;inset:0;
-    z-index:700;
-    background:rgba(0,0,0,0.85);
-    align-items:center;justify-content:center;
-    flex-direction:column;
-    padding:2rem;
-  }
-  #secretModal.show { display:flex; }
-  .secret-box {
-    background:linear-gradient(160deg,#2a0630,#4a0e4f);
-    border:2px solid var(--gold);
-    border-radius:24px;
-    padding:2rem 2.2rem;
-    max-width:340px;width:100%;
-    text-align:center;
-    animation:milePop 0.4s cubic-bezier(.36,.07,.19,.97) both;
-  }
-  .secret-box h3 { font-size:0.8rem; color:var(--gold); letter-spacing:0.15em; text-transform:uppercase; margin-bottom:1rem; }
-  .secret-box p  { font-size:0.75rem; color:rgba(255,255,255,0.45); margin-bottom:1rem; font-style:italic; }
-  #secretInput {
-    width:100%;
-    background:rgba(255,255,255,0.07);
-    border:1px solid rgba(212,175,55,0.4);
-    border-radius:100px;
-    color:#fff;
-    font-family:Georgia,serif;
-    font-size:1rem;
-    text-align:center;
-    letter-spacing:0.2em;
-    padding:0.7rem 1rem;
-    outline:none;
-    margin-bottom:0.8rem;
-    text-transform:uppercase;
-  }
-  #secretInput::placeholder { color:rgba(255,255,255,0.25); letter-spacing:0.1em; text-transform:none; }
-  #secretSubmit {
-    background:linear-gradient(135deg,var(--gold),var(--gold2));
-    color:var(--purple);font-weight:bold;
-    border:none;border-radius:100px;
-    padding:0.7rem 2rem;
-    font-family:Georgia,serif;font-size:0.85rem;
-    cursor:pointer;width:100%;margin-bottom:0.6rem;
-  }
-  #secretClose { background:none;border:none;color:rgba(255,255,255,0.3);font-size:0.75rem;cursor:pointer;font-family:Georgia,serif; }
-  #secretResult {
-    margin-top:1rem;
-    display:none;
-  }
-  #secretResult .secret-msg-text {
-    font-size:0.95rem;color:var(--cream);line-height:1.8;
-    font-style:italic;margin-bottom:0.6rem;
-  }
-  #secretResult .secret-msg-from { font-size:0.7rem;color:var(--gold2);letter-spacing:0.1em; }
-  #secretError { color:var(--pink);font-size:0.75rem;margin-top:0.5rem;display:none; }
-
-
-  /* ── BOTTOM NAV ── */
-  #bottomNav {
-    position: fixed; bottom: 0; left: 0; right: 0;
-    background: rgba(13,8,32,0.97);
-    border-top: 1px solid rgba(212,175,55,0.2);
-    display: flex; justify-content: space-around; align-items: center;
-    padding: 8px 0 max(8px, env(safe-area-inset-bottom));
-    z-index: 90;
-  }
-  .nav-btn {
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    background: none; border: none; cursor: pointer;
-    color: rgba(255,255,255,0.35); font-family: Georgia, serif;
-    padding: 4px 12px; border-radius: 12px;
-    transition: color 0.2s, background 0.2s;
-    -webkit-tap-highlight-color: transparent;
-  }
-  .nav-btn.active { color: var(--gold); background: rgba(212,175,55,0.1); }
-  .nav-btn span:first-child { font-size: 1.3rem; }
-  .nav-btn span:last-child  { font-size: 0.48rem; letter-spacing: 0.1em; text-transform: uppercase; }
-
-  /* ── SCREENS ── */
-  .screen {
-    display: none;
-    flex-direction: column;
-    position: fixed;
-    inset: 0;
-    bottom: 60px;
-    overflow-y: auto;
-    overflow-x: hidden;
-    -webkit-overflow-scrolling: touch;
-    background: linear-gradient(160deg, #2a0630 0%, #4a0e4f 40%, #6b1a72 70%, #3d0a4a 100%);
-    padding-bottom: 16px;
-  }
-  .screen.active { display: flex; }
-  #mainScreen { align-items: stretch; }
-
-  /* ── MEMORY JAR ── */
-  #jarScreen { padding: 16px 16px 80px; gap: 12px; }
-  .jar-header { text-align: center; padding: 8px 0 4px; }
-  .jar-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
-  .jar-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
-  .jar-input-wrap {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,175,55,0.25);
-    border-radius: 16px; padding: 14px;
-  }
-  #jarInput {
-    width: 100%; background: none; border: none; outline: none;
-    color: var(--cream); font-family: Georgia,serif; font-size: 0.9rem;
-    line-height: 1.7; resize: none; min-height: 80px;
-  }
-  #jarInput::placeholder { color: rgba(255,255,255,0.2); font-style: italic; }
-  .jar-input-footer { display: flex; flex-direction: column; margin-top: 8px; }
-  .mood-btn {
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px;
-    padding: 6px 12px;
-    cursor: pointer;
-    transition: background 0.2s, border 0.2s, transform 0.15s;
-    display: flex; flex-direction: column; align-items: center; gap: 2px;
-    flex: 1;
-  }
-  .mood-btn:active { transform: scale(0.95); }
-  .mood-btn.selected {
-    background: rgba(212,175,55,0.18);
-    border-color: var(--gold);
-    box-shadow: 0 0 10px rgba(212,175,55,0.2);
-  }
-  .mood-emoji { font-size: 1.4rem; line-height: 1; }
-  .mood-label { font-size: 0.55rem; letter-spacing: 0.06em; color: rgba(255,255,255,0.45); text-transform: uppercase; }
-  .mood-btn.selected .mood-label { color: var(--gold2); }
-  .jar-mood-row { display: flex; gap: 8px; width: 100%; margin-bottom: 10px; }
-  .jar-actions { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-  .jar-photo-btn {
-    background: rgba(255,255,255,0.06);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 100px;
-    color: rgba(255,255,255,0.6);
-    font-family: Georgia, serif;
-    font-size: 0.78rem;
-    padding: 7px 14px;
-    cursor: pointer;
-    transition: background 0.2s;
-  }
-  .jar-photo-btn:hover { background: rgba(255,255,255,0.1); }
-  .jar-save-btn {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--purple); font-family: Georgia,serif; font-size: 0.8rem;
-    font-weight: bold; border: none; border-radius: 100px;
-    padding: 7px 20px; cursor: pointer;
-  }
-  .memory-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,175,55,0.15);
-    border-radius: 14px; padding: 14px 16px;
-    animation: slideUp2 0.4s cubic-bezier(.16,1,.3,1) both;
-    position: relative;
-  }
-  .memory-card .mem-mood-row { display: flex; align-items: center; gap: 6px; margin-bottom: 5px; }
-  .memory-card .mem-mood-emoji { font-size: 1.2rem; line-height: 1; }
-  .memory-card .mem-mood-lbl  { font-size: 0.6rem; letter-spacing: 0.1em; text-transform: uppercase; color: rgba(212,175,55,0.6); }
-  .memory-card .mem-text  { font-size: 0.85rem; color: rgba(255,255,255,0.85); line-height: 1.6; font-style: italic; }
-  .memory-card .mem-meta  { font-size: 0.6rem; color: rgba(255,255,255,0.3); margin-top: 6px; letter-spacing: 0.08em; }
-  .memory-card .mem-del   {
-    position: absolute; top: 10px; right: 12px;
-    background: none; border: none; color: rgba(255,255,255,0.2);
-    font-size: 0.8rem; cursor: pointer;
-  }
-  .jar-empty { text-align: center; padding: 3rem 1rem; color: rgba(255,255,255,0.25); font-style: italic; font-size: 0.85rem; }
-
-  /* ── MINI GAMES SCREEN ── */
-  #gamesScreen { padding: 16px 16px 80px; gap: 12px; align-items: stretch; }
-  .games-header { text-align: center; padding: 8px 0 4px; }
-  .games-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
-  .games-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
-  .game-card {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 16px; padding: 14px 16px; cursor: pointer;
-    transition: transform 0.15s, background 0.2s;
-    display: flex; align-items: center; gap: 14px;
-  }
-  .game-card:active { transform: scale(0.98); background: rgba(212,175,55,0.08); }
-  .game-card .gc-icon { font-size: 2.2rem; flex-shrink: 0; }
-  .game-card .gc-info { flex: 1; }
-  .game-card .gc-title { font-size: 0.85rem; color: var(--gold2); font-weight: bold; margin-bottom: 2px; }
-  .game-card .gc-desc  { font-size: 0.72rem; color: rgba(255,255,255,0.4); line-height: 1.4; }
-  .game-card .gc-score { font-size: 0.65rem; color: rgba(212,175,55,0.5); margin-top: 4px; letter-spacing: 0.08em; }
-
-  .size-btn {
-    flex:1; background:rgba(255,255,255,0.06); border:1px solid rgba(212,175,55,0.25);
-    border-radius:10px; color:var(--gold2); font-family:Georgia,serif;
-    font-size:0.75rem; font-weight:bold; padding:7px 4px 5px;
-    cursor:pointer; transition:background 0.2s,border 0.2s,transform 0.15s;
-    display:flex; flex-direction:column; align-items:center; gap:1px;
-  }
-  .size-btn span { font-size:0.5rem; color:rgba(255,255,255,0.35); letter-spacing:0.06em; text-transform:uppercase; font-weight:normal; }
-  .size-btn:active { transform:scale(0.95); background:rgba(212,175,55,0.15); border-color:var(--gold); }
-
-  /* ── DEVOTIONAL SCREEN ── */
-  #devotScreen { padding: 16px 16px 80px; gap: 12px; align-items: stretch; }
-  .devot-header { text-align: center; padding: 8px 0 4px; }
-  .devot-header h2 { font-family: Georgia,serif; font-size: 1rem; color: var(--gold); letter-spacing: 0.1em; }
-  .devot-header p  { font-size: 0.7rem; color: rgba(255,255,255,0.35); margin-top: 3px; }
-  .devot-card {
-    background: linear-gradient(135deg, rgba(212,175,55,0.08), rgba(255,105,180,0.06));
-    border: 1px solid rgba(212,175,55,0.3);
-    border-radius: 16px; padding: 20px 18px; text-align: center;
-  }
-  .devot-day   { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--gold2); text-transform: uppercase; margin-bottom: 8px; }
-  .devot-emoji { font-size: 2.5rem; display: block; margin-bottom: 10px; }
-  .devot-title { font-size: 1rem; color: var(--cream); font-weight: bold; margin-bottom: 8px; }
-  .devot-body  { font-size: 0.82rem; color: rgba(255,255,255,0.7); line-height: 1.8; font-style: italic; }
-  .devot-challenge {
-    background: rgba(255,255,255,0.04);
-    border: 1px solid rgba(255,105,180,0.2);
-    border-radius: 14px; padding: 14px 16px;
-  }
-  .devot-challenge .ch-label { font-size: 0.6rem; letter-spacing: 0.15em; color: var(--pink2); text-transform: uppercase; margin-bottom: 6px; }
-  .devot-challenge .ch-text  { font-size: 0.85rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
-  .devot-done {
-    background: linear-gradient(135deg, var(--gold), var(--gold2));
-    color: var(--purple); font-family: Georgia,serif; font-weight: bold;
-    border: none; border-radius: 100px; padding: 0.8rem 2rem;
-    font-size: 0.85rem; cursor: pointer; width: 100%;
-  }
-  .devot-done:disabled { opacity: 0.4; cursor: default; }
-
-  /* ── GOODNIGHT SCREEN ── */
-  #goodnightScreen { padding: 16px 16px 80px; align-items: center; justify-content: center; gap: 16px; }
-  #goodnightScreen.active { display: flex; }
-  .gn-card {
-    background: linear-gradient(160deg, rgba(13,8,32,0.9), rgba(42,6,48,0.95));
-    border: 1px solid rgba(212,175,55,0.2);
-    border-radius: 24px; padding: 2.5rem 2rem;
-    max-width: 340px; width: 100%; text-align: center;
-  }
-  .gn-moon { font-size: 4rem; display: block; margin-bottom: 1rem; animation: petFloat 4s ease-in-out infinite; }
-  .gn-title { font-family: Georgia,serif; font-size: 1.1rem; color: var(--gold); margin-bottom: 0.5rem; }
-  .gn-sub   { font-size: 0.75rem; color: rgba(255,255,255,0.4); margin-bottom: 1.2rem; line-height: 1.6; }
-  .gn-verse { font-style: italic; font-size: 0.82rem; color: rgba(255,255,255,0.75); line-height: 1.7; margin-bottom: 1.4rem; padding: 12px 14px; background: rgba(212,175,55,0.07); border-radius: 12px; }
-  .gn-btn {
-    background: linear-gradient(135deg, #1a0535, #4a0e4f);
-    border: 1px solid rgba(212,175,55,0.4);
-    color: var(--gold2); font-family: Georgia,serif; font-size: 0.85rem;
-    border-radius: 100px; padding: 0.8rem 2rem; cursor: pointer; width: 100%;
-  }
-  .gn-status { font-size: 0.7rem; color: rgba(212,175,55,0.5); letter-spacing: 0.1em; }
-
-  /* ── GAME MODALS ── */
-  #gameModal {
-    display: none; position: fixed; inset: 0; z-index: 750;
-    background: rgba(0,0,0,0.92);
-    flex-direction: column; align-items: center; justify-content: center;
-    padding: 1rem;
-  }
-  #gameModal.show { display: flex; }
-  #gameModal .gm-title { font-family:'Press Start 2P',monospace; font-size:0.75rem; color:var(--gold); margin-bottom:0.8rem; text-align:center; }
-  #gameCanvas { border: 1px solid rgba(212,175,55,0.3); border-radius: 12px; display: block; max-width: 100%; }
-  #gameScore  { font-family:'Press Start 2P',monospace; font-size:0.65rem; color:var(--gold2); margin: 6px 0; }
-  #gameClose  { margin-top: 8px; background: none; border: 1px solid rgba(212,175,55,0.3); color: rgba(212,175,55,0.6); border-radius: 100px; padding: 0.5rem 1.5rem; font-family:Georgia,serif; font-size:0.8rem; cursor: pointer; }
-  /* ── CONFETTI ── */
-  .confetti { position: fixed; pointer-events: none; z-index: 400; border-radius: 3px; animation: confettiFall var(--d) var(--delay) ease-in forwards; }
-  @keyframes confettiFall {
-    0%  { opacity:1; transform: translateY(-10px) rotate(0deg); }
-    100%{ opacity:0; transform: translateY(105vh) rotate(720deg); }
-  }
+:root{--purple:#4a0e4f;--purple2:#6b1a72;--gold:#d4af37;--gold2:#f0cc55;--pink:#ff69b4;--pink2:#ff9cc8;--cream:#fff8f0;--green:#4a7c2f;--bg:linear-gradient(160deg,#2a0630 0%,#4a0e4f 40%,#6b1a72 70%,#3d0a4a 100%);}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;background:#0d0820;color:var(--cream);overflow:hidden;position:fixed;}
+#loadScreen{position:fixed;inset:0;z-index:9999;background:linear-gradient(160deg,#080010,#1a0535,#0d0820);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:2rem;gap:1.2rem;transition:opacity 0.7s ease;}
+#loadScreen.out{opacity:0;pointer-events:none;}
+.ld-dove{font-size:4rem;animation:ldFloat 2s ease-in-out infinite;filter:drop-shadow(0 0 24px rgba(212,175,55,0.7));}
+@keyframes ldFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-12px);}}
+.ld-title{font-family:Georgia,serif;font-size:1.4rem;color:var(--gold);letter-spacing:0.12em;text-align:center;text-shadow:0 0 24px rgba(212,175,55,0.5);}
+.ld-sub{font-size:0.62rem;letter-spacing:0.22em;color:rgba(255,255,255,0.25);text-transform:uppercase;text-align:center;}
+.ld-bar-wrap{width:min(280px,80vw);height:6px;background:rgba(255,255,255,0.08);border-radius:99px;overflow:hidden;}
+.ld-bar{height:100%;width:0%;border-radius:99px;background:linear-gradient(90deg,#4a7c2f,#d4af37,#ff69b4);transition:width 0.35s ease;box-shadow:0 0 10px rgba(212,175,55,0.4);}
+.ld-fact-wrap{width:min(320px,88vw);background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.2);border-radius:16px;padding:14px 18px;min-height:72px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.ld-fact{font-size:0.82rem;color:rgba(255,255,255,0.75);line-height:1.7;font-style:italic;transition:opacity 0.35s;}
+.ld-fact.fade{opacity:0;}
+.ld-pct{font-size:0.62rem;letter-spacing:0.15em;color:rgba(212,175,55,0.45);}
+.star{position:fixed;border-radius:50%;background:#fff;pointer-events:none;animation:twinkle var(--d) ease-in-out infinite var(--dl);}
+@keyframes twinkle{0%,100%{opacity:0.1;}50%{opacity:var(--op);}}
+#app{width:100%;height:100%;position:relative;background:var(--bg);}
+.screen{display:none;flex-direction:column;position:fixed;inset:0;bottom:58px;overflow-y:auto;overflow-x:hidden;-webkit-overflow-scrolling:touch;background:var(--bg);}
+.screen.active{display:flex;}
+#nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,5,22,0.98);border-top:1px solid rgba(212,175,55,0.18);display:flex;justify-content:space-around;align-items:center;padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100;}
+.nb{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);font-family:Georgia,serif;padding:4px 10px;border-radius:10px;transition:color 0.2s,background 0.2s;}
+.nb.on{color:var(--gold);background:rgba(212,175,55,0.1);}
+.nb span:first-child{font-size:1.25rem;}.nb span:last-child{font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;}
+#topBanner{background:linear-gradient(90deg,rgba(212,175,55,0.15),rgba(255,105,180,0.12),rgba(212,175,55,0.15));border-bottom:1px solid rgba(212,175,55,0.25);padding:max(12px,env(safe-area-inset-top)) 16px 10px;text-align:center;}
+#dayCounter{font-size:0.65rem;letter-spacing:0.2em;color:var(--gold2);text-transform:uppercase;margin-bottom:2px;}
+#dayBig{font-size:1.5rem;font-weight:bold;color:var(--gold);text-shadow:0 0 20px rgba(212,175,55,0.5);}
+#dayBig span{color:rgba(255,255,255,0.35);font-size:0.9rem;}
+#bdayBanner{display:none;margin:8px 16px 0;background:linear-gradient(135deg,rgba(212,175,55,0.2),rgba(255,105,180,0.15));border:2px solid var(--gold);border-radius:14px;padding:12px;text-align:center;animation:bdayGlow 2s ease-in-out infinite;}
+@keyframes bdayGlow{0%,100%{box-shadow:0 0 10px rgba(212,175,55,0.3);}50%{box-shadow:0 0 30px rgba(212,175,55,0.7);}}
+#bdayText{font-size:0.82rem;color:var(--gold2);line-height:1.6;font-weight:bold;}
+#missedBanner{display:none;margin:8px 16px 0;background:linear-gradient(135deg,rgba(255,105,180,0.12),rgba(212,175,55,0.1));border:1px solid rgba(255,105,180,0.3);border-radius:12px;padding:10px 14px;text-align:center;}
+#missedBanner .me{font-size:1.3rem;display:block;margin-bottom:3px;}
+#missedBanner .mt{font-size:0.8rem;color:var(--pink2);line-height:1.5;font-style:italic;}
+#ringSection{display:flex;flex-direction:column;align-items:center;padding:12px 0 4px;}
+#ringWrap{position:relative;width:210px;height:210px;}
+#ringWrap svg{width:100%;height:100%;transform:rotate(-90deg);}
+#petWrap{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center;cursor:pointer;user-select:none;-webkit-user-select:none;}
+#petEmoji{font-size:5rem;display:block;transition:transform 0.3s cubic-bezier(.36,.07,.19,.97);filter:drop-shadow(0 4px 20px rgba(212,175,55,0.5));animation:petFloat 4s ease-in-out infinite;}
+@keyframes petFloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-8px);}}
+#petEmoji.loved{animation:none!important;transform:scale(1.15)!important;filter:drop-shadow(0 0 30px rgba(255,105,180,0.9))!important;}
+#petEmoji.sad{animation:petSad 1s ease-in-out infinite;}
+@keyframes petSad{0%,100%{transform:translateY(0) rotate(-3deg);}50%{transform:translateY(3px) rotate(3deg);}}
+#petLabel{font-size:0.58rem;letter-spacing:0.14em;color:rgba(212,175,55,0.7);text-transform:uppercase;margin-top:3px;}
+#petPct{font-size:0.62rem;color:rgba(255,255,255,0.35);}
+.heart-p{position:fixed;font-size:1.4rem;pointer-events:none;animation:heartUp 3s ease-out forwards;z-index:9998;}
+@keyframes heartUp{0%{opacity:1;transform:translateY(0) scale(0.5) rotate(var(--r));}20%{opacity:1;transform:translateY(-40px) scale(1.2) rotate(var(--r));}100%{opacity:0;transform:translateY(-200px) scale(0.8) rotate(calc(var(--r) + 30deg));}}
+.egg-bub{position:fixed;left:50%;transform:translateX(-50%);background:rgba(240,204,85,0.97);color:#1a0820;font-family:Georgia,serif;font-size:0.85rem;font-weight:bold;padding:10px 18px;border-radius:20px;max-width:80vw;text-align:center;z-index:9997;box-shadow:0 4px 20px rgba(212,175,55,0.5);pointer-events:none;animation:ebIn 0.3s cubic-bezier(.36,.07,.19,.97) both;}
+@keyframes ebIn{from{opacity:0;transform:translateX(-50%) scale(0.7);}to{opacity:1;transform:translateX(-50%) scale(1);}}
+@keyframes ebOut{to{opacity:0;transform:translateX(-50%) scale(0.85) translateY(-8px);}}
+#verseCard{margin:4px 16px 6px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.22);border-radius:14px;padding:12px 16px;text-align:center;cursor:pointer;transition:transform 0.2s;}
+#verseCard:active{transform:scale(0.98);}
+#verseText{font-style:italic;font-size:0.8rem;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:4px;}
+#verseRef{font-size:0.62rem;letter-spacing:0.1em;color:var(--gold2);text-transform:uppercase;}
+#streakRow{display:flex;gap:8px;margin:0 16px 6px;}
+.sb{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:10px;padding:8px 6px;text-align:center;}
+.sb .sv{font-size:1.2rem;font-weight:bold;color:var(--gold);display:block;}
+.sb .sl{font-size:0.52rem;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;}
+#teaser{margin:0 16px 6px;text-align:center;font-size:0.7rem;color:rgba(212,175,55,0.55);font-style:italic;line-height:1.6;}
+#secretBtnWrap{text-align:center;padding:4px 0 2px;}
+#secretBtnWrap button{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.28);border-radius:100px;color:rgba(212,175,55,0.75);font-family:Georgia,serif;font-size:0.73rem;padding:6px 18px;cursor:pointer;}
+#tapHint{text-align:center;font-size:0.56rem;letter-spacing:0.14em;color:rgba(255,255,255,0.2);text-transform:uppercase;padding-bottom:12px;animation:hint 2.5s ease-in-out infinite;}
+@keyframes hint{0%,100%{opacity:0.3;}50%{opacity:0.7;}}
+#jarScreen{padding:14px 14px 16px;gap:10px;align-items:stretch;}
+.sec-hdr{text-align:center;padding:6px 0 2px;}
+.sec-hdr h2{font-family:Georgia,serif;font-size:1rem;color:var(--gold);letter-spacing:0.1em;}
+.sec-hdr p{font-size:0.68rem;color:rgba(255,255,255,0.3);margin-top:2px;}
+.jar-box{background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.22);border-radius:14px;padding:12px;}
+#photoPreviewWrap{display:none;margin-bottom:8px;position:relative;text-align:center;}
+#photoPreview{max-width:100%;max-height:150px;border-radius:8px;object-fit:cover;border:1px solid rgba(212,175,55,0.3);}
+#removePhotoBtn{position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.65);border:none;color:#fff;border-radius:50%;width:22px;height:22px;font-size:0.7rem;cursor:pointer;}
+#jarInput{width:100%;background:none;border:none;outline:none;color:var(--cream);font-family:Georgia,serif;font-size:0.88rem;line-height:1.7;resize:none;min-height:72px;}
+#jarInput::placeholder{color:rgba(255,255,255,0.18);font-style:italic;}
+.mood-row{display:flex;gap:6px;margin:8px 0;}
+.mood-btn{flex:1;background:rgba(255,255,255,0.05);border:1px solid rgba(255,255,255,0.1);border-radius:10px;padding:6px 4px 5px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:2px;transition:background 0.2s,border 0.2s;}
+.mood-btn.on{background:rgba(212,175,55,0.18);border-color:var(--gold);}
+.mood-btn .mde{font-size:1.3rem;}.mood-btn .mdl{font-size:0.5rem;letter-spacing:0.06em;color:rgba(255,255,255,0.4);text-transform:uppercase;}
+.mood-btn.on .mdl{color:var(--gold2);}
+.jar-actions{display:flex;justify-content:space-between;align-items:center;margin-top:6px;}
+.photo-label{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.14);border-radius:100px;color:rgba(255,255,255,0.55);font-family:Georgia,serif;font-size:0.75rem;padding:6px 14px;cursor:pointer;}
+.save-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--purple);font-family:Georgia,serif;font-size:0.8rem;font-weight:bold;border:none;border-radius:100px;padding:7px 20px;cursor:pointer;}
+.mem-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.14);border-radius:12px;padding:12px 14px;animation:slideUp2 0.4s cubic-bezier(.16,1,.3,1) both;position:relative;}
+.mem-card img{width:100%;border-radius:7px;margin-bottom:7px;object-fit:cover;max-height:190px;}
+.mem-mood-row{display:flex;align-items:center;gap:5px;margin-bottom:4px;}
+.mem-mood-e{font-size:1.1rem;}.mem-mood-l{font-size:0.58rem;letter-spacing:0.08em;text-transform:uppercase;color:rgba(212,175,55,0.55);}
+.mem-text{font-size:0.83rem;color:rgba(255,255,255,0.82);line-height:1.6;font-style:italic;}
+.mem-meta{font-size:0.58rem;color:rgba(255,255,255,0.28);margin-top:5px;letter-spacing:0.07em;}
+.mem-del{position:absolute;top:8px;right:10px;background:none;border:none;color:rgba(255,255,255,0.2);font-size:0.8rem;cursor:pointer;}
+.jar-empty{text-align:center;padding:2.5rem 1rem;color:rgba(255,255,255,0.22);font-style:italic;font-size:0.83rem;}
+#devotScreen{padding:14px 14px 16px;gap:10px;align-items:stretch;}
+.devot-card{background:linear-gradient(135deg,rgba(212,175,55,0.08),rgba(255,105,180,0.06));border:1px solid rgba(212,175,55,0.28);border-radius:14px;padding:18px 16px;text-align:center;}
+.devot-day{font-size:0.58rem;letter-spacing:0.15em;color:var(--gold2);text-transform:uppercase;margin-bottom:6px;}
+.devot-emoji{font-size:2.4rem;display:block;margin-bottom:8px;}
+.devot-title{font-size:0.98rem;color:var(--cream);font-weight:bold;margin-bottom:6px;}
+.devot-body{font-size:0.8rem;color:rgba(255,255,255,0.7);line-height:1.8;font-style:italic;}
+.devot-challenge{background:rgba(255,255,255,0.04);border:1px solid rgba(255,105,180,0.2);border-radius:12px;padding:12px 14px;}
+.ch-lbl{font-size:0.58rem;letter-spacing:0.14em;color:var(--pink2);text-transform:uppercase;margin-bottom:5px;}
+.ch-text{font-size:0.83rem;color:rgba(255,255,255,0.82);line-height:1.55;}
+.devot-done-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--purple);font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.75rem 2rem;font-size:0.83rem;cursor:pointer;width:100%;}
+.devot-done-btn:disabled{opacity:0.4;cursor:default;}
+#gamesScreen{padding:14px 14px 16px;gap:10px;align-items:stretch;}
+.game-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:14px;padding:12px 14px;transition:transform 0.15s,background 0.2s;}
+.game-card.tap:active{transform:scale(0.98);background:rgba(212,175,55,0.08);}
+.gc-top{display:flex;align-items:center;gap:12px;}
+.gc-icon{font-size:2rem;flex-shrink:0;}
+.gc-title{font-size:0.83rem;color:var(--gold2);font-weight:bold;margin-bottom:2px;}
+.gc-desc{font-size:0.7rem;color:rgba(255,255,255,0.38);line-height:1.4;}
+.gc-score{font-size:0.62rem;color:rgba(212,175,55,0.48);margin-top:3px;letter-spacing:0.07em;}
+.size-row{display:flex;gap:6px;margin-top:8px;}
+.sz-btn{flex:1;background:rgba(255,255,255,0.06);border:1px solid rgba(212,175,55,0.22);border-radius:8px;color:var(--gold2);font-family:Georgia,serif;font-size:0.73rem;font-weight:bold;padding:6px 4px 4px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:1px;}
+.sz-btn span{font-size:0.48rem;color:rgba(255,255,255,0.32);letter-spacing:0.06em;text-transform:uppercase;}
+.sz-btn:active{background:rgba(212,175,55,0.15);border-color:var(--gold);}
+#nightScreen{padding:14px 14px 16px;align-items:center;justify-content:center;}
+.gn-card{background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:20px;padding:2rem 1.8rem;max-width:340px;width:100%;text-align:center;}
+.gn-moon{font-size:3.8rem;display:block;margin-bottom:1rem;animation:petFloat 3.5s ease-in-out infinite;}
+.gn-title{font-family:Georgia,serif;font-size:1.05rem;color:var(--gold);margin-bottom:0.4rem;}
+.gn-sub{font-size:0.73rem;color:rgba(255,255,255,0.38);margin-bottom:1rem;line-height:1.6;}
+.gn-verse{font-style:italic;font-size:0.8rem;color:rgba(255,255,255,0.72);line-height:1.7;margin-bottom:1.2rem;padding:10px 12px;background:rgba(212,175,55,0.07);border-radius:10px;}
+.gn-btn{background:linear-gradient(135deg,var(--purple2),var(--gold));color:var(--cream);font-family:Georgia,serif;font-size:0.83rem;border:1px solid rgba(212,175,55,0.35);border-radius:100px;padding:0.75rem 2rem;cursor:pointer;width:100%;margin-bottom:0.5rem;}
+.gn-btn:disabled{opacity:0.4;cursor:default;}
+.gn-status{font-size:0.65rem;color:rgba(212,175,55,0.45);letter-spacing:0.09em;}
+.modal{display:none;position:fixed;inset:0;z-index:800;background:rgba(0,0,0,0.82);align-items:center;justify-content:center;flex-direction:column;padding:1.5rem;}
+.modal.show{display:flex;}
+.modal-box{background:linear-gradient(160deg,#2a0630,#4a0e4f);border:1.5px solid rgba(212,175,55,0.35);border-radius:20px;padding:2rem;max-width:340px;width:100%;text-align:center;}
+.modal-box h3{font-family:Georgia,serif;font-size:0.78rem;color:var(--gold);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.8rem;}
+.modal-close{margin-top:10px;background:none;border:1px solid rgba(212,175,55,0.3);color:rgba(212,175,55,0.6);border-radius:100px;padding:0.5rem 1.8rem;font-family:Georgia,serif;font-size:0.78rem;cursor:pointer;}
+#secretModal .modal-box p{font-size:0.73rem;color:rgba(255,255,255,0.4);margin-bottom:0.8rem;font-style:italic;}
+#secretInput{width:100%;background:rgba(255,255,255,0.07);border:1px solid rgba(212,175,55,0.35);border-radius:100px;color:#fff;font-family:Georgia,serif;font-size:1rem;text-align:center;letter-spacing:0.2em;padding:0.65rem 1rem;outline:none;margin-bottom:0.7rem;text-transform:uppercase;}
+#secretInput::placeholder{color:rgba(255,255,255,0.22);letter-spacing:0.08em;text-transform:none;}
+#secretSubmit{width:100%;background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--purple);font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.65rem 2rem;font-size:0.83rem;cursor:pointer;margin-bottom:0.5rem;}
+#secretResult{display:none;margin-top:0.8rem;}
+.sr-emoji{font-size:2.3rem;display:block;margin-bottom:0.4rem;}
+.sr-msg{font-size:0.88rem;color:var(--cream);line-height:1.8;font-style:italic;margin-bottom:0.4rem;}
+.sr-from{font-size:0.68rem;color:var(--gold2);letter-spacing:0.08em;}
+#secretError{color:var(--pink);font-size:0.73rem;margin-top:0.4rem;display:none;}
+#prayerModal{overflow-y:auto;justify-content:flex-start;padding:env(safe-area-inset-top,20px) 20px 40px;}
+.prayer-inner{max-width:400px;width:100%;text-align:center;padding-top:16px;}
+.prayer-dove{font-size:2.8rem;display:block;margin-bottom:0.8rem;animation:petFloat 3s ease-in-out infinite;}
+.prayer-inner h2{font-family:Georgia,serif;font-size:0.9rem;color:var(--gold);letter-spacing:0.14em;text-transform:uppercase;margin-bottom:0.2rem;}
+.prayer-sub{font-size:0.65rem;color:rgba(255,255,255,0.35);letter-spacing:0.1em;margin-bottom:1.2rem;}
+.prayer-text{font-size:0.95rem;line-height:2.1;color:rgba(255,255,255,0.88);font-style:italic;margin-bottom:1.2rem;}
+.prayer-names{font-size:0.7rem;color:rgba(212,175,55,0.6);letter-spacing:0.14em;margin-bottom:1.4rem;}
+.prayer-cont{background:linear-gradient(135deg,var(--purple2),var(--gold));color:var(--cream);border:1px solid var(--gold);border-radius:100px;padding:0.75rem 2.2rem;font-family:Georgia,serif;font-size:0.88rem;cursor:pointer;}
+#crossModal .cross-grid{display:grid;grid-template-columns:repeat(3,44px);grid-template-rows:repeat(5,44px);gap:4px;margin-bottom:0.8rem;}
+.cc{display:flex;align-items:center;justify-content:center;font-size:1.4rem;}
+.cc.on{animation:hpulse 1s ease-in-out infinite;}
+@keyframes hpulse{0%,100%{transform:scale(1);}50%{transform:scale(1.2);}}
+.cross-sub{color:var(--gold2);font-size:0.72rem;letter-spacing:0.1em;text-align:center;margin-bottom:0.8rem;}
+#milestoneModal .modal-box{border-color:rgba(212,175,55,0.5);box-shadow:0 0 40px rgba(212,175,55,0.3);}
+.me3{font-size:3.2rem;display:block;margin-bottom:0.7rem;}
+.mt2{font-size:1.05rem;color:var(--gold);font-weight:bold;margin-bottom:0.4rem;}
+.ms{font-size:0.8rem;color:rgba(255,255,255,0.68);line-height:1.6;margin-bottom:1.2rem;}
+.mile-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--purple);font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.65rem 2rem;font-size:0.83rem;cursor:pointer;}
+#gameModal{z-index:900;background:rgba(0,0,0,0.95);}
+.gm-title{font-family:'Press Start 2P',monospace;font-size:0.68rem;color:var(--gold);margin-bottom:5px;text-align:center;}
+#gameScore{font-family:'Press Start 2P',monospace;font-size:0.58rem;color:var(--gold2);margin-bottom:6px;}
+#gameCanvas{display:block;border:1px solid rgba(212,175,55,0.3);border-radius:10px;max-width:min(320px,94vw);}
+#gameClose{margin-top:8px;background:none;border:1px solid rgba(212,175,55,0.3);color:rgba(212,175,55,0.6);border-radius:100px;padding:0.5rem 1.6rem;font-family:Georgia,serif;font-size:0.8rem;cursor:pointer;}
+#finalScreen{position:fixed;inset:0;z-index:9000;background:linear-gradient(160deg,#0d0115,#2a0040,#4a0e4f);display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:2rem;gap:1rem;}
+#finalScreen.show{display:flex;}
+.final-dove{font-size:5rem;display:block;animation:phoenixRise 3s ease-in-out infinite;}
+@keyframes phoenixRise{50%{transform:translateY(-20px) scale(1.1);filter:drop-shadow(0 0 40px #ff6900) drop-shadow(0 0 80px #d4af37);}}
+.final-title{font-size:1.4rem;color:var(--gold);font-weight:bold;line-height:1.4;}
+.final-verse{font-style:italic;font-size:0.8rem;color:rgba(255,255,255,0.68);max-width:320px;line-height:1.8;}
+.cf{position:fixed;pointer-events:none;z-index:9996;border-radius:3px;animation:cfFall var(--d) var(--dl) ease-in forwards;}
+@keyframes cfFall{0%{opacity:1;transform:translateY(-10px) rotate(0);}100%{opacity:0;transform:translateY(105vh) rotate(720deg);}}
+@keyframes slideUp2{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
+@keyframes milePop{0%{transform:scale(0.3) rotate(-5deg);opacity:0;}70%{transform:scale(1.08) rotate(1deg);}100%{transform:scale(1) rotate(0);opacity:1;}}
 </style>
 </head>
 <body>
-
+<div id="loadScreen">
+  <div class="ld-dove">🕊️</div>
+  <div style="text-align:center"><div class="ld-title">Covenant</div><div class="ld-sub" style="margin-top:4px">Tito Boi + Jay · Forever</div></div>
+  <div class="ld-bar-wrap"><div class="ld-bar" id="ldBar"></div></div>
+  <div class="ld-fact-wrap"><div class="ld-fact" id="ldFact">Loading your love story... 💕</div></div>
+  <div class="ld-pct" id="ldPct">0%</div>
+</div>
 <div id="app">
-
-<!-- ══ BOTTOM NAV ══ -->
-<div id="bottomNav">
-  <button class="nav-btn active" id="nav-home"    onclick="switchTab('home')"     ><span>🕊️</span><span>Home</span></button>
-  <button class="nav-btn"        id="nav-jar"     onclick="switchTab('jar')"      ><span>📸</span><span>Memory</span></button>
-  <button class="nav-btn"        id="nav-devot"   onclick="switchTab('devot')"    ><span>🙏</span><span>Devotion</span></button>
-  <button class="nav-btn"        id="nav-games"   onclick="switchTab('games')"    ><span>🎮</span><span>Games</span></button>
-  <button class="nav-btn"        id="nav-night"   onclick="switchTab('night')"    ><span>🌙</span><span>Night</span></button>
+<div id="nav">
+  <button class="nb on"  id="nb-home"  onclick="goTab('home')" ><span>🕊️</span><span>Home</span></button>
+  <button class="nb"     id="nb-jar"   onclick="goTab('jar')"  ><span>📸</span><span>Memory</span></button>
+  <button class="nb"     id="nb-devot" onclick="goTab('devot')"><span>🙏</span><span>Devotion</span></button>
+  <button class="nb"     id="nb-games" onclick="goTab('games')"><span>🎮</span><span>Games</span></button>
+  <button class="nb"     id="nb-night" onclick="goTab('night')"><span>🌙</span><span>Night</span></button>
 </div>
-
-<!-- ══ MAIN SCREEN ══ -->
-<div class="screen active" id="mainScreen">
-
-  <!-- TOP BANNER -->
-  <div id="topBanner">
-    <div id="dayCounter">✝ Covenant Streak ✝</div>
-    <div id="dayBig">Day <span id="dayNum">1</span> <span>/ 3652</span></div>
-  </div>
-
-  <!-- BIRTHDAY BANNER -->
-  <div id="bdayBanner">
-    <div id="bdayText"></div>
-  </div>
-
-  <!-- MISSED MESSAGE -->
-  <div id="missedBanner">
-    <span class="miss-emoji" id="missEmoji">💕</span>
-    <div class="miss-text" id="missText"></div>
-  </div>
-
-  <!-- PROGRESS RING + PET -->
-  <div id="ringSection">
-    <div id="ringWrap">
-      <svg viewBox="0 0 220 220" xmlns="http://www.w3.org/2000/svg">
-        <defs>
-          <linearGradient id="ringGrad" x1="0%" y1="0%" x2="100%" y2="100%">
-            <stop offset="0%"   stop-color="#4a7c2f"/>
-            <stop offset="50%"  stop-color="#d4af37"/>
-            <stop offset="100%" stop-color="#ff69b4"/>
-          </linearGradient>
-        </defs>
-        <circle class="ringBg" cx="110" cy="110" r="100" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="10"/>
-        <circle id="ringFill" cx="110" cy="110" r="100" fill="none" stroke="url(#ringGrad)" stroke-width="10" stroke-linecap="round"
-          stroke-dasharray="628" stroke-dashoffset="628"/>
-      </svg>
-
-      <div id="petWrap" id="pet">
-        <span id="petEmoji">🥚</span>
-        <div id="petLabel">Golden Egg</div>
-        <div id="pct">0.0%</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- VERSE CARD -->
-  <div id="verseCard" onclick="nextVerse()">
-    <div id="verseText">"My beloved is mine and I am his..."</div>
-    <div id="verseRef">Song of Solomon 2:16 · tap to change</div>
-  </div>
-
-  <!-- STREAK STATS -->
+<div class="screen active" id="homeScreen">
+  <div id="topBanner"><div id="dayCounter">✝ Covenant Streak ✝</div><div id="dayBig">Day <span id="dayNum">1</span> <span>/ 3652</span></div></div>
+  <div id="bdayBanner"><div id="bdayText"></div></div>
+  <div id="missedBanner"><span class="me" id="missEmoji">💕</span><div class="mt" id="missText"></div></div>
+  <div id="ringSection"><div id="ringWrap">
+    <svg viewBox="0 0 210 210" xmlns="http://www.w3.org/2000/svg">
+      <defs><linearGradient id="rg" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#4a7c2f"/><stop offset="50%" stop-color="#d4af37"/><stop offset="100%" stop-color="#ff69b4"/></linearGradient></defs>
+      <circle cx="105" cy="105" r="96" fill="none" stroke="rgba(255,255,255,0.07)" stroke-width="9"/>
+      <circle id="ringFill" cx="105" cy="105" r="96" fill="none" stroke="url(#rg)" stroke-width="9" stroke-linecap="round" stroke-dasharray="603" stroke-dashoffset="603" style="transition:stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)"/>
+    </svg>
+    <div id="petWrap"><span id="petEmoji">🥚</span><div id="petLabel">Golden Egg</div><div id="petPct">0.0%</div></div>
+  </div></div>
+  <div id="verseCard" onclick="nextVerse()"><div id="verseText">"My beloved is mine and I am his..."</div><div id="verseRef">Song of Solomon 2:16 · tap to change</div></div>
   <div id="streakRow">
-    <div class="stat-box">
-      <span class="val" id="streakDays">1</span>
-      <span class="lbl">Day Streak</span>
-    </div>
-    <div class="stat-box">
-      <span class="val" id="daysLeft">3651</span>
-      <span class="lbl">Days Left</span>
-    </div>
-    <div class="stat-box">
-      <span class="val" id="yearsLeft">10.0</span>
-      <span class="lbl">Years Left</span>
-    </div>
+    <div class="sb"><span class="sv" id="sDays">1</span><span class="sl">Streak</span></div>
+    <div class="sb"><span class="sv" id="sLeft">3651</span><span class="sl">Days Left</span></div>
+    <div class="sb"><span class="sv" id="sYears">10.0</span><span class="sl">Yrs Left</span></div>
   </div>
-
-  <!-- TOMORROW TEASER -->
   <div id="teaser"></div>
-
-  <!-- SECRET MESSAGE BUTTON -->
-  <div style="text-align:center;padding:4px 0 2px;">
-    <button onclick="openSecretModal()" style="
-      background:rgba(212,175,55,0.1);
-      border:1px solid rgba(212,175,55,0.3);
-      border-radius:100px;
-      color:rgba(212,175,55,0.8);
-      font-family:Georgia,serif;
-      font-size:0.75rem;
-      padding:0.5rem 1.5rem;
-      cursor:pointer;
-      letter-spacing:0.08em;
-    ">💌 Got a code from Tito Boi?</button>
-  </div>
-
-  <!-- TAP HINT -->
-  <div id="tapHint">tap pet · long-press to pray · tap verse to change</div>
-
+  <div id="secretBtnWrap"><button onclick="openModal('secretModal')">💌 Got a code from Tito Boi?</button></div>
+  <div id="tapHint">tap pet · long-press to pray · tap verse to rotate</div>
 </div>
-</div><!-- end mainScreen -->
-
-<!-- ══ MEMORY JAR SCREEN ══ -->
 <div class="screen" id="jarScreen">
-  <div class="jar-header"><h2>📸 Memory Jar</h2><p>your little notes live here forever</p></div>
-  <div class="jar-input-wrap">
-    <!-- Photo upload -->
-    <div id="photoPreviewWrap" style="display:none;margin-bottom:10px;text-align:center;position:relative;">
-      <img id="photoPreview" style="max-width:100%;max-height:160px;border-radius:10px;object-fit:cover;border:1px solid rgba(212,175,55,0.3);"/>
-      <button onclick="removePhoto()" style="position:absolute;top:4px;right:4px;background:rgba(0,0,0,0.6);border:none;color:#fff;border-radius:50%;width:24px;height:24px;font-size:0.75rem;cursor:pointer;line-height:1;">✕</button>
-    </div>
-    <textarea id="jarInput" placeholder="Write a memory, a feeling, something you want to remember... 🌸" maxlength="300"></textarea>
-    <div class="jar-input-footer">
-      <!-- Mood row with labels -->
-      <div class="jar-mood-row">
-        <button class="mood-btn" data-mood="😊" data-label="fun day" onclick="selectMood(this)">
-          <span class="mood-emoji">😊</span>
-          <span class="mood-label">fun day</span>
-        </button>
-        <button class="mood-btn selected" data-mood="😐" data-label="mid day" onclick="selectMood(this)">
-          <span class="mood-emoji">😐</span>
-          <span class="mood-label">mid day</span>
-        </button>
-        <button class="mood-btn" data-mood="😔" data-label="sad day" onclick="selectMood(this)">
-          <span class="mood-emoji">😔</span>
-          <span class="mood-label">sad day</span>
-        </button>
-      </div>
+  <div class="sec-hdr"><h2>📸 Memory Jar</h2><p>your little notes live here forever</p></div>
+  <div class="jar-box">
+    <div id="photoPreviewWrap"><img id="photoPreview" alt=""/><button id="removePhotoBtn" onclick="removePhoto()">✕</button></div>
+    <textarea id="jarInput" placeholder="Write a memory, a feeling, something to remember... 🌸" maxlength="300"></textarea>
+    <div class="mood-row">
+      <button class="mood-btn" data-mood="😊" data-lbl="fun day" onclick="pickMood(this)"><span class="mde">😊</span><span class="mdl">fun day</span></button>
+      <button class="mood-btn on" data-mood="😐" data-lbl="mid day" onclick="pickMood(this)"><span class="mde">😐</span><span class="mdl">mid day</span></button>
+      <button class="mood-btn" data-mood="😔" data-lbl="sad day" onclick="pickMood(this)"><span class="mde">😔</span><span class="mdl">sad day</span></button>
     </div>
     <div class="jar-actions">
-      <!-- Photo upload button -->
-      <label class="jar-photo-btn" for="photoInput">📷 Add Photo</label>
-      <input type="file" id="photoInput" accept="image/*" style="display:none;" onchange="handlePhoto(event)"/>
-      <button class="jar-save-btn" onclick="saveMemory()">Save 💌</button>
+      <label class="photo-label" for="photoInput">📷 Add Photo</label>
+      <input type="file" id="photoInput" accept="image/*" style="display:none" onchange="handlePhoto(event)"/>
+      <button class="save-btn" onclick="saveMemory()">Save 💌</button>
     </div>
   </div>
-  <div id="memoriesList"></div>
+  <div id="memList"></div>
 </div>
-
-<!-- ══ DEVOTIONAL SCREEN ══ -->
 <div class="screen" id="devotScreen">
-  <div class="devot-header"><h2>🙏 Daily Devotion</h2><p>Tito Boi + Jay · Faith First</p></div>
-  <div class="devot-card">
-    <div class="devot-day" id="devotDay">Day 1 Devotion</div>
-    <span class="devot-emoji" id="devotEmoji">✝️</span>
-    <div class="devot-title" id="devotTitle">Loading...</div>
-    <div class="devot-body"  id="devotBody"></div>
-  </div>
-  <div class="devot-challenge">
-    <div class="ch-label">✦ Today's Challenge</div>
-    <div class="ch-text" id="devotChallenge"></div>
-  </div>
-  <button class="devot-done" id="devotDoneBtn" onclick="markDevotDone()">I did it today 🙏</button>
+  <div class="sec-hdr"><h2>🙏 Daily Devotion</h2><p>Tito Boi + Jay · Faith First</p></div>
+  <div class="devot-card"><div class="devot-day" id="devotDay">Day 1 Devotion</div><span class="devot-emoji" id="devotEmoji">✝️</span><div class="devot-title" id="devotTitle">Loading...</div><div class="devot-body" id="devotBody"></div></div>
+  <div class="devot-challenge"><div class="ch-lbl">✦ Today's Challenge</div><div class="ch-text" id="devotChallenge"></div></div>
+  <button class="devot-done-btn" id="devotBtn" onclick="markDevot()">I did it today 🙏</button>
 </div>
-
-<!-- ══ GAMES SCREEN ══ -->
 <div class="screen" id="gamesScreen">
-  <div class="games-header"><h2>🎮 Mini Games</h2><p>play · grow · love</p></div>
-  <div class="game-card" onclick="startGame('hearts')">
-    <div class="gc-icon">💖</div>
-    <div class="gc-info">
-      <div class="gc-title">Catch the Hearts</div>
-      <div class="gc-desc">Tap falling hearts before they hit the ground. Miss too many and the dove cries 🕊️</div>
-      <div class="gc-score" id="score-hearts">Best: 0</div>
-    </div>
+  <div class="sec-hdr"><h2>🎮 Mini Games</h2><p>play · grow · love</p></div>
+  <div class="game-card tap" onclick="launchGame('hearts')">
+    <div class="gc-top"><div class="gc-icon">💖</div><div><div class="gc-title">Catch the Hearts</div><div class="gc-desc">Tap falling hearts before they hit the ground. Gets faster as you score! 🔥</div><div class="gc-score" id="sc-hearts">Best: 0</div></div></div>
   </div>
-  <div class="game-card" onclick="startGame('dove')">
-    <div class="gc-icon">🕊️</div>
-    <div class="gc-info">
-      <div class="gc-title">Feed the Dove</div>
-      <div class="gc-desc">Tap the olive branches to feed the dove. Don't let it get hungry! 🫒</div>
-      <div class="gc-score" id="score-dove">Best: 0</div>
-    </div>
+  <div class="game-card tap" onclick="launchGame('dove')">
+    <div class="gc-top"><div class="gc-icon">🕊️</div><div><div class="gc-title">Feed the Dove</div><div class="gc-desc">Tap olive branches to feed the dove. Don't let her get hungry! 🫒</div><div class="gc-score" id="sc-dove">Best: 0</div></div></div>
   </div>
-  <div class="game-card" style="flex-direction:column;align-items:flex-start;cursor:default;">
-    <div style="display:flex;align-items:center;gap:14px;width:100%;">
-      <div class="gc-icon">🌸</div>
-      <div class="gc-info">
-        <div class="gc-title">Love Match</div>
-        <div class="gc-desc">Flip cards and match the pairs. A love letter unlocks when you win 💌</div>
-        <div class="gc-score" id="score-memory">Best: --</div>
-      </div>
-    </div>
-    <div style="display:flex;gap:8px;margin-top:10px;width:100%;">
-      <button class="size-btn" onclick="startGame('memory','2x2')">2×2<span>Easy</span></button>
-      <button class="size-btn" onclick="startGame('memory','3x4')">3×4<span>Normal</span></button>
-      <button class="size-btn" onclick="startGame('memory','4x4')">4×4<span>Hard</span></button>
-      <button class="size-btn" onclick="startGame('memory','4x5')">4×5<span>Insane</span></button>
+  <div class="game-card">
+    <div class="gc-top"><div class="gc-icon">🌸</div><div><div class="gc-title">Love Match</div><div class="gc-desc">Flip cards and match pairs. A love letter unlocks when you win 💌</div><div class="gc-score" id="sc-memory">Best: --</div></div></div>
+    <div class="size-row">
+      <button class="sz-btn" onclick="launchGame('memory','2x2')">2×2<span>Easy</span></button>
+      <button class="sz-btn" onclick="launchGame('memory','3x4')">3×4<span>Normal</span></button>
+      <button class="sz-btn" onclick="launchGame('memory','4x4')">4×4<span>Hard</span></button>
+      <button class="sz-btn" onclick="launchGame('memory','4x5')">4×5<span>Insane</span></button>
     </div>
   </div>
 </div>
-
-<!-- ══ GOODNIGHT SCREEN ══ -->
-<div class="screen" id="goodnightScreen">
-  <div class="gn-card">
-    <span class="gn-moon" id="gnMoon">🌙</span>
-    <div class="gn-title">Goodnight, Jay 🕊️</div>
-    <div class="gn-sub">Before you sleep, let the dove tuck you in.<br/>Tito Boi is thinking of you right now.</div>
-    <div class="gn-verse" id="gnVerse"></div>
-    <button class="gn-btn" id="gnBtn" onclick="doGoodnight()">🌙 Tuck in the Dove</button>
-    <div class="gn-status" id="gnStatus"></div>
-  </div>
+<div class="screen" id="nightScreen">
+  <div class="gn-card"><span class="gn-moon" id="gnMoon">🌙</span><div class="gn-title">Goodnight, Jay 🕊️</div><div class="gn-sub">Before you sleep, let the dove tuck you in.<br/>Tito Boi is thinking of you right now.</div><div class="gn-verse" id="gnVerse"></div><button class="gn-btn" id="gnBtn" onclick="doGoodnight()">🌙 Tuck in the Dove</button><div class="gn-status" id="gnStatus"></div></div>
 </div>
-
-<!-- ═══ LORD'S PRAYER MODAL ═══ -->
-<div id="prayerModal">
-  <div class="prayer-header">
-    <span class="dove">🕊️</span>
-    <h2>Lord's Prayer</h2>
-    <p>Tito Boi + Jay · Praying As One</p>
-  </div>
-  <div class="prayer-text">
-    <strong>Our Father,</strong> who art in heaven,<br/>
-    hallowed be Thy name.<br/>
-    Thy kingdom come,<br/>
-    Thy will be done,<br/>
-    on earth as it is in heaven.<br/><br/>
-    Give us this day our daily bread,<br/>
-    and forgive us our trespasses,<br/>
-    as we forgive those who trespass against us.<br/><br/>
-    And lead us not into temptation,<br/>
-    but deliver us from evil.<br/><br/>
-    For Thine is the kingdom,<br/>
-    the power and the glory,<br/>
-    forever and ever.<br/><br/>
-    <strong>Amen. 🕊️</strong>
-  </div>
+</div>
+<div class="modal" id="prayerModal">
+  <div class="prayer-inner"><span class="prayer-dove">🕊️</span><h2>Lord's Prayer</h2><p class="prayer-sub">Tito Boi + Jay · Praying As One</p>
+  <div class="prayer-text"><strong>Our Father,</strong> who art in heaven,<br/>hallowed be Thy name.<br/>Thy kingdom come, Thy will be done,<br/>on earth as it is in heaven.<br/><br/>Give us this day our daily bread,<br/>and forgive us our trespasses,<br/>as we forgive those who trespass against us.<br/><br/>And lead us not into temptation,<br/>but deliver us from evil.<br/><br/>For Thine is the kingdom,<br/>the power and the glory,<br/>forever and ever.<br/><br/><strong>Amen. 🕊️</strong></div>
   <div class="prayer-names">✝ Tito Boi + Jay · Praying Together ✝</div>
-  <button class="prayer-continue" onclick="closePrayer()">Continue in Love 💕</button>
+  <button class="prayer-cont" onclick="closePrayer()">Continue in Love 💕</button></div>
 </div>
-
-<!-- ═══ CROSS HEARTS ═══ -->
-<div id="crossHearts">
+<div class="modal" id="crossModal">
   <div class="cross-grid" id="crossGrid"></div>
-  <div id="crossCaption">Tito Boi + Jay · United in Christ 💍✝️</div>
-  <button id="crossClose" onclick="closeCross()">Amen 🙏</button>
+  <div class="cross-sub">Tito Boi + Jay · United in Christ 💍✝️</div>
+  <button class="modal-close" onclick="closeModal('crossModal')">Amen 🙏</button>
 </div>
-
-<!-- ═══ MILESTONE POPUP ═══ -->
-<div id="milestonePopup">
-  <div class="milestone-box">
-    <span class="milestone-emoji" id="mileEmoji">👑</span>
-    <div class="milestone-title" id="mileTitle">Week 1 Legend!</div>
-    <div class="milestone-sub" id="mileSub">You showed up. That's love.</div>
-    <button class="milestone-btn" onclick="closeMilestone()">Keep Going 💕</button>
+<div class="modal" id="milestoneModal">
+  <div class="modal-box" style="animation:milePop 0.5s cubic-bezier(.36,.07,.19,.97) both;">
+    <span class="me3" id="mileEmoji">👑</span><div class="mt2" id="mileTitle">Week 1!</div><div class="ms" id="mileSub"></div>
+    <button class="mile-btn" onclick="closeModal('milestoneModal')">Keep Going 💕</button>
   </div>
 </div>
-
-<!-- ═══ SECRET MESSAGE MODAL ═══ -->
-<div id="secretModal">
-  <div class="secret-box">
-    <h3>💌 Secret Message</h3>
-    <p>Enter the code Tito Boi sent you</p>
-    <input id="secretInput" type="text" maxlength="10" placeholder="Enter code..." autocomplete="off" autocorrect="off" spellcheck="false"/>
-    <button id="secretSubmit" onclick="submitSecretCode()">Open Message 💌</button>
-    <div id="secretResult">
-      <div style="font-size:2.5rem;margin-bottom:0.5rem" id="secretMsgEmoji">💌</div>
-      <div class="secret-msg-text" id="secretMsgText"></div>
-      <div class="secret-msg-from" id="secretMsgFrom"></div>
-    </div>
-    <div id="secretError">❌ Wrong code... ask Tito Boi! 😄</div>
-    <button id="secretClose" onclick="closeSecretModal()">close</button>
-  </div>
+<div class="modal" id="secretModal">
+  <div class="modal-box"><h3>💌 Secret Message</h3><p>Enter the code Tito Boi sent you</p>
+  <input id="secretInput" type="text" maxlength="10" placeholder="Enter code..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+  <button id="secretSubmit" onclick="checkSecret()">Open Message 💌</button>
+  <div id="secretResult"><span class="sr-emoji" id="srEmoji">💌</span><div class="sr-msg" id="srMsg"></div><div class="sr-from" id="srFrom"></div></div>
+  <div id="secretError">❌ Wrong code... ask Tito Boi! 😄</div>
+  <button class="modal-close" onclick="closeModal('secretModal')">close</button></div>
 </div>
-
-<!-- ═══ FINAL SCREEN ═══ -->
+<div class="modal" id="gameModal">
+  <div class="gm-title" id="gmTitle">Game 💖</div>
+  <div id="gameScore">Score: 0</div>
+  <canvas id="gameCanvas" width="320" height="460"></canvas>
+  <button id="gameClose" onclick="closeGame()">✕ Close</button>
+</div>
 <div id="finalScreen">
   <span class="final-dove">🔥🕊️🔥</span>
   <div class="final-title">TITO BOI + JAY<br/>= ETERNAL 💍✝️</div>
-  <div class="final-verse">
-    "Egg → Dove → Phoenix"<br/>
-    Dec 30 + Dec 31 = New Year Forever<br/>
-    Like Christ rose — Tito Boi + Jay rise eternal.<br/><br/>
-    <em>"Many waters cannot quench love."</em><br/>
-    Song of Solomon 8:7
-  </div>
+  <div class="final-verse">"Egg → Dove → Phoenix"<br/>Dec 30 + Dec 31 = New Year Forever<br/>Like Christ rose — Tito Boi + Jay rise eternal.<br/><br/><em>"Many waters cannot quench love."</em><br/>Song of Solomon 8:7</div>
 </div>
-
 <script>
-// ═══════════════════════════════════════════════
-//  DATA
-// ═══════════════════════════════════════════════
+// Safe roundRect polyfill (ctx.roundRect not supported in older Safari/Android)
+function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
-const VERSES = [
-  { text: '"My beloved is mine and I am his; he grazes among the lilies."', ref: 'Song of Solomon 2:16' },
-  { text: '"Love is patient, love is kind. It does not envy, it does not boast, it is not proud... it always protects, always trusts, always hopes, always perseveres."', ref: '1 Corinthians 13:4–7' },
-  { text: '"Place me like a seal over your heart... for love is as strong as death, its jealousy unyielding as the grave."', ref: 'Song of Solomon 8:6–7' },
-  { text: '"Where you go I will go, and where you stay I will stay. Your people will be my people and your God my God."', ref: 'Ruth 1:16' },
-  { text: '"You are altogether beautiful, my darling; there is no flaw in you."', ref: 'Song of Solomon 4:7' },
-  { text: '"Joseph son of David, do not be afraid to take Mary home as your wife, because what is conceived in her is from the Holy Spirit."', ref: 'Matthew 1:20' },
-  { text: '"I am the Lord\'s servant. May your word to me be fulfilled."', ref: 'Luke 1:38' },
-];
+// LOADING
+const FACTS=['Did you know this app was created by Tito Boi with a little help from AI? 🤖💕','Did you know Tito Boi made this app entirely for Jay? Not for anyone else. Just you. 🥹','Did you know the golden egg hatches on Day 30? Keep the streak! 🥚✨','Did you know there are secret codes Tito Boi can send you? Ask him for one 💌','Did you know the dove evolves over 10 years? Egg to Baby to Teen to Wedding Dove to Phoenix 🔥','Did you know your Memory Jar stores up to 100 memories with photos? 📸','Did you know Tito Boi spent hours coding this just to make you smile? Worth it. 😊','Did you know there are 24 Bible verses chosen just for you? 📖','Did you know long-pressing the dove opens the Lord\'s Prayer? Try it 🙏','Did you know the app celebrates your birthday on Dec 30? Tito Boi remembered 👑','Did you know Dec 30 + Dec 31 = New Year Forever? That\'s Tito Boi\'s theory 💍','Did you know the mini games get harder the better you do? Good luck 🎮','Did you know Tito Boi waited a whole month before sending you this? Patience is love 🌹','Did you know this app works offline? The dove never leaves you. 🕊️','Did you know the Memory Jar is your personal diary? Fill it up, Jay 💕'];
+(function(){
+  var bar=document.getElementById('ldBar'),fact=document.getElementById('ldFact'),pct=document.getElementById('ldPct');
+  var sh=FACTS.slice().sort(function(){return Math.random()-0.5;});
+  var fi=0,prog=0;
+  function nf(){fact.classList.add('fade');setTimeout(function(){fact.textContent=sh[fi++%sh.length];fact.classList.remove('fade');},350);}
+  nf();var ft=setInterval(nf,2200);
+  var tgts=[30,60,82,94],ti=0;
+  var pt=setInterval(function(){var t=tgts[Math.min(ti,tgts.length-1)];if(prog<t)prog=Math.min(t,prog+1.2);else ti++;if(bar)bar.style.width=prog+'%';if(pct)pct.textContent=Math.round(prog)+'%';},50);
+  window.addEventListener('load',function(){setTimeout(function(){clearInterval(pt);clearInterval(ft);if(bar)bar.style.width='100%';if(pct)pct.textContent='100%';setTimeout(function(){var ls=document.getElementById('loadScreen');ls.classList.add('out');setTimeout(function(){ls.style.display='none';},700);},350);},500);});
+})();
 
-const EGG_MSGS = [
-  "Hi mom! I cannot hatch yet 🥚",
-  "Knock knock... not yet! 😄",
-  "I can hear you! I am still growing 🌱",
-  "Shhh I am sleeping... jk hi! 👋",
-  "It is warm in here, I do not wanna leave 🥚💕",
-  "Come back on Day 30, I promise I will be cute 🐣",
-  "Did someone say tap? That was me. Hi! 🥚",
-  "I am a golden egg. That means I am special 👑",
-  "Tito Boi says hi too btw 💌",
-  "Every tap makes me grow a little more 🌟",
-  "Almost there... Day 30 is the big day! 🎉",
-  "I heard you and Tito Boi are doing great 🥹",
-  "God is watching over us both in here 🙏",
-  "Patient heart, golden egg. Like you, Jay 💛",
-  "Saving my wings for the right moment 🕊️",
-  "Can you feel me wiggling? That means I love you 🥚💗",
-  "Still incubating... greatness takes time 👑",
-  "Day {{day}} of 30 until I hatch — almost there! 🐣",
-  "Every day you open this = one more feather growing 🪶",
-  "Two more taps and I might just crack a smile 😄",
-];
+// DATA
+var TOTAL=3652;
+var VERSES=[{t:'"My beloved is mine and I am his; he grazes among the lilies."',r:'Song of Solomon 2:16'},{t:'"Love is patient, love is kind. It does not envy, it does not boast... it always protects, always trusts, always hopes, always perseveres."',r:'1 Corinthians 13:4-7'},{t:'"Place me like a seal over your heart... for love is as strong as death."',r:'Song of Solomon 8:6-7'},{t:'"Where you go I will go, and where you stay I will stay. Your people will be my people."',r:'Ruth 1:16'},{t:'"You are altogether beautiful, my darling; there is no flaw in you."',r:'Song of Solomon 4:7'},{t:'"Joseph son of David, do not be afraid to take Mary home as your wife."',r:'Matthew 1:20'},{t:'"I am the Lord\'s servant. May your word to me be fulfilled."',r:'Luke 1:38'},{t:'"How beautiful you are, my darling! Oh, how beautiful! Your eyes are doves."',r:'Song of Solomon 1:15'},{t:'"I have found the one whom my soul loves."',r:'Song of Solomon 3:4'},{t:'"His left arm is under my head, and his right arm embraces me."',r:'Song of Solomon 2:6'},{t:'"Many women do noble things, but you surpass them all."',r:'Proverbs 31:29'},{t:'"Two are better than one, because they have a good return for their labor."',r:'Ecclesiastes 4:9'},{t:'"A cord of three strands is not quickly broken."',r:'Ecclesiastes 4:12'},{t:'"Be completely humble and gentle; be patient, bearing with one another in love."',r:'Ephesians 4:2'},{t:'"Above all, love each other deeply, because love covers a multitude of sins."',r:'1 Peter 4:8'},{t:'"And now these three remain: faith, hope and love. But the greatest of these is love."',r:'1 Corinthians 13:13'},{t:'"Delight yourself in the Lord, and he will give you the desires of your heart."',r:'Psalm 37:4'},{t:'"For I know the plans I have for you — plans to prosper you and not to harm you."',r:'Jeremiah 29:11'},{t:'"The Lord your God is with you, the Mighty Warrior who saves."',r:'Zephaniah 3:17'},{t:'"Like an apple tree among the trees of the forest is my beloved among the young men."',r:'Song of Solomon 2:3'},{t:'"Let him kiss me with the kisses of his mouth — for your love is more delightful than wine."',r:'Song of Solomon 1:2'},{t:'"Love never fails."',r:'1 Corinthians 13:8'},{t:'"I praise you because I am fearfully and wonderfully made."',r:'Psalm 139:14'},{t:'"She is worth far more than rubies."',r:'Proverbs 31:10'}];
+var EGG_MSGS=['Hi mom! I cannot hatch yet 🥚','Knock knock... not yet! 😄','I can hear you! Still growing 🌱','Shhh I am sleeping... jk hi! 👋','It is warm in here, I do not wanna leave 🥚💕','Come back on Day 30, I promise I will be cute 🐣','Did someone say tap? That was me. Hi! 🥚','I am a golden egg. That means I am special 👑','Tito Boi says hi too btw 💌','Every tap makes me grow a little more 🌟','Almost there... Day 30 is the big day! 🎉','God is watching over us both in here 🙏','Patient heart, golden egg. Like you, Jay 💛','Saving my wings for the right moment 🕊️','Can you feel me wiggling? That means I love you 🥚💗','Day {{d}} of 30 until I hatch! 🐣','Every day you open this = one more feather 🪶'];
+var MISSED=[{d:[1,2],e:'😏',t:'Missed me, Jay? 😏 I kept the light on for you.'},{d:[1,2],e:'🌸',t:'Look who is back! Welcome home, Jay 🌸'},{d:[1,2],e:'💌',t:'One day away felt like forever, Jay 💌'},{d:[1,2],e:'✨',t:'You always come back. That is why I love you, Jay ✨'},{d:[1,2],e:'🕊️',t:'The dove waited. The dove is happy now, Jay 🕊️'},{d:[3,6],e:'💕',t:'Heart kept your spot warm, Jay. It is still yours 💕'},{d:[3,6],e:'🌙',t:'I counted the nights, Jay. Every single one 🌙'},{d:[3,6],e:'💛',t:'A few days gone but my love did not move an inch, Jay 💛'},{d:[3,6],e:'🌿',t:'Like an olive branch, I still offer peace, Jay 🌿'},{d:[3,6],e:'🙏',t:'Prayed for you every day you were gone, Jay 🙏'},{d:[7,9999],e:'💍',t:'I would wait 10 years. A few days was just practice, Jay 💍'},{d:[7,9999],e:'✝️',t:'Love endures all things. We endure, Jay. Always 💕'},{d:[7,9999],e:'🕊️',t:'The dove does not leave. She circles back. Like you, Jay 🕊️'},{d:[7,9999],e:'🌹',t:'Worth the wait. Always. Come back whenever, Jay 🌹'},{d:[7,9999],e:'👑',t:'Queens do not quit. And neither do I, Jay 👑'}];
+var MILESTONES={7:{e:'👑',t:'Week 1 Legend!',s:'7 days of showing up. That is real love, Jay.'},30:{e:'🏆',t:'Month 1 Queen!',s:'30 days strong. The dove is so proud of you 🕊️'},100:{e:'💯',t:'Triple Digits!',s:'100 days. You are not just dating — you are building, Jay.'},365:{e:'🎉',t:'Year 1 Forever!',s:'365 days. One full year of choosing each other 💍'},1000:{e:'💍',t:'3+ Years Legends',s:'1000 days. Tito Boi + Jay. Nothing stops this love 💕'},3652:{e:'🔥',t:'TITO BOI + JAY = ETERNAL',s:'10 years. The covenant is complete. ✝️💍'}};
+var SECRETS={'TITO01':{e:'💌',m:'Hey Jay... just wanted you to know I think about you every single day. This egg is proof. 🥚✝️',f:'— Tito Boi, always'},'ILOVEU':{e:'💕',m:'I love you, Jay. There. I said it. Now the app knows too. 🕊️',f:'— Tito Boi 💍'},'DEC30':{e:'👑',m:'Happy Birthday Queen. Dec 30 is the best day God ever made. You are proof of that. 🎂✨',f:'— Your Tito Boi 👑'},'PRAY':{e:'🙏',m:'I prayed for you today. I prayed for us. I prayed that God keeps you safe and brings us closer every day. 💕',f:'— Tito Boi ✝️'},'SORRY':{e:'🌸',m:'I am sorry, Jay. Whatever it is, I am sorry. You deserve nothing but kindness from me. Always. 🕊️',f:'— Tito Boi 🤍'},'GANDA':{e:'🌟',m:'You are so beautiful, Jay. I hope you know that. Like actually. The kind of beautiful that stays. 💛',f:'— Tito Boi'},'PROUD':{e:'🏆',m:'I am so proud of you Jay. Everything you carry, everything you push through — it is extraordinary. 💪✝️',f:'— Tito Boi 👑'},'MISS':{e:'🥺',m:'I miss you, Jay. Even when you are near. Is that weird? Maybe. But it is true. 💗',f:'— Tito Boi 🥺'},'FAITH':{e:'✝️',m:'"For I know the plans I have for you" — Jeremiah 29:11. God planned you for something beautiful. I believe you are part of mine. 🕊️',f:'— Tito Boi ✝️'},'COURT':{e:'🌹',m:'It took me a month of courage to ask. And I would wait a thousand more days just for the chance. Thank you for saying yes, Jay. 🌹💍',f:'— Tito Boi, forever courting you'}};
+var DEVOTIONS=[{e:'✝️',t:'Faith Over Fear',b:'"Do not fear, for I am with you." — Isaiah 41:10\n\nToday, lay down one worry at God\'s feet. He is already working it out.',c:'Say out loud: "God is bigger than this." Then text Tito Boi one thing you are trusting God for today 💕'},{e:'🌿',t:'Be Still',b:'"Be still and know that I am God." — Psalm 46:10\n\nIn the noise, pause. Five deep breaths. Feel His peace.',c:'Spend 5 quiet minutes with no phone. Just you and God. 🙏'},{e:'💕',t:'Love Is Patient',b:'"Love is patient, love is kind." — 1 Cor 13:4\n\nPatience is a form of love. Today, practice it with someone who tests yours.',c:'Find one moment to choose patience over frustration. Tell Tito Boi how it went 😊'},{e:'🌸',t:'You Are Chosen',b:'"You did not choose me, but I chose you." — John 15:16\n\nGod chose you. Specifically. Intentionally. On purpose.',c:'Write one thing God loves about you. Save it in your Memory Jar 💌'},{e:'🕊️',t:'Peace Like a River',b:'"Peace I leave with you; my peace I give you." — John 14:27\n\nHis peace is not the absence of trouble — it is calm in the middle of it.',c:'Pray for peace for someone else today. Then enjoy the peace that returns 🕊️'},{e:'👑',t:'You Are Royalty',b:'"You are a chosen people, a royal priesthood." — 1 Peter 2:9\n\nYou carry a crown you cannot always see. Walk like it today.',c:'Do one thing that honors the queen God made you to be 👑'},{e:'🌙',t:'Rest Is Holy',b:'"He grants sleep to those he loves." — Psalm 127:2\n\nRest is not laziness. It is trust.',c:'Go to bed 30 minutes earlier tonight. Give that time back to God 🌙'},{e:'🌹',t:'Love Covers All',b:'"Above all, love each other deeply, because love covers a multitude of sins." — 1 Peter 4:8',c:'Think of someone who hurt you. Pray for them today, even just one sentence 🌹'},{e:'🙏',t:'Pray Without Ceasing',b:'"Pray continually." — 1 Thessalonians 5:17\n\nPrayer is a conversation. Talk to Him like He is right there.',c:'Pray three times today: morning, afternoon, before sleep 🙏'},{e:'💛',t:'Gratitude Changes Everything',b:'"Give thanks in all circumstances." — 1 Thessalonians 5:18\n\nGratitude is choosing to find God in it anyway.',c:'List 5 things you are grateful for and save them in your Memory Jar 💛'},{e:'🔥',t:'Refined by Fire',b:'"When you walk through the fire, you will not be burned." — Isaiah 43:2\n\nEvery hard season makes you stronger.',c:'Write about one hard thing that made you stronger. God used it 🔥'},{e:'🤍',t:'Grace Upon Grace',b:'"From his fullness we have all received grace upon grace." — John 1:16\n\nYou cannot run out of His grace. Not today. Not ever.',c:'Extend grace to yourself today. One mistake does not define you 🤍'}];
+var GN_VERSES=[{t:'"He grants sleep to those he loves."',r:'Psalm 127:2'},{t:'"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."',r:'Psalm 4:8'},{t:'"When you lie down, you will not be afraid; your sleep will be sweet."',r:'Proverbs 3:24'},{t:'"The Lord watches over you... he will keep you from all harm."',r:'Psalm 121:5,7'},{t:'"Cast all your anxiety on him because he cares for you."',r:'1 Peter 5:7'},{t:'"My beloved is mine and I am his."',r:'Song of Solomon 2:16'},{t:'"Peace I leave with you; my peace I give you."',r:'John 14:27'}];
 
-const MISSED_MSGS = [
-  { days:[1,2], emoji:'😏', msg:`Missed me, Jay? 😏 I kept the light on for you.` },
-  { days:[1,2], emoji:'🌸', msg:`Look who's back! Welcome home, Jay 🌸` },
-  { days:[1,2], emoji:'💌', msg:`One day away felt like forever, Jay 💌` },
-  { days:[1,2], emoji:'✨', msg:`You always come back. That's why I love you, Jay ✨` },
-  { days:[1,2], emoji:'🕊️', msg:`The dove waited. The dove is happy now, Jay 🕊️` },
-  { days:[3,6], emoji:'💕', msg:`Heart kept your spot warm, Jay. It's still yours 💕` },
-  { days:[3,6], emoji:'🌙', msg:`I counted the nights, Jay. Every single one 🌙` },
-  { days:[3,6], emoji:'💛', msg:`A few days gone but my love didn't move an inch, Jay 💛` },
-  { days:[3,6], emoji:'🌿', msg:`Like an olive branch, I still offer peace, Jay 🌿` },
-  { days:[3,6], emoji:'🙏', msg:`Prayed for you every day you were gone, Jay 🙏` },
-  { days:[7,9999], emoji:'💍', msg:`I'd wait 10 years. A few days was just practice, Jay 💍` },
-  { days:[7,9999], emoji:'✝️', msg:`"Love endures all things." — We endure, Jay. Always 💕` },
-  { days:[7,9999], emoji:'🕊️', msg:`The dove doesn't leave. She circles back. Like you, Jay 🕊️` },
-  { days:[7,9999], emoji:'🌹', msg:`Worth the wait. Always. Come back whenever, Jay 🌹` },
-  { days:[7,9999], emoji:'👑', msg:`Queens don't quit. And neither do I, Jay 👑` },
-];
+// STATE
+function getState(){var d={currentDay:1,lastLogin:null,msgHistory:[],verseIndex:0,eggHistory:[],shownMilestones:[]};try{return Object.assign(d,JSON.parse(localStorage.getItem('cov_v3')||'{}'));}catch(e){return d;}}
+function saveState(s){try{localStorage.setItem('cov_v3',JSON.stringify(s));}catch(e){}}
+function todayStr(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}
+var ST=getState(),missedDays=0,lpTimer=null;
 
-const MILESTONES = {
-  7:    { emoji:'👑', title:'Week 1 Legend!',          sub:`7 days of showing up. That's real love, Jay.` },
-  30:   { emoji:'🏆', title:'Month 1 Queen!',           sub:`30 days strong. The dove is so proud of you 🕊️` },
-  100:  { emoji:'💯', title:'Triple Digits!',           sub:`100 days. You're not just dating — you're building, Jay.` },
-  365:  { emoji:'🎉', title:'Year 1 Forever!',          sub:`365 days. One full year of choosing each other 💍` },
-  1000: { emoji:'💍', title:'3+ Years Legends',         sub:`1000 days. Tito Boi + Jay. Nothing stops this love 💕` },
-  3652: { emoji:'🔥', title:'TITO BOI + JAY = ETERNAL', sub:`10 years. The covenant is complete ✝️💍` },
-};
-
-// ═══════════════════════════════════════════════
-//  STATE
-// ═══════════════════════════════════════════════
-const TOTAL = 3652;
-
-function getState() {
-  const def = {
-    currentDay: 1,
-    lastLogin: null,
-    messageHistory: [],
-    verseIndex: 0,
-    shownMilestones: [],
-  };
-  try { return Object.assign(def, JSON.parse(localStorage.getItem('covenant_state') || '{}')); }
-  catch(e) { return def; }
-}
-function saveState(s) {
-  try { localStorage.setItem('covenant_state', JSON.stringify(s)); } catch(e){}
-}
-
-function todayStr() {
-  const d = new Date();
-  return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');
-}
-
-// ═══════════════════════════════════════════════
-//  INIT
-// ═══════════════════════════════════════════════
-let state = getState();
-let longPressTimer = null;
-let petMood = 'happy';
-let missedDays = 0;
-
-window.addEventListener('DOMContentLoaded', () => {
-  const today = todayStr();
-
-  if (!state.lastLogin) {
-    // First ever open
-    state.lastLogin = today;
-    state.currentDay = 1;
-    saveState(state);
-  } else if (state.lastLogin !== today) {
-    const last = new Date(state.lastLogin);
-    const now  = new Date(today);
-    const diff = Math.round((now - last) / 86400000);
-    missedDays = diff - 1;
-    state.currentDay = Math.min(state.currentDay + diff, TOTAL);
-    state.lastLogin = today;
-    saveState(state);
-  }
-
-  renderAll();
-  setupPet();
-  checkBirthday();
-  checkMilestone();
+// INIT
+window.addEventListener('DOMContentLoaded',function(){
+  for(var i=0;i<55;i++){var s=document.createElement('div');s.className='star';var sz=Math.random()*1.8+0.3;s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'vw;top:'+Math.random()*100+'vh;--d:'+(2+Math.random()*4)+'s;--dl:'+(Math.random()*4)+'s;--op:'+(0.35+Math.random()*0.55)+';';document.body.appendChild(s);}
+  var today=todayStr();
+  if(!ST.lastLogin){ST.lastLogin=today;ST.currentDay=1;saveState(ST);}
+  else if(ST.lastLogin!==today){var diff=Math.round((new Date(today)-new Date(ST.lastLogin))/86400000);missedDays=diff-1;ST.currentDay=Math.min(ST.currentDay+diff,TOTAL);ST.lastLogin=today;saveState(ST);}
+  renderHome();setupPet();checkBday();checkMilestone();
+  document.getElementById('secretInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkSecret();});
 });
 
-// ═══════════════════════════════════════════════
-//  RENDER
-// ═══════════════════════════════════════════════
-function renderAll() {
-  const day = state.currentDay;
-  document.getElementById('dayNum').textContent = day;
+// HOME
+function renderHome(){
+  var d=ST.currentDay;
+  document.getElementById('dayNum').textContent=d;
+  document.getElementById('ringFill').style.strokeDashoffset=603*(1-d/TOTAL);
+  var ps=petStage(d);document.getElementById('petEmoji').textContent=ps.emoji;document.getElementById('petLabel').textContent=ps.label;document.getElementById('petPct').textContent=(d/TOTAL*100).toFixed(2)+'%';
+  document.getElementById('sDays').textContent=d;document.getElementById('sLeft').textContent=TOTAL-d;document.getElementById('sYears').textContent=((TOTAL-d)/365.2).toFixed(1);
+  var t=['Day '+(d+1)+' awaits, Dec 30 Queen 🌸','Tomorrow is Day '+(d+1)+'. One step closer 💕','Day '+(d+1)+': another page in our story 📖',(TOTAL-d)+' days left. Each one worth it 🕊️'];
+  document.getElementById('teaser').textContent=t[d%t.length];
+  renderVerse();if(missedDays>0)showMissed(missedDays);
+}
+function petStage(d){if(d<=30)return{emoji:'🥚',label:'Golden Egg'};if(d<=365)return{emoji:'🐣',label:'Baby Dove'};if(d<=1000)return{emoji:'🕊️',label:'Teen Dove'};if(d<3652)return{emoji:'🤍🕊️',label:'Wedding Dove'};return{emoji:'🔥🕊️🔥',label:'Phoenix'};}
+function renderVerse(){var v=VERSES[ST.verseIndex%VERSES.length];document.getElementById('verseText').textContent=v.t;document.getElementById('verseRef').textContent=v.r+' · tap to change';}
+function nextVerse(){ST.verseIndex=(ST.verseIndex+1)%VERSES.length;saveState(ST);renderVerse();spawnHearts(document.getElementById('verseCard'),3);}
+function showMissed(days){var pool=MISSED.filter(function(m){return days>=m.d[0]&&days<=m.d[1];});var hist=ST.msgHistory||[];var avail=pool.filter(function(_,i){return!hist.slice(-5).includes(i);});var src=avail.length?avail:pool;var pick=src[Math.floor(Math.random()*src.length)];ST.msgHistory=hist.slice(-9).concat([MISSED.indexOf(pick)]);saveState(ST);document.getElementById('missEmoji').textContent=pick.e;document.getElementById('missText').textContent=pick.t;document.getElementById('missedBanner').style.display='block';}
 
-  // Ring
-  const pct = day / TOTAL;
-  const circumference = 2 * Math.PI * 100; // r=100
-  const offset = circumference * (1 - pct);
-  document.getElementById('ringFill').style.strokeDashoffset = offset;
-  document.getElementById('pct').textContent = (pct * 100).toFixed(2) + '%';
+// PET
+function setupPet(){
+  var w=document.getElementById('petWrap');
+  w.addEventListener('click',onPetTap);
+  w.addEventListener('touchend',function(e){e.preventDefault();clearTimeout(lpTimer);onPetTap(e);});
+  w.addEventListener('mousedown',function(){lpTimer=setTimeout(function(){clearTimeout(lpTimer);openModal('prayerModal');},700);});
+  w.addEventListener('touchstart',function(e){e.preventDefault();lpTimer=setTimeout(function(){clearTimeout(lpTimer);openModal('prayerModal');},700);});
+  ['mouseup','mouseleave','touchend','touchcancel'].forEach(function(ev){w.addEventListener(ev,function(){clearTimeout(lpTimer);});});
+}
+function onPetTap(){var el=document.getElementById('petEmoji');el.classList.remove('sad');el.classList.add('loved');spawnHearts(el,10);if(ST.currentDay<=30)showEggBubble();else nextVerse();setTimeout(function(){el.classList.remove('loved');},1200);}
+function showEggBubble(){
+  var hist=ST.eggHistory||[];var pool=EGG_MSGS.map(function(_,i){return i;}).filter(function(i){return!hist.slice(-3).includes(i);});var idx=pool[Math.floor(Math.random()*pool.length)];
+  ST.eggHistory=hist.slice(-5).concat([idx]);saveState(ST);
+  document.querySelectorAll('.egg-bub').forEach(function(b){b.remove();});
+  var b=document.createElement('div');b.className='egg-bub';b.textContent=EGG_MSGS[idx].replace('{{d}}',ST.currentDay);
+  var top=document.getElementById('ringSection').getBoundingClientRect().top;b.style.top=Math.max(70,top-10)+'px';
+  var tail=document.createElement('div');tail.style.cssText='position:absolute;bottom:-9px;left:50%;transform:translateX(-50%);width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;border-top:9px solid rgba(240,204,85,0.97);';
+  b.appendChild(tail);document.body.appendChild(b);
+  setTimeout(function(){b.style.animation='ebOut 0.4s ease-in forwards';setTimeout(function(){b.remove();},400);},2800);
+}
 
-  // Pet stage
-  const { emoji, label } = getPetStage(day);
-  document.getElementById('petEmoji').textContent = emoji;
-  document.getElementById('petLabel').textContent = label;
+// HEARTS
+function spawnHearts(el,n){var r=el.getBoundingClientRect(),cx=r.left+r.width/2,cy=r.top+r.height/2;var em=['💖','💗','💕','💓','💝','🌸','✨'];for(var i=0;i<n;i++){var h=document.createElement('div');h.className='heart-p';h.textContent=em[Math.floor(Math.random()*em.length)];h.style.left=(cx+(Math.random()-0.5)*120)+'px';h.style.top=cy+'px';h.style.setProperty('--r',(Math.random()*40-20)+'deg');h.style.animationDelay=(i*80)+'ms';document.body.appendChild(h);setTimeout(function(){h.remove();},3500);}}
 
-  // Stats
-  document.getElementById('streakDays').textContent = day;
-  document.getElementById('daysLeft').textContent = TOTAL - day;
-  document.getElementById('yearsLeft').textContent = ((TOTAL - day) / 365.2).toFixed(1);
+// CONFETTI
+function confetti(){var c=['#d4af37','#ff69b4','#c4b5fd','#6ee7b7','#fff','#f9c3d3'];for(var i=0;i<80;i++){var el=document.createElement('div');el.className='cf';var col=c[Math.floor(Math.random()*c.length)];var w=5+Math.random()*7,h2=5+Math.random()*7;el.style.cssText='left:'+Math.random()*100+'vw;top:-8px;width:'+w+'px;height:'+h2+'px;background:'+col+';--d:'+(1.2+Math.random()*1.5)+'s;--dl:'+Math.random()*1.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(el);setTimeout(function(){el.remove();},3500);}}
 
-  // Verse
-  renderVerse();
+// TABS
+var TABS={home:'homeScreen',jar:'jarScreen',devot:'devotScreen',games:'gamesScreen',night:'nightScreen'};
+function goTab(tab){Object.keys(TABS).forEach(function(k){document.getElementById(TABS[k]).classList.toggle('active',k===tab);document.getElementById('nb-'+k).classList.toggle('on',k===tab);});if(tab==='jar')renderMemList();if(tab==='devot')renderDevot();if(tab==='night')renderNight();if(tab==='games')renderGameScores();}
 
-  // Teaser
-  const next = day + 1;
-  const teasers = [
-    `Day ${next} awaits, Dec 30 Queen 🌸`,
-    `Tomorrow is Day ${next}. One step closer 💕`,
-    `Day ${next}: another page in our story, Jay 📖`,
-    `${TOTAL - day} days left. Each one worth it 🕊️`,
-  ];
-  document.getElementById('teaser').textContent = teasers[day % teasers.length];
+// MODALS
+function openModal(id){document.getElementById(id).classList.add('show');}
+function closeModal(id){document.getElementById(id).classList.remove('show');if(id==='secretModal'){document.getElementById('secretResult').style.display='none';document.getElementById('secretError').style.display='none';document.getElementById('secretInput').value='';}}
+function closePrayer(){closeModal('prayerModal');var pat=[false,true,false,true,true,true,false,true,false,false,true,false,false,true,false];var g=document.getElementById('crossGrid');g.innerHTML='';pat.forEach(function(on){var c=document.createElement('div');c.className='cc'+(on?' on':'');c.textContent=on?'💖':'';g.appendChild(c);});openModal('crossModal');}
 
-  // Missed
-  if (missedDays > 0) {
-    showMissedMessage(missedDays);
-    petMood = 'sad';
+// BIRTHDAY
+function checkBday(){var m=new Date().getMonth()+1,d=new Date().getDate();var b=document.getElementById('bdayBanner'),t=document.getElementById('bdayText');if(m===12&&d===30){b.style.display='block';t.innerHTML='👑 HAPPY BIRTHDAY JAY! 👑<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">"I praise you because I am fearfully and wonderfully made." — Psalm 139:14</em>';confetti();}else if(m===12&&d===31){b.style.display='block';t.innerHTML='🪵 TITO BOI DAY! 🪵<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Jay celebrates you today 💕</em>';confetti();}else if(m===1&&d===1){b.style.display='block';t.innerHTML='🎊 Dec 30 + Dec 31 = NEW YEAR FOREVER 💍<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Tito Boi + Jay eternal ✝️</em>';confetti();}}
+
+// MILESTONE
+function checkMilestone(){var d=ST.currentDay;if(!MILESTONES[d])return;if((ST.shownMilestones||[]).includes(d))return;ST.shownMilestones=(ST.shownMilestones||[]).concat([d]);saveState(ST);var m=MILESTONES[d];document.getElementById('mileEmoji').textContent=m.e;document.getElementById('mileTitle').textContent=m.t;document.getElementById('mileSub').textContent=m.s;openModal('milestoneModal');confetti();if(d===3652)setTimeout(function(){closeModal('milestoneModal');document.getElementById('finalScreen').classList.add('show');},3000);}
+
+// SECRET
+function checkSecret(){var code=document.getElementById('secretInput').value.trim().toUpperCase();var msg=SECRETS[code];document.getElementById('secretError').style.display='none';if(msg){document.getElementById('secretResult').style.display='block';document.getElementById('srEmoji').textContent=msg.e;document.getElementById('srMsg').textContent=msg.m;document.getElementById('srFrom').textContent=msg.f;spawnHearts(document.getElementById('secretResult'),12);confetti();}else{document.getElementById('secretError').style.display='block';document.getElementById('secretInput').value='';}}
+
+// MEMORY JAR
+var curMood='😐',curMoodLbl='mid day',curPhoto=null;
+function pickMood(btn){document.querySelectorAll('.mood-btn').forEach(function(b){b.classList.remove('on');});btn.classList.add('on');curMood=btn.dataset.mood;curMoodLbl=btn.dataset.lbl;}
+function handlePhoto(e){var file=e.target.files[0];if(!file)return;var reader=new FileReader();reader.onload=function(ev){var img=new Image();img.onload=function(){var maxW=600,sc=img.width>maxW?maxW/img.width:1;var cv=document.createElement('canvas');cv.width=img.width*sc;cv.height=img.height*sc;cv.getContext('2d').drawImage(img,0,0,cv.width,cv.height);curPhoto=cv.toDataURL('image/jpeg',0.7);document.getElementById('photoPreview').src=curPhoto;document.getElementById('photoPreviewWrap').style.display='block';};img.src=ev.target.result;};reader.readAsDataURL(file);e.target.value='';}
+function removePhoto(){curPhoto=null;document.getElementById('photoPreview').src='';document.getElementById('photoPreviewWrap').style.display='none';}
+function getMems(){try{return JSON.parse(localStorage.getItem('cov_mems')||'[]');}catch(e){return[];}}
+function saveMemory(){var txt=document.getElementById('jarInput').value.trim();if(!txt&&!curPhoto)return;var mems=getMems();mems.unshift({id:Date.now(),text:txt,mood:curMood,moodLbl:curMoodLbl,photo:curPhoto,day:ST.currentDay,date:todayStr()});try{localStorage.setItem('cov_mems',JSON.stringify(mems.slice(0,100)));}catch(e){localStorage.setItem('cov_mems',JSON.stringify(mems.slice(0,100).map(function(m,i){return i>50?Object.assign({},m,{photo:null}):m;})));}document.getElementById('jarInput').value='';removePhoto();spawnHearts(document.getElementById('jarInput'),6);renderMemList();}
+function deleteMem(id){localStorage.setItem('cov_mems',JSON.stringify(getMems().filter(function(m){return m.id!==id;})));renderMemList();}
+function renderMemList(){var el=document.getElementById('memList');if(!el)return;var mems=getMems();if(!mems.length){el.innerHTML='<div class="jar-empty">No memories yet...<br/>Write something or add a photo 🌸</div>';return;}el.innerHTML=mems.map(function(m){return '<div class="mem-card"><button class="mem-del" onclick="deleteMem('+m.id+')">✕</button>'+(m.photo?'<img src="'+m.photo+'" alt="memory"/>' : '')+'<div class="mem-mood-row"><span class="mem-mood-e">'+m.mood+'</span><span class="mem-mood-l">'+(m.moodLbl||'')+'</span></div>'+(m.text?'<div class="mem-text">"'+m.text+'"</div>':'')+'<div class="mem-meta">Day '+m.day+' · '+m.date+'</div></div>';}).join('');}
+
+// DEVOTIONAL
+function renderDevot(){var key='cov_devot_'+todayStr(),done=localStorage.getItem(key)==='1';var dv=DEVOTIONS[ST.currentDay%DEVOTIONS.length];document.getElementById('devotDay').textContent='Day '+ST.currentDay+' Devotion';document.getElementById('devotEmoji').textContent=dv.e;document.getElementById('devotTitle').textContent=dv.t;document.getElementById('devotBody').innerHTML=dv.b.replace(/\n/g,'<br/>');document.getElementById('devotChallenge').textContent=dv.c;var btn=document.getElementById('devotBtn');btn.disabled=done;btn.textContent=done?'Done for today ✅':'I did it today 🙏';}
+function markDevot(){localStorage.setItem('cov_devot_'+todayStr(),'1');renderDevot();spawnHearts(document.getElementById('devotBtn'),10);confetti();}
+
+// GOODNIGHT
+function renderNight(){var key='cov_gn_'+todayStr(),done=localStorage.getItem(key)==='1';var v=GN_VERSES[ST.currentDay%GN_VERSES.length];document.getElementById('gnVerse').innerHTML='<em>"'+v.t+'"</em><br/><small style="color:rgba(212,175,55,0.45);font-size:0.63rem;letter-spacing:0.09em">'+v.r+'</small>';document.getElementById('gnMoon').textContent=done?'😴':'🌙';document.getElementById('gnBtn').disabled=done;document.getElementById('gnBtn').textContent=done?'Dove is tucked in 😴':'🌙 Tuck in the Dove';document.getElementById('gnStatus').textContent=done?'Sweet dreams, Jay 🕊️ Tito Boi is praying for you tonight.':'Tap before you sleep each night 🌙';}
+function doGoodnight(){localStorage.setItem('cov_gn_'+todayStr(),'1');renderNight();spawnHearts(document.getElementById('gnBtn'),12);for(var i=0;i<18;i++){var s=document.createElement('div');s.style.cssText='position:fixed;font-size:'+(0.9+Math.random())+'rem;left:'+Math.random()*100+'vw;top:'+(20+Math.random()*60)+'vh;pointer-events:none;z-index:9997;animation:heartUp '+(2+Math.random()*2)+'s ease-out forwards;animation-delay:'+Math.random()+'s;opacity:0;';s.textContent=['⭐','🌟','✨','💫','🌙'][Math.floor(Math.random()*5)];document.body.appendChild(s);setTimeout(function(){s.remove();},5000);}}
+
+// GAMES
+function renderGameScores(){var hs=function(k){return parseInt(localStorage.getItem('hs_'+k)||'0');};document.getElementById('sc-hearts').textContent='Best: '+hs('hearts');document.getElementById('sc-dove').textContent='Best: '+hs('dove');var sizes=['2x2','3x4','4x4','4x5'];var b=sizes.map(function(s){var v=localStorage.getItem('hs_m_'+s);return v&&v!=='999'?s+':'+v+'m':null;}).filter(Boolean);document.getElementById('sc-memory').textContent=b.length?'Best: '+b.join(' · '):'Best: --';}
+var gFrame=null;
+function launchGame(type,size){document.getElementById('gameModal').classList.add('show');var titles={hearts:'Catch the Hearts 💖',dove:'Feed the Dove 🕊️',memory:'Love Match 🌸'};document.getElementById('gmTitle').textContent=titles[type]+(size?' ('+size+')':'');if(type==='hearts')initHearts();else if(type==='dove')initDove();else initMemory(size||'4x4');}
+function closeGame(){if(gFrame){cancelAnimationFrame(gFrame);gFrame=null;}document.getElementById('gameModal').classList.remove('show');renderGameScores();}
+
+// HEARTS GAME
+function initHearts(){
+  var cv=document.getElementById('gameCanvas');var W=320,H=460;cv.width=W;cv.height=H;
+  var ctx=cv.getContext('2d');var score=0,lives=3,over=false,lastSpawn=0,frame=0;
+  var hearts=[],parts=[],floats=[];var prev=parseInt(localStorage.getItem('hs_hearts')||'0');
+  var STARS=Array.from({length:40},function(){return{x:Math.random()*W,y:Math.random()*H,r:Math.random()*1.2+0.3,op:Math.random()*0.5+0.2,tw:Math.random()*Math.PI*2};});
+  var TIERS=[{at:0,ms:1100,spd:1.8,max:3},{at:10,ms:900,spd:2.4,max:4},{at:20,ms:720,spd:3.0,max:5},{at:35,ms:560,spd:3.8,max:6},{at:55,ms:420,spd:4.8,max:7},{at:80,ms:300,spd:6.0,max:8}];
+  var TLBLS=[null,'Speeding up! 💨','Getting fast! 🔥','BLAZING! 🌟','INSANE!! 💫','GODMODE 👑'];
+  var DCOLS=['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
+  var tier=0,banner=null,bannerT=0;
+  function getTier(){var t=TIERS[0];TIERS.forEach(function(x){if(score>=x.at)t=x;});return t;}
+  function loop(ts){
+    if(over)return;frame++;
+    var t=getTier();var ni=TIERS.filter(function(x){return score>=x.at;}).length-1;
+    if(ni>tier&&TLBLS[ni]){tier=ni;banner=TLBLS[ni];bannerT=90;}if(bannerT>0)bannerT--;
+    if(hearts.length<t.max&&ts-lastSpawn>t.ms){var em=['💖','💗','💕','💓','🌸','✨'];hearts.push({x:28+Math.random()*(W-56),y:-28,vy:t.spd+Math.random()*0.8,vx:(Math.random()-0.5)*0.6,e:em[Math.floor(Math.random()*em.length)],r:20,rot:(Math.random()-0.5)*0.3});lastSpawn=ts;}
+    hearts.forEach(function(h){h.y+=h.vy;h.x+=h.vx;h.vy+=0.05;});
+    var missed=hearts.filter(function(h){return h.y>H+30;});
+    if(missed.length){lives-=missed.length;missed.forEach(function(h){for(var i=0;i<6;i++)parts.push({x:h.x,y:H-20,vx:(Math.random()-0.5)*4,vy:-(Math.random()*3+1),life:1,r:3,c:'rgba(255,80,80,'});});hearts=hearts.filter(function(h){return h.y<=H+30;});if(lives<=0){over=true;endHearts(score,prev);return;}}
+    parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=0.045;p.vx*=0.95;});parts=parts.filter(function(p){return p.life>0;});
+    floats.forEach(function(f){f.y+=f.vy;f.life-=0.03;});floats=floats.filter(function(f){return f.life>0;});
+    var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d0820');g.addColorStop(1,'#1a0535');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    STARS.forEach(function(s){ctx.fillStyle='rgba(255,255,255,'+(s.op+Math.sin(frame*0.03+s.tw)*0.12)+')';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+    ctx.font='32px serif';ctx.textAlign='center';
+    hearts.forEach(function(h){ctx.save();ctx.translate(h.x,h.y);ctx.rotate(h.rot);ctx.shadowColor='rgba(255,105,180,0.5)';ctx.shadowBlur=8;ctx.fillText(h.e,0,0);ctx.shadowBlur=0;ctx.restore();});
+    parts.forEach(function(p){ctx.fillStyle=p.c+p.life.toFixed(2)+')';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();});
+    floats.forEach(function(f){ctx.fillStyle='rgba(240,204,85,'+f.life.toFixed(2)+')';ctx.font='bold 15px Georgia';ctx.textAlign='center';ctx.fillText(f.t,f.x,f.y);});
+    ctx.font='17px serif';ctx.textAlign='left';for(var i=0;i<3;i++){ctx.globalAlpha=i<lives?1:0.2;ctx.fillText('💖',8+i*26,26);}ctx.globalAlpha=1;
+    ctx.fillStyle='#f0cc55';ctx.font='bold 14px Georgia';ctx.textAlign='right';ctx.fillText(''+score,W-10,26);
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px Georgia';ctx.fillText('best '+Math.max(score,prev),W-10,41);
+    var ti2=TIERS.filter(function(x){return score>=x.at;}).length-1;for(var i=0;i<TIERS.length;i++){ctx.beginPath();ctx.arc(W/2-25+i*10,40,3.5,0,Math.PI*2);ctx.fillStyle=i<=ti2?DCOLS[i]:'rgba(255,255,255,0.1)';ctx.fill();}
+    if(bannerT>0){var a=Math.min(1,bannerT/20)*Math.min(1,(bannerT)/90*3);ctx.fillStyle='rgba(212,175,55,'+a*0.14+')';ctx.fillRect(0,H/2-26,W,40);ctx.fillStyle='rgba(240,204,85,'+a+')';ctx.font='bold 16px Georgia';ctx.textAlign='center';ctx.fillText(banner,W/2,H/2+5);}
+    document.getElementById('gameScore').textContent='Score: '+score+'  ·  Best: '+Math.max(score,prev);
+    gFrame=requestAnimationFrame(loop);
   }
+  cv.ontouchstart=cv.onmousedown=function(e){e.preventDefault();if(over)return;var rc=cv.getBoundingClientRect();var src=e.touches?e.touches[0]:e;var tx=(src.clientX-rc.left)*(W/rc.width),ty=(src.clientY-rc.top)*(H/rc.height);var hi=-1;hearts.forEach(function(h,i){if(Math.hypot(h.x-tx,h.y-ty)<h.r+14)hi=i;});if(hi!==-1){for(var i=0;i<10;i++){var a=(Math.PI*2/10)*i;parts.push({x:hearts[hi].x,y:hearts[hi].y,vx:Math.cos(a)*(2+Math.random()*3),vy:Math.sin(a)*(2+Math.random()*3),life:1,r:2+Math.random()*3,c:'rgba(255,105,180,'});}floats.push({x:hearts[hi].x,y:hearts[hi].y-10,vy:-1.2,life:1,t:'+1 💕'});hearts.splice(hi,1);score++;if(score>prev)localStorage.setItem('hs_hearts',score);}};
+  gFrame=requestAnimationFrame(loop);
 }
+function endHearts(score,prev){if(gFrame){cancelAnimationFrame(gFrame);gFrame=null;}var best=Math.max(score,prev);if(score>=prev&&score>0){localStorage.setItem('hs_hearts',best);confetti();}var cv=document.getElementById('gameCanvas'),ctx=cv.getContext('2d');ctx.fillStyle='rgba(10,5,25,0.96)';ctx.fillRect(0,0,cv.width,cv.height);ctx.textAlign='center';ctx.font='50px serif';ctx.fillText(score>15?'🌟':'💖',cv.width/2,110);ctx.fillStyle='#d4af37';ctx.font='bold 19px Georgia';ctx.fillText(score>15?'Amazing! 🔥':'Game Over!',cv.width/2,158);ctx.fillStyle='#fff';ctx.font='14px Georgia';ctx.fillText('Score: '+score,cv.width/2,186);if(score>=prev&&score>0){ctx.fillStyle='#f0cc55';ctx.font='bold 12px Georgia';ctx.fillText('✨ New Best: '+best+'!',cv.width/2,207);}else{ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='13px Georgia';ctx.fillText('Best: '+best,cv.width/2,207);}ctx.fillStyle='rgba(249,195,211,0.85)';ctx.font='italic 12px Georgia';ctx.fillText(['Every heart you caught = love returned 💕','The dove is proud of you 🕊️','Tito Boi would have caught them all for you 😄'][score%3],cv.width/2,248);ctx.fillStyle='rgba(255,255,255,0.22)';ctx.font='10px Georgia';ctx.fillText('Close and tap again to replay',cv.width/2,285);}
 
-function getPetStage(day) {
-  if (day <= 30)    return { emoji: '🥚',  label: 'Golden Egg' };
-  if (day <= 365)   return { emoji: '🐣',  label: 'Baby Dove' };
-  if (day <= 1000)  return { emoji: '🕊️', label: 'Teen Dove' };
-  if (day < 3652)   return { emoji: '🤍🕊️', label: 'Wedding Dove' };
-  return              { emoji: '🔥🕊️🔥', label: 'Phoenix' };
-}
-
-function renderVerse() {
-  const v = VERSES[state.verseIndex % VERSES.length];
-  document.getElementById('verseText').textContent = v.text;
-  document.getElementById('verseRef').textContent  = v.ref + ' · tap to change';
-}
-
-function nextVerse() {
-  state.verseIndex = (state.verseIndex + 1) % VERSES.length;
-  saveState(state);
-  renderVerse();
-  spawnHearts(document.getElementById('verseCard'), 3);
-}
-
-// ═══════════════════════════════════════════════
-//  MISSED MESSAGE
-// ═══════════════════════════════════════════════
-function showMissedMessage(missed) {
-  const pool = MISSED_MSGS.filter(m => missed >= m.days[0] && missed <= m.days[1]);
-  const history = state.messageHistory || [];
-  const filtered = pool.filter((_, i) => !history.slice(-5).includes(i));
-  const src = filtered.length ? filtered : pool;
-  const pick = src[Math.floor(Math.random() * src.length)];
-  const idx  = MISSED_MSGS.indexOf(pick);
-  state.messageHistory = [...history.slice(-9), idx];
-  saveState(state);
-
-  document.getElementById('missEmoji').textContent = pick.emoji;
-  document.getElementById('missText').textContent  = pick.msg;
-  document.getElementById('missedBanner').style.display = 'block';
-}
-
-// ═══════════════════════════════════════════════
-//  PET INTERACTION
-// ═══════════════════════════════════════════════
-function setupPet() {
-  const wrap = document.getElementById('petWrap');
-
-  wrap.addEventListener('click', onPetTap);
-  wrap.addEventListener('touchend', e => { e.preventDefault(); clearTimeout(longPressTimer); onPetTap(e); });
-  wrap.addEventListener('mousedown', startLongPress);
-  wrap.addEventListener('touchstart', e => { e.preventDefault(); startLongPress(e); });
-  wrap.addEventListener('mouseup',   cancelLongPress);
-  wrap.addEventListener('mouseleave',cancelLongPress);
-  wrap.addEventListener('touchend',  cancelLongPress);
-  wrap.addEventListener('touchcancel',cancelLongPress);
-}
-
-function onPetTap(e) {
-  const el = document.getElementById('petEmoji');
-  el.classList.remove('sad');
-  el.classList.add('loved');
-  spawnHearts(el, 10);
-
-  if (state.currentDay <= 30) {
-    // Egg stage — show speech bubble instead of verse
-    showEggBubble();
-  } else {
-    nextVerse();
+// DOVE GAME
+function initDove(){
+  var cv=document.getElementById('gameCanvas');var W=320,H=460;cv.width=W;cv.height=H;
+  var ctx=cv.getContext('2d');var score=0,hunger=80,over=false,lastDrop=0,frame=0;
+  var branches=[],parts=[],floats=[],ripples=[];var prev=parseInt(localStorage.getItem('hs_dove')||'0');
+  var DX=W/2,DY=H-105;
+  var STARS=Array.from({length:35},function(){return{x:Math.random()*W,y:Math.random()*H*0.7,r:Math.random()*1.2+0.2,tw:Math.random()*Math.PI*2};});
+  var TIERS=[{at:0,ms:1800,spd:1.4,max:2,dr:0.025},{at:8,ms:1400,spd:1.9,max:3,dr:0.035},{at:18,ms:1050,spd:2.5,max:4,dr:0.05},{at:32,ms:800,spd:3.2,max:5,dr:0.07},{at:50,ms:580,spd:4.0,max:6,dr:0.10},{at:75,ms:400,spd:5.0,max:7,dr:0.14}];
+  var TLBLS=[null,'Hungrier now! 🫒','Branches faster! 🌿','SO HUNGRY!! 🔥','FRENZY!! 💫','MAX HUNGER 👑'];
+  var DCOLS=['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
+  var tier=0,banner=null,bannerT=0;
+  function getTier(){var t=TIERS[0];TIERS.forEach(function(x){if(score>=x.at)t=x;});return t;}
+  function loop(ts){
+    if(over)return;frame++;
+    var t=getTier();var ni=TIERS.filter(function(x){return score>=x.at;}).length-1;
+    if(ni>tier&&TLBLS[ni]){tier=ni;banner=TLBLS[ni];bannerT=90;}if(bannerT>0)bannerT--;
+    hunger=Math.max(0,hunger-t.dr);
+    if(branches.length<t.max&&ts-lastDrop>t.ms){branches.push({x:28+Math.random()*(W-56),y:-28,vy:t.spd+Math.random()*0.9,vx:(Math.random()-0.5)*0.4,rot:(Math.random()-0.5)*0.4,r:22});lastDrop=ts;}
+    branches.forEach(function(b){b.y+=b.vy;b.x+=b.vx;b.rot+=0.02;});
+    var missed=branches.filter(function(b){return b.y>H+30;}).length;
+    if(missed){hunger=Math.max(0,hunger-missed*14);branches=branches.filter(function(b){return b.y<=H+30;});if(hunger<=0){over=true;endDove(score,prev);return;}}
+    parts.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.life-=0.04;p.vx*=0.94;});parts=parts.filter(function(p){return p.life>0;});
+    floats.forEach(function(f){f.y+=f.vy;f.life-=0.025;});floats=floats.filter(function(f){return f.life>0;});
+    ripples.forEach(function(r){r.sc+=0.12;r.life-=0.06;});ripples=ripples.filter(function(r){return r.life>0;});
+    var sky=ctx.createLinearGradient(0,0,0,H);if(hunger>50){sky.addColorStop(0,'#0d1a30');sky.addColorStop(1,'#1a0535');}else if(hunger>25){sky.addColorStop(0,'#1a1008');sky.addColorStop(1,'#2a0535');}else{sky.addColorStop(0,'#200808');sky.addColorStop(1,'#350510');}
+    ctx.fillStyle=sky;ctx.fillRect(0,0,W,H);
+    STARS.forEach(function(s){ctx.fillStyle='rgba(255,255,255,'+(0.2+Math.sin(frame*0.025+s.tw)*0.14)+')';ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();});
+    var grd=ctx.createLinearGradient(0,H-40,0,H);grd.addColorStop(0,'rgba(74,124,47,0.25)');grd.addColorStop(1,'transparent');ctx.fillStyle=grd;ctx.fillRect(0,H-40,W,40);
+    ripples.forEach(function(r){ctx.strokeStyle='rgba(212,175,55,'+r.life*0.45+')';ctx.lineWidth=1.5;ctx.beginPath();ctx.arc(r.x,r.y,r.sc*28,0,Math.PI*2);ctx.stroke();});
+    var nb=branches.length?branches.reduce(function(a,b){return Math.abs(b.x-DX)<Math.abs(a.x-DX)?b:a;},branches[0]):null;
+    var tilt=nb?Math.atan2(nb.x-DX,60)*0.18:0;
+    ctx.save();ctx.translate(DX,DY+Math.sin(frame*0.05)*5);ctx.rotate(tilt);ctx.font='42px serif';ctx.textAlign='center';ctx.shadowColor='rgba(212,175,55,0.45)';ctx.shadowBlur=14;ctx.fillText('🕊️',0,0);ctx.shadowBlur=0;ctx.restore();
+    branches.forEach(function(b){ctx.save();ctx.translate(b.x,b.y);ctx.rotate(b.rot);ctx.font='27px serif';ctx.textAlign='center';ctx.shadowColor='rgba(74,180,47,0.4)';ctx.shadowBlur=7;ctx.fillText('🫒',0,0);ctx.shadowBlur=0;ctx.restore();});
+    parts.forEach(function(p){ctx.fillStyle='rgba(212,175,55,'+p.life.toFixed(2)+')';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();});
+    floats.forEach(function(f){ctx.fillStyle='rgba(240,204,85,'+f.life.toFixed(2)+')';ctx.font='bold 14px Georgia';ctx.textAlign='center';ctx.fillText(f.t,f.x,f.y);});
+    var bx=20,by=H-22,bw=W-40,bh=10;ctx.fillStyle='rgba(255,255,255,0.08)';rr(ctx,bx,by,bw,bh,5);ctx.fill();
+    var hc=hunger>50?'#4af0a0':hunger>25?'#ffd166':'#ff4d6d';ctx.fillStyle=hc;ctx.shadowColor=hc;ctx.shadowBlur=hunger<=25?8:0;rr(ctx,bx,by,bw*(hunger/100),bh,5);ctx.fill();ctx.shadowBlur=0;
+    ctx.fillStyle='rgba(255,255,255,0.28)';ctx.font='10px Georgia';ctx.textAlign='left';ctx.fillText(hunger>50?'well fed 🟢':hunger>25?'getting hungry 🟡':'HUNGRY! 🔴',bx,by-4);
+    ctx.fillStyle='#f0cc55';ctx.font='bold 14px Georgia';ctx.textAlign='right';ctx.fillText(''+score,W-10,26);
+    ctx.fillStyle='rgba(255,255,255,0.3)';ctx.font='10px Georgia';ctx.fillText('best '+Math.max(score,prev),W-10,41);
+    var ti2=TIERS.filter(function(x){return score>=x.at;}).length-1;for(var i=0;i<TIERS.length;i++){ctx.beginPath();ctx.arc(W/2-25+i*10,40,3.5,0,Math.PI*2);ctx.fillStyle=i<=ti2?DCOLS[i]:'rgba(255,255,255,0.1)';ctx.fill();}
+    if(bannerT>0){var a=Math.min(1,bannerT/20)*Math.min(1,(bannerT)/90*3);ctx.fillStyle='rgba(212,175,55,'+a*0.14+')';ctx.fillRect(0,H/2-26,W,40);ctx.fillStyle='rgba(240,204,85,'+a+')';ctx.font='bold 16px Georgia';ctx.textAlign='center';ctx.fillText(banner,W/2,H/2+5);}
+    document.getElementById('gameScore').textContent='Fed: '+score+'  ·  Best: '+Math.max(score,prev);
+    gFrame=requestAnimationFrame(loop);
   }
-
-  // ring bump visual
-  document.getElementById('ringFill').style.transition = 'stroke-dashoffset 0.3s ease-out';
-  setTimeout(() => {
-    el.classList.remove('loved');
-    petMood = 'happy';
-    document.getElementById('ringFill').style.transition = 'stroke-dashoffset 1.5s cubic-bezier(.4,0,.2,1)';
-  }, 1200);
+  cv.ontouchstart=cv.onmousedown=function(e){e.preventDefault();if(over)return;var rc=cv.getBoundingClientRect();var src=e.touches?e.touches[0]:e;var tx=(src.clientX-rc.left)*(W/rc.width),ty=(src.clientY-rc.top)*(H/rc.height);var hi=-1;branches.forEach(function(b,i){if(Math.hypot(b.x-tx,b.y-ty)<b.r+14)hi=i;});if(hi!==-1){for(var i=0;i<8;i++){var a=(Math.PI*2/8)*i;parts.push({x:branches[hi].x,y:branches[hi].y,vx:Math.cos(a)*(1.5+Math.random()*2.5),vy:Math.sin(a)*(1.5+Math.random()*2.5),life:1,r:3+Math.random()*2});}floats.push({x:branches[hi].x,y:branches[hi].y-10,vy:-1.2,life:1,t:'+🫒 yum!'});ripples.push({x:DX,y:DY,sc:0.2,life:1});branches.splice(hi,1);score++;hunger=Math.min(100,hunger+18);if(score>prev)localStorage.setItem('hs_dove',score);}};
+  gFrame=requestAnimationFrame(loop);
 }
-
-function showEggBubble() {
-  // pick random egg message, avoid last 3
-  const history = state.eggMsgHistory || [];
-  const pool = EGG_MSGS.map((m,i)=>i).filter(i => !history.slice(-3).includes(i));
-  const idx = pool[Math.floor(Math.random() * pool.length)];
-  state.eggMsgHistory = [...history.slice(-5), idx];
-  saveState(state);
-
-  let msg = EGG_MSGS[idx].replace('{{day}}', state.currentDay);
-
-  // Remove old bubble if any
-  const old = document.getElementById('eggBubble');
-  if (old) old.remove();
-
-  const bubble = document.createElement('div');
-  bubble.id = 'eggBubble';
-  bubble.textContent = msg;
-  bubble.style.cssText = `
-    position:fixed;
-    left:50%;
-    transform:translateX(-50%);
-    background:rgba(240,204,85,0.95);
-    color:#2a0630;
-    font-family:Georgia,serif;
-    font-size:0.85rem;
-    font-weight:bold;
-    padding:10px 18px;
-    border-radius:20px;
-    max-width:80vw;
-    text-align:center;
-    z-index:300;
-    box-shadow:0 4px 20px rgba(212,175,55,0.5);
-    animation:bubbleIn 0.3s cubic-bezier(.36,.07,.19,.97) both;
-    pointer-events:none;
-  `;
-  // Position above the ring section
-  const ring = document.getElementById('ringSection');
-  const ringTop = ring.getBoundingClientRect().top;
-  bubble.style.top = Math.max(80, ringTop - 20) + 'px';
-  document.body.appendChild(bubble);
-
-  // tail triangle
-  const tail = document.createElement('div');
-  tail.style.cssText = `
-    position:absolute;bottom:-10px;left:50%;transform:translateX(-50%);
-    width:0;height:0;
-    border-left:10px solid transparent;
-    border-right:10px solid transparent;
-    border-top:10px solid rgba(240,204,85,0.95);
-  `;
-  bubble.appendChild(tail);
-
-  setTimeout(() => {
-    bubble.style.animation = 'bubbleOut 0.4s ease-in forwards';
-    setTimeout(() => bubble.remove(), 400);
-  }, 2800);
-}
-
-function startLongPress(e) {
-  longPressTimer = setTimeout(() => {
-    cancelLongPress();
-    openPrayer();
-  }, 700);
-}
-function cancelLongPress() { clearTimeout(longPressTimer); }
-
-// ═══════════════════════════════════════════════
-//  HEARTS
-// ═══════════════════════════════════════════════
-function spawnHearts(el, count) {
-  const rect = el.getBoundingClientRect();
-  const cx = rect.left + rect.width  / 2;
-  const cy = rect.top  + rect.height / 2;
-  const emojis = ['💖','💗','💕','💓','💝','🌸','✨'];
-  for (let i = 0; i < count; i++) {
-    const h = document.createElement('div');
-    h.className = 'heart-particle';
-    h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
-    const spread = (Math.random() - 0.5) * 120;
-    h.style.left = (cx + spread) + 'px';
-    h.style.top  = cy + 'px';
-    h.style.setProperty('--r', (Math.random() * 40 - 20) + 'deg');
-    h.style.animationDelay = (i * 80) + 'ms';
-    document.body.appendChild(h);
-    setTimeout(() => h.remove(), 3500);
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  PRAYER
-// ═══════════════════════════════════════════════
-function openPrayer() {
-  document.getElementById('prayerModal').classList.add('show');
-}
-function closePrayer() {
-  document.getElementById('prayerModal').classList.remove('show');
-  // show cross hearts
-  buildCross();
-  document.getElementById('crossHearts').classList.add('show');
-}
-function buildCross() {
-  // 3×5 grid, cross pattern: col1 row2,3,4 + row2 all cols
-  const cross = [
-    false,true, false,
-    true, true, true,
-    false,true, false,
-    false,true, false,
-    false,true, false,
-  ];
-  const grid = document.getElementById('crossGrid');
-  grid.innerHTML = '';
-  cross.forEach(on => {
-    const cell = document.createElement('div');
-    cell.className = 'cross-cell' + (on ? ' on' : '');
-    cell.textContent = on ? '💖' : '';
-    grid.appendChild(cell);
-  });
-}
-function closeCross() {
-  document.getElementById('crossHearts').classList.remove('show');
-}
-
-// ═══════════════════════════════════════════════
-//  BIRTHDAY
-// ═══════════════════════════════════════════════
-function checkBirthday() {
-  const now = new Date();
-  const m = now.getMonth() + 1;
-  const d = now.getDate();
-  const banner = document.getElementById('bdayBanner');
-  const text   = document.getElementById('bdayText');
-
-  if (m === 12 && d === 30) {
-    banner.style.display = 'block';
-    text.innerHTML = '👑 HAPPY BIRTHDAY JAY! 👑<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">"I praise you because I am fearfully and wonderfully made." — Psalm 139:14</em><br/>🕊️ The dove crowns you today 🕊️';
-    confettiBurst();
-  } else if (m === 12 && d === 31) {
-    banner.style.display = 'block';
-    text.innerHTML = '🪵 TITO BOI DAY! 🪵<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Carpenter\'s hands, faithful heart. Jay celebrates you today 💕</em>';
-    confettiBurst();
-  } else if (m === 1 && d === 1) {
-    banner.style.display = 'block';
-    text.innerHTML = '🎊 Dec 30 + Dec 31 = NEW YEAR FOREVER 💍<br/><em style="font-size:0.75rem;color:rgba(255,255,255,0.7)">Two birthdays, one beginning. Tito Boi + Jay eternal ✝️</em>';
-    confettiBurst();
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  MILESTONE
-// ═══════════════════════════════════════════════
-function checkMilestone() {
-  const day = state.currentDay;
-  if (!MILESTONES[day]) return;
-  if ((state.shownMilestones || []).includes(day)) return;
-
-  state.shownMilestones = [...(state.shownMilestones || []), day];
-  saveState(state);
-
-  const m = MILESTONES[day];
-  document.getElementById('mileEmoji').textContent  = m.emoji;
-  document.getElementById('mileTitle').textContent  = m.title;
-  document.getElementById('mileSub').textContent    = m.sub;
-  document.getElementById('milestonePopup').classList.add('show');
-  confettiBurst();
-
-  if (day === 3652) {
-    setTimeout(() => {
-      document.getElementById('milestonePopup').classList.remove('show');
-      document.getElementById('finalScreen').classList.add('show');
-    }, 3000);
-  }
-}
-
-function closeMilestone() {
-  document.getElementById('milestonePopup').classList.remove('show');
-}
-
-// ═══════════════════════════════════════════════
-//  CONFETTI
-// ═══════════════════════════════════════════════
-function confettiBurst() {
-  const colors = ['#d4af37','#ff69b4','#c4b5fd','#6ee7b7','#fff','#f9c3d3'];
-  for (let i = 0; i < 80; i++) {
-    const el = document.createElement('div');
-    el.className = 'confetti';
-    el.style.cssText = `
-      left:${Math.random()*100}vw;
-      top:-8px;
-      width:${5+Math.random()*7}px;
-      height:${5+Math.random()*7}px;
-      background:${colors[Math.floor(Math.random()*colors.length)]};
-      --d:${1.2+Math.random()*1.5}s;
-      --delay:${Math.random()*1.5}s;
-      border-radius:${Math.random()>0.5?'50%':'2px'};
-    `;
-    document.body.appendChild(el);
-    setTimeout(() => el.remove(), 3500);
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  SECRET MESSAGES (code → message)
-// ═══════════════════════════════════════════════
-// Add your secret codes and messages here!
-// Format: 'CODE': { emoji, msg, from }
-const SECRET_MESSAGES = {
-  'TITO01': { emoji:'💌', msg:`Hey Jay... just wanted you to know I think about you every single day. This egg is proof. 🥚✝️`, from:`— Tito Boi, always` },
-  'ILOVEU': { emoji:'💕', msg:`I love you, Jay. There. I said it. Now the app knows too. 🕊️`, from:`— Tito Boi 💍` },
-  'DEC30':  { emoji:'👑', msg:`Happy Birthday Queen. Dec 30 is the best day God ever made. You're proof of that. 🎂✨`, from:`— Your Tito Boi 👑` },
-  'PRAY':   { emoji:'🙏', msg:`I prayed for you today. I prayed for us. I prayed that God keeps you safe and brings us closer every day. 💕`, from:`— Tito Boi ✝️` },
-  'SORRY':  { emoji:'🌸', msg:`I'm sorry, Jay. Whatever it is — I'm sorry. You deserve nothing but kindness from me. Always. 🕊️`, from:`— Tito Boi 🤍` },
-  'GANDA':  { emoji:'🌟', msg:`You're so beautiful, Jay. I hope you know that. Like actually. The kind of beautiful that stays. 💛`, from:`— Tito Boi, not just saying it` },
-  'PROUD':  { emoji:'🏆', msg:`I'm so proud of you Jay. Everything you carry, everything you push through — it's extraordinary. 💪✝️`, from:`— Tito Boi 👑` },
-  'MISS':   { emoji:'🥺', msg:`I miss you, Jay. Even when you're near. Is that weird? Maybe. But it's true. 💗`, from:`— Tito Boi 🥺` },
-  'FAITH':  { emoji:'✝️', msg:`"For I know the plans I have for you" — Jeremiah 29:11. God planned you for something beautiful. I believe you're part of mine. 🕊️`, from:`— Tito Boi ✝️` },
-  'COURT':  { emoji:'🌹', msg:`It took me a month of courage to ask. And I'd wait a thousand more days just for the chance. Thank you for saying yes, Jay. 🌹💍`, from:`— Tito Boi, forever courting you` },
-};
-
-function openSecretModal() {
-  document.getElementById('secretInput').value = '';
-  document.getElementById('secretResult').style.display = 'none';
-  document.getElementById('secretError').style.display = 'none';
-  document.getElementById('secretModal').classList.add('show');
-  setTimeout(() => document.getElementById('secretInput').focus(), 300);
-}
-function closeSecretModal() {
-  document.getElementById('secretModal').classList.remove('show');
-}
-function submitSecretCode() {
-  const code = document.getElementById('secretInput').value.trim().toUpperCase();
-  const msg  = SECRET_MESSAGES[code];
-  document.getElementById('secretError').style.display = 'none';
-  if (msg) {
-    const result = document.getElementById('secretResult');
-    result.style.display = 'block';
-    document.getElementById('secretMsgEmoji').textContent = msg.emoji;
-    document.getElementById('secretMsgText').textContent  = msg.msg;
-    document.getElementById('secretMsgFrom').textContent  = msg.from;
-    spawnHearts(document.getElementById('secretResult'), 12);
-    confettiBurst();
-  } else {
-    document.getElementById('secretError').style.display = 'block';
-    document.getElementById('secretInput').value = '';
-  }
-}
-// allow Enter key to submit
-document.getElementById('secretInput').addEventListener('keydown', function(e) {
-  if (e.key === 'Enter') submitSecretCode();
-});
-
-
-// ═══════════════════════════════════════════════
-//  TAB NAVIGATION
-// ═══════════════════════════════════════════════
-const SCREENS = { home:'mainScreen', jar:'jarScreen', devot:'devotScreen', games:'gamesScreen', night:'goodnightScreen' };
-
-function switchTab(tab) {
-  Object.entries(SCREENS).forEach(([key, screenId]) => {
-    const screen = document.getElementById(screenId);
-    const btn    = document.getElementById('nav-' + key);
-    if (!screen || !btn) return;
-    if (key === tab) { screen.classList.add('active'); btn.classList.add('active'); }
-    else             { screen.classList.remove('active'); btn.classList.remove('active'); }
-  });
-  if (tab === 'jar')   renderMemories();
-  if (tab === 'devot') renderDevotion();
-  if (tab === 'night') renderGoodnight();
-  if (tab === 'games') renderGameScores();
-}
-
-// ═══════════════════════════════════════════════
-//  MEMORY JAR
-// ═══════════════════════════════════════════════
-let selectedMood = '😐';
-let selectedMoodLabel = 'mid day';
-let currentPhotoData = null;
-
-function selectMood(btn) {
-  document.querySelectorAll('.mood-btn').forEach(b => b.classList.remove('selected'));
-  btn.classList.add('selected');
-  selectedMood      = btn.dataset.mood;
-  selectedMoodLabel = btn.dataset.label;
-}
-
-function handlePhoto(e) {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = (ev) => {
-    // Compress image to max 600px wide, jpeg 0.7 quality to save localStorage space
-    const img = new Image();
-    img.onload = () => {
-      const maxW = 600;
-      const scale = img.width > maxW ? maxW / img.width : 1;
-      const canvas = document.createElement('canvas');
-      canvas.width  = img.width  * scale;
-      canvas.height = img.height * scale;
-      canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
-      currentPhotoData = canvas.toDataURL('image/jpeg', 0.7);
-      document.getElementById('photoPreview').src = currentPhotoData;
-      document.getElementById('photoPreviewWrap').style.display = 'block';
-    };
-    img.src = ev.target.result;
-  };
-  reader.readAsDataURL(file);
-  e.target.value = '';
-}
-
-function removePhoto() {
-  currentPhotoData = null;
-  document.getElementById('photoPreview').src = '';
-  document.getElementById('photoPreviewWrap').style.display = 'none';
-}
-
-function saveMemory() {
-  const text = document.getElementById('jarInput').value.trim();
-  if (!text && !currentPhotoData) return;
-  const memories = getMemories();
-  const entry = {
-    id: Date.now(),
-    text,
-    mood: selectedMood,
-    moodLabel: selectedMoodLabel,
-    photo: currentPhotoData || null,
-    day: state.currentDay,
-    date: todayStr(),
-  };
-  memories.unshift(entry);
-  // Keep max 100 entries (photos are large)
-  try {
-    localStorage.setItem('covenant_memories', JSON.stringify(memories.slice(0, 100)));
-  } catch(e) {
-    // If storage full, remove oldest photo and retry
-    const trimmed = memories.slice(0, 100).map((m,i) => i > 50 ? {...m, photo: null} : m);
-    localStorage.setItem('covenant_memories', JSON.stringify(trimmed));
-  }
-  document.getElementById('jarInput').value = '';
-  removePhoto();
-  spawnHearts(document.getElementById('jarInput'), 6);
-  renderMemories();
-}
-
-function getMemories() {
-  try { return JSON.parse(localStorage.getItem('covenant_memories') || '[]'); }
-  catch(e) { return []; }
-}
-
-function deleteMemory(id) {
-  const memories = getMemories().filter(m => m.id !== id);
-  localStorage.setItem('covenant_memories', JSON.stringify(memories));
-  renderMemories();
-}
-
-function renderMemories() {
-  const list = document.getElementById('memoriesList');
-  if (!list) return;
-  const memories = getMemories();
-  if (!memories.length) {
-    list.innerHTML = '<div class="jar-empty">No memories yet...<br/>Write something or add a photo 🌸</div>';
-    return;
-  }
-  list.innerHTML = memories.map(m => `
-    <div class="memory-card">
-      <button class="mem-del" onclick="deleteMemory(${m.id})">✕</button>
-      ${m.photo ? `<img src="${m.photo}" style="width:100%;border-radius:8px;margin-bottom:8px;object-fit:cover;max-height:200px;"/>` : ''}
-      <div class="mem-mood-row">
-        <span class="mem-mood-emoji">${m.mood}</span>
-        <span class="mem-mood-lbl">${m.moodLabel || ''}</span>
-      </div>
-      ${m.text ? `<div class="mem-text">"${m.text}"</div>` : ''}
-      <div class="mem-meta">Day ${m.day} · ${m.date}</div>
-    </div>
-  `).join('');
-}
-
-// ═══════════════════════════════════════════════
-//  DAILY DEVOTIONAL
-// ═══════════════════════════════════════════════
-const DEVOTIONS = [
-  { emoji:'✝️', title:'Faith Over Fear',       body:`"Do not fear, for I am with you." — Isaiah 41:10\n\nToday, lay down one worry at God's feet. He is already working it out.`, challenge:`Say out loud: "God is bigger than this." Then text Tito Boi one thing you are trusting God for today 💕` },
-  { emoji:'🌿', title:'Be Still',              body:`"Be still and know that I am God." — Psalm 46:10\n\nIn the middle of the noise, pause. Five deep breaths. Feel His peace wash over you.`, challenge:`Spend 5 quiet minutes today with no phone. Just you and God. 🙏` },
-  { emoji:'💕', title:'Love Is Patient',       body:`"Love is patient, love is kind." — 1 Cor 13:4\n\nPatience is a form of love. Today, practice it with someone who tests yours.`, challenge:`Find one moment today to choose patience over frustration. Tell Tito Boi how it went 😊` },
-  { emoji:'🌸', title:'You Are Chosen',        body:`"You did not choose me, but I chose you." — John 15:16\n\nGod chose you. Specifically. Intentionally. On purpose. You are not an accident.`, challenge:`Write one thing about yourself that you believe God loves. Keep it in your Memory Jar 💌` },
-  { emoji:'🕊️', title:'Peace Like a River',   body:`"Peace I leave with you; my peace I give you." — John 14:27\n\nHis peace is not the absence of trouble — it's calm in the middle of it.`, challenge:`Pray for peace for someone else today. Then enjoy the peace that comes back to you 🕊️` },
-  { emoji:'👑', title:'You Are Royalty',       body:`"You are a chosen people, a royal priesthood." — 1 Peter 2:9\n\nYou carry a crown you cannot always see. Walk like it today.`, challenge:`Do one thing today that honors the queen God made you to be 👑` },
-  { emoji:'🌙', title:'Rest Is Holy',          body:`"He grants sleep to those he loves." — Psalm 127:2\n\nRest is not laziness. It is trust. Trusting God enough to put things down.`, challenge:`Go to bed 30 minutes earlier tonight. Give that time back to God 🌙` },
-  { emoji:'🌹', title:'Love Covers All',       body:`"Above all, love each other deeply, because love covers a multitude of sins." — 1 Peter 4:8\n\nDeep love forgives. Deep love stays. Deep love covers.`, challenge:`Think of someone who hurt you. Pray for them today, even just one sentence 🌹` },
-  { emoji:'🙏', title:'Pray Without Ceasing',  body:`"Pray continually." — 1 Thessalonians 5:17\n\nPrayer is not a ritual. It is a conversation. Talk to Him like He is right there — because He is.`, challenge:`Pray three times today: morning, afternoon, before sleep. Even one sentence each time 🙏` },
-  { emoji:'💛', title:'Gratitude Changes Everything', body:`"Give thanks in all circumstances." — 1 Thessalonians 5:18\n\nGratitude is not denying pain. It is choosing to find God in it anyway.`, challenge:`List 5 things you are grateful for today and save them in your Memory Jar 💛` },
-  { emoji:'🔥', title:'Refined by Fire',       body:`"When you walk through the fire, you will not be burned." — Isaiah 43:2\n\nEvery hard season is making you stronger. You are not being destroyed — you are being refined.`, challenge:`Write about one hard thing that made you stronger. God used it 🔥` },
-  { emoji:'🤍', title:'Grace Upon Grace',      body:`"From his fullness we have all received grace upon grace." — John 1:16\n\nYou cannot run out of His grace. Not today. Not ever.`, challenge:`Extend grace to yourself today. One mistake does not define you 🤍` },
-];
-
-function renderDevotion() {
-  const doneKey = 'covenant_devot_' + todayStr();
-  const isDone  = localStorage.getItem(doneKey) === '1';
-  const idx     = state.currentDay % DEVOTIONS.length;
-  const d       = DEVOTIONS[idx];
-
-  document.getElementById('devotDay').textContent       = `Day ${state.currentDay} Devotion`;
-  document.getElementById('devotEmoji').textContent     = d.emoji;
-  document.getElementById('devotTitle').textContent     = d.title;
-  document.getElementById('devotBody').innerHTML        = d.body.replace(/\n/g, '<br/>');
-  document.getElementById('devotChallenge').textContent = d.challenge;
-
-  const btn = document.getElementById('devotDoneBtn');
-  btn.disabled    = isDone;
-  btn.textContent = isDone ? 'Done for today ✅' : 'I did it today 🙏';
-}
-
-function markDevotDone() {
-  const doneKey = 'covenant_devot_' + todayStr();
-  localStorage.setItem(doneKey, '1');
-  renderDevotion();
-  spawnHearts(document.getElementById('devotDoneBtn'), 10);
-  confettiBurst();
-}
-
-// ═══════════════════════════════════════════════
-//  GOODNIGHT MODE
-// ═══════════════════════════════════════════════
-const GN_VERSES = [
-  { text:`"He grants sleep to those he loves."`, ref:`Psalm 127:2` },
-  { text:`"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."`, ref:`Psalm 4:8` },
-  { text:`"When you lie down, you will not be afraid; when you lie down, your sleep will be sweet."`, ref:`Proverbs 3:24` },
-  { text:`"The Lord watches over you... the Lord will keep you from all harm."`, ref:`Psalm 121:5,7` },
-  { text:`"Cast all your anxiety on him because he cares for you."`, ref:`1 Peter 5:7` },
-  { text:`"My beloved is mine and I am his."`, ref:`Song of Solomon 2:16` },
-  { text:`"Peace I leave with you; my peace I give you."`, ref:`John 14:27` },
-];
-
-function renderGoodnight() {
-  const doneKey = 'covenant_gn_' + todayStr();
-  const isDone  = localStorage.getItem(doneKey) === '1';
-  const v       = GN_VERSES[state.currentDay % GN_VERSES.length];
-
-  document.getElementById('gnVerse').innerHTML = `<em>"${v.text}"</em><br/><small style="color:rgba(212,175,55,0.5);font-size:0.65rem;letter-spacing:0.1em">${v.ref}</small>`;
-  document.getElementById('gnMoon').textContent   = isDone ? '😴' : '🌙';
-  document.getElementById('gnBtn').disabled       = isDone;
-  document.getElementById('gnBtn').textContent    = isDone ? 'Dove is tucked in 😴' : '🌙 Tuck in the Dove';
-  document.getElementById('gnStatus').textContent = isDone ? 'Sweet dreams, Jay 🕊️ Tito Boi is praying for you tonight.' : 'Tap before you sleep each night 🌙';
-}
-
-function doGoodnight() {
-  const doneKey = 'covenant_gn_' + todayStr();
-  localStorage.setItem(doneKey, '1');
-  renderGoodnight();
-  spawnHearts(document.getElementById('gnBtn'), 12);
-  // show sleepy stars
-  for (let i = 0; i < 20; i++) {
-    const s = document.createElement('div');
-    s.style.cssText = `position:fixed;font-size:${0.8+Math.random()*1}rem;left:${Math.random()*100}vw;top:${Math.random()*60+20}vh;pointer-events:none;z-index:999;animation:heartUp ${2+Math.random()*2}s ease-out forwards;animation-delay:${Math.random()*1}s;opacity:0;`;
-    s.textContent = ['⭐','🌟','✨','💫','🌙'][Math.floor(Math.random()*5)];
-    document.body.appendChild(s);
-    setTimeout(() => s.remove(), 5000);
-  }
-}
-
-// ═══════════════════════════════════════════════
-//  MINI GAMES
-// ═══════════════════════════════════════════════
-let currentGame = null;
-let gameAnimFrame = null;
-
-function renderGameScores() {
-  const hs = key => parseInt(localStorage.getItem('covenant_hs_' + key) || '0');
-  document.getElementById('score-hearts').textContent = `Best: ${hs('hearts')}`;
-  document.getElementById('score-dove').textContent   = `Best: ${hs('dove')}`;
-  const sizes = ['2x2','3x4','4x4','4x5'];
-  const bests = sizes.map(s=>{ const v=localStorage.getItem(`covenant_hs_memory_${s}`); return v&&v!=='999'?`${s}:${v}m`:null; }).filter(Boolean);
-  document.getElementById('score-memory').textContent = bests.length ? `Best: ${bests.join(' · ')}` : 'Best: --';
-}
-
-function startGame(type, size) {
-  currentGame = type;
-  document.getElementById('gameModal').classList.add('show');
-  const titles = { hearts:'Catch the Hearts 💖', dove:'Feed the Dove 🕊️', memory:'Love Match 🌸' };
-  const sizeLabel = size ? ` (${size})` : '';
-  document.getElementById('gmTitle').textContent = titles[type] + sizeLabel;
-  if (type === 'hearts') initHeartsGame();
-  else if (type === 'dove')   initDoveGame();
-  else if (type === 'memory') initMemoryGame(size || '4x4');
-}
-
-function closeGame() {
-  if (gameAnimFrame) cancelAnimationFrame(gameAnimFrame);
-  gameAnimFrame = null;
-  currentGame = null;
-  document.getElementById('gameModal').classList.remove('show');
-  renderGameScores();
-}
-
-// ── HEARTS GAME ── (polished)
-function initHeartsGame() {
-  const canvas = document.getElementById('gameCanvas');
-  const W = 320, H = 460;
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  let score = 0, lives = 3, gameOver = false;
-  let hearts = [], particles = [], floaters = [], lastSpawn = 0, speed = 1.8, frame = 0;
-  let prevBest = parseInt(localStorage.getItem('covenant_hs_hearts') || '0');
-  let newBest = false;
-
-  // Static starfield
-  const stars = Array.from({length:40}, () => ({
-    x: Math.random()*W, y: Math.random()*H,
-    r: Math.random()*1.2+0.3, op: Math.random()*0.5+0.2,
-    twinkle: Math.random()*Math.PI*2
-  }));
-
-  function spawnHeart(spd) {
-    const emojis = ['💖','💗','💕','💓','🌸','✨'];
-    const s = spd || 1.8;
-    hearts.push({
-      x: 28 + Math.random()*(W-56), y: -28,
-      vy: s + Math.random()*0.8,
-      vx: (Math.random()-0.5)*0.6,
-      emoji: emojis[Math.floor(Math.random()*emojis.length)],
-      r: 20, scale: 1, pop: 0, rot: (Math.random()-0.5)*0.3
-    });
-  }
-
-  function spawnParticles(x, y, color) {
-    for (let i = 0; i < 10; i++) {
-      const angle = (Math.PI*2/10)*i + Math.random()*0.5;
-      particles.push({
-        x, y,
-        vx: Math.cos(angle)*(2+Math.random()*3),
-        vy: Math.sin(angle)*(2+Math.random()*3),
-        life: 1, color,
-        r: 2+Math.random()*3
-      });
-    }
-  }
-
-  function spawnFloater(x, y, txt) {
-    floaters.push({ x, y, vy: -1.2, life: 1, txt });
-  }
-
-  // Difficulty tiers
-  const TIERS = [
-    { at:0,  label:null,            spawnMs:1100, speed:1.8,  maxOnScreen:3 },
-    { at:10, label:'Speeding up! 💨', spawnMs:900,  speed:2.4,  maxOnScreen:4 },
-    { at:20, label:'Getting fast! 🔥', spawnMs:720,  speed:3.0,  maxOnScreen:5 },
-    { at:35, label:'BLAZING! 🌟',    spawnMs:560,  speed:3.8,  maxOnScreen:6 },
-    { at:55, label:'INSANE!! 💫',    spawnMs:420,  speed:4.8,  maxOnScreen:7 },
-    { at:80, label:'GODMODE 👑',     spawnMs:300,  speed:6.0,  maxOnScreen:8 },
-  ];
-  let tier = 0, tierAnnounce = null, tierAnnounceTimer = 0;
-
-  function getCurrentTier() {
-    let t = TIERS[0];
-    for (const tier of TIERS) { if (score >= tier.at) t = tier; }
-    return t;
-  }
-
-  function update(ts) {
-    if (gameOver) return;
-    frame++;
-
-    const t = getCurrentTier();
-    // Check tier upgrade
-    const newTierIdx = TIERS.filter(x => score >= x.at).length - 1;
-    if (newTierIdx > tier && TIERS[newTierIdx].label) {
-      tier = newTierIdx;
-      tierAnnounce = TIERS[newTierIdx].label;
-      tierAnnounceTimer = 90;
-    }
-    if (tierAnnounceTimer > 0) tierAnnounceTimer--;
-
-    // Spawn — respect max on screen
-    if (hearts.length < t.maxOnScreen && ts - lastSpawn > t.spawnMs) {
-      spawnHeart(t.speed);
-      lastSpawn = ts;
-    }
-
-    hearts.forEach(h => { h.y += h.vy; h.x += h.vx; h.vy += 0.05; });
-
-    const missed = hearts.filter(h => h.y > H+30);
-    if (missed.length) {
-      lives -= missed.length;
-      missed.forEach(h => { for(let i=0;i<6;i++) particles.push({x:h.x,y:H-20,vx:(Math.random()-0.5)*4,vy:-(Math.random()*3+1),life:1,color:'rgba(255,80,80,',r:3}); });
-      hearts = hearts.filter(h => h.y <= H+30);
-      if (lives <= 0) { gameOver = true; endHeartsGame(score, prevBest); return; }
-    }
-
-    particles.forEach(p => { p.x+=p.vx; p.y+=p.vy; p.vy+=0.1; p.life-=0.045; p.vx*=0.95; });
-    particles = particles.filter(p => p.life > 0);
-    floaters.forEach(f => { f.y+=f.vy; f.life-=0.03; });
-    floaters = floaters.filter(f => f.life > 0);
-
-    draw();
-    gameAnimFrame = requestAnimationFrame(update);
-  }
-
-  function draw() {
-    // Background gradient
-    const grad = ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0,'#0d0820'); grad.addColorStop(1,'#1a0535');
-    ctx.fillStyle = grad; ctx.fillRect(0,0,W,H);
-
-    // Starfield
-    stars.forEach(s => {
-      const op = s.op + Math.sin(frame*0.03 + s.twinkle)*0.15;
-      ctx.fillStyle = `rgba(255,255,255,${op})`;
-      ctx.beginPath(); ctx.arc(s.x, s.y, s.r, 0, Math.PI*2); ctx.fill();
-    });
-
-    // Ground line glow
-    const glow = ctx.createLinearGradient(0, H-3, 0, H);
-    glow.addColorStop(0, lives <= 1 ? 'rgba(255,80,80,0.6)' : 'rgba(212,175,55,0.4)');
-    glow.addColorStop(1, 'transparent');
-    ctx.fillStyle = glow; ctx.fillRect(0, H-3, W, 3);
-
-    // Hearts
-    ctx.save();
-    hearts.forEach(h => {
-      ctx.font = `${Math.round(34 * (h.scale||1))}px serif`;
-      ctx.textAlign = 'center';
-      ctx.save();
-      ctx.translate(h.x, h.y);
-      ctx.rotate(h.rot || 0);
-      // shadow glow
-      ctx.shadowColor = 'rgba(255,105,180,0.6)'; ctx.shadowBlur = 10;
-      ctx.fillText(h.emoji, 0, 0);
-      ctx.shadowBlur = 0;
-      ctx.restore();
-    });
-    ctx.restore();
-
-    // Particles
-    particles.forEach(p => {
-      ctx.fillStyle = p.color ? `${p.color}${p.life.toFixed(2)})` : `rgba(255,200,100,${p.life.toFixed(2)})`;
-      ctx.beginPath(); ctx.arc(p.x, p.y, p.r, 0, Math.PI*2); ctx.fill();
-    });
-
-    // Floaters (+1 text)
-    ctx.textAlign = 'center';
-    floaters.forEach(f => {
-      ctx.fillStyle = `rgba(240,204,85,${f.life})`;
-      ctx.font = `bold 16px Georgia`;
-      ctx.fillText(f.txt, f.x, f.y);
-    });
-
-    // HUD — lives
-    ctx.font = '18px serif'; ctx.textAlign = 'left';
-    for(let i=0;i<3;i++) {
-      ctx.globalAlpha = i < lives ? 1 : 0.2;
-      ctx.fillText('💖', 8 + i*26, 28);
-    }
-    ctx.globalAlpha = 1;
-
-    // Score
-    ctx.fillStyle = '#f0cc55';
-    ctx.font = 'bold 15px Georgia'; ctx.textAlign = 'right';
-    ctx.fillText(`${score}`, W-10, 28);
-    ctx.fillStyle = 'rgba(255,255,255,0.3)';
-    ctx.font = '11px Georgia';
-    ctx.fillText(`best ${Math.max(score,prevBest)}`, W-10, 44);
-
-    // Tier announce banner
-    if (tierAnnounceTimer > 0) {
-      const alpha = Math.min(1, tierAnnounceTimer/20) * Math.min(1, (tierAnnounceTimer)/90*3);
-      ctx.fillStyle = `rgba(212,175,55,${alpha*0.15})`;
-      ctx.fillRect(0, H/2-28, W, 42);
-      ctx.fillStyle = `rgba(240,204,85,${alpha})`;
-      ctx.font = 'bold 17px Georgia'; ctx.textAlign = 'center';
-      ctx.fillText(tierAnnounce, W/2, H/2+6);
-    }
-
-    // Speed indicator dots
-    const t2 = getCurrentTier();
-    const dotColors = ['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
-    const tIdx = TIERS.indexOf(t2);
-    for(let i=0;i<TIERS.length;i++){
-      ctx.beginPath(); ctx.arc(W/2-25+i*10, 38, 4, 0, Math.PI*2);
-      ctx.fillStyle = i<=tIdx ? dotColors[i] : 'rgba(255,255,255,0.12)';
-      ctx.fill();
-    }
-
-    document.getElementById('gameScore').textContent = `Score: ${score}  ·  Best: ${Math.max(score,prevBest)}`;
-  }
-
-  canvas.ontouchstart = canvas.onmousedown = (e) => {
-    e.preventDefault();
-    if (gameOver) return;
-    const rect = canvas.getBoundingClientRect();
-    const scaleX = W/rect.width, scaleY = H/rect.height;
-    const src = e.touches ? e.touches[0] : e;
-    const tx = (src.clientX-rect.left)*scaleX;
-    const ty = (src.clientY-rect.top)*scaleY;
-    let hit = -1;
-    hearts.forEach((h,i) => { if(Math.hypot(h.x-tx,h.y-ty)<h.r+14) hit=i; });
-    if (hit !== -1) {
-      spawnParticles(hearts[hit].x, hearts[hit].y, 'rgba(255,105,180,');
-      spawnFloater(hearts[hit].x, hearts[hit].y-10, '+1 💕');
-      hearts.splice(hit,1);
-      score++;
-      if(score > prevBest) { newBest=true; }
-    }
-  };
-
-  requestAnimationFrame(update);
-}
-
-function endHeartsGame(score, prevBest) {
-  if (gameAnimFrame) { cancelAnimationFrame(gameAnimFrame); gameAnimFrame=null; }
-  const canvas = document.getElementById('gameCanvas');
-  const ctx = canvas.getContext('2d');
-  const best = Math.max(score, prevBest);
-  if (score >= prevBest && score > 0) {
-    localStorage.setItem('covenant_hs_hearts', best);
-    confettiBurst();
-  }
-
-  ctx.fillStyle = 'rgba(10,5,25,0.96)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.textAlign = 'center';
-
-  // Big emoji
-  ctx.font = '52px serif'; ctx.fillText(score > 15 ? '🌟' : '💖', canvas.width/2, 115);
-
-  // Title
-  ctx.fillStyle = '#d4af37';
-  ctx.font = 'bold 20px Georgia';
-  ctx.fillText(score > 15 ? 'Amazing! 🔥' : 'Game Over!', canvas.width/2, 162);
-
-  // Score
-  ctx.fillStyle = '#fff';
-  ctx.font = '15px Georgia';
-  ctx.fillText(`Score: ${score}`, canvas.width/2, 194);
-
-  // Best
-  if (score >= prevBest && score > 0) {
-    ctx.fillStyle = '#f0cc55';
-    ctx.font = 'bold 13px Georgia';
-    ctx.fillText(`✨ New Best: ${best}!`, canvas.width/2, 216);
-  } else {
-    ctx.fillStyle = 'rgba(255,255,255,0.4)';
-    ctx.font = '13px Georgia';
-    ctx.fillText(`Best: ${best}`, canvas.width/2, 216);
-  }
-
-  // Sweet message
-  ctx.fillStyle = 'rgba(249,195,211,0.85)';
-  ctx.font = 'italic 12px Georgia';
-  const msgs = ['Every heart you caught = love returned 💕','The dove is proud of you 🕊️','Tito Boi would have caught them all for you 😄'];
-  ctx.fillText(msgs[score % msgs.length], canvas.width/2, 255);
-
-  // Replay hint
-  ctx.fillStyle = 'rgba(255,255,255,0.25)';
-  ctx.font = '11px Georgia';
-  ctx.fillText('Close and tap again to replay', canvas.width/2, 290);
-}
-
-// ── DOVE FEED GAME ── (polished)
-function initDoveGame() {
-  const canvas = document.getElementById('gameCanvas');
-  const W = 320, H = 460;
-  canvas.width = W; canvas.height = H;
-  const ctx = canvas.getContext('2d');
-  let score = 0, hunger = 80, gameOver = false, lastDrop = 0, frame = 0;
-  let branches = [], particles = [], floaters = [], ripples = [];
-  let prevBest = parseInt(localStorage.getItem('covenant_hs_dove') || '0');
-  const DOVE_X = W/2, DOVE_Y = H - 100;
-
-  const stars = Array.from({length:35},()=>({x:Math.random()*W,y:Math.random()*H*0.7,r:Math.random()*1.2+0.2,twinkle:Math.random()*Math.PI*2}));
-
-  function spawnBranch(spd) {
-    const s = spd || 1.4;
-    branches.push({
-      x: 28+Math.random()*(W-56), y: -28,
-      vy: s+Math.random()*0.9,
-      vx: (Math.random()-0.5)*0.4,
-      rot: (Math.random()-0.5)*0.4,
-      r: 22, scale: 1
-    });
-  }
-
-  function spawnParticles(x,y) {
-    for(let i=0;i<8;i++) {
-      const a=(Math.PI*2/8)*i;
-      particles.push({x,y,vx:Math.cos(a)*(1.5+Math.random()*2.5),vy:Math.sin(a)*(1.5+Math.random()*2.5),life:1,r:3+Math.random()*2});
-    }
-  }
-
-  // Difficulty tiers for dove
-  const DOVE_TIERS = [
-    { at:0,  label:null,              spawnMs:1800, speed:1.4, hungerDrain:0.025, maxOnScreen:2 },
-    { at:8,  label:'Hungrier now! 🫒', spawnMs:1400, speed:1.9, hungerDrain:0.035, maxOnScreen:3 },
-    { at:18, label:'Branches faster! 🌿', spawnMs:1050, speed:2.5, hungerDrain:0.05, maxOnScreen:4 },
-    { at:32, label:'SO HUNGRY!! 🔥',   spawnMs:800,  speed:3.2, hungerDrain:0.07, maxOnScreen:5 },
-    { at:50, label:'FRENZY!! 💫',      spawnMs:580,  speed:4.0, hungerDrain:0.10, maxOnScreen:6 },
-    { at:75, label:'MAX HUNGER 👑',    spawnMs:400,  speed:5.0, hungerDrain:0.14, maxOnScreen:7 },
-  ];
-  let doveTier = 0, doveTierAnnounce = null, doveTierTimer = 0;
-
-  function getDoveTier() {
-    let t = DOVE_TIERS[0];
-    for (const dt of DOVE_TIERS) { if (score >= dt.at) t = dt; }
-    return t;
-  }
-
-  function update(ts) {
-    if(gameOver) return;
-    frame++;
-
-    const t = getDoveTier();
-    const newTierIdx = DOVE_TIERS.filter(x => score >= x.at).length - 1;
-    if (newTierIdx > doveTier && DOVE_TIERS[newTierIdx].label) {
-      doveTier = newTierIdx;
-      doveTierAnnounce = DOVE_TIERS[newTierIdx].label;
-      doveTierTimer = 90;
-    }
-    if (doveTierTimer > 0) doveTierTimer--;
-
-    hunger = Math.max(0, hunger - t.hungerDrain);
-
-    if(branches.length < t.maxOnScreen && ts - lastDrop > t.spawnMs) {
-      spawnBranch(t.speed);
-      lastDrop = ts;
-    }
-
-    branches.forEach(b => { b.y+=b.vy; b.x+=b.vx; b.rot+=0.02; });
-    const missed = branches.filter(b=>b.y>H+30).length;
-    if(missed) {
-      hunger = Math.max(0, hunger - missed*14);
-      branches = branches.filter(b=>b.y<=H+30);
-      if(hunger<=0) { gameOver=true; endDoveGame(score,prevBest); return; }
-    }
-
-    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.08;p.life-=0.04;p.vx*=0.94;});
-    particles=particles.filter(p=>p.life>0);
-    floaters.forEach(f=>{f.y+=f.vy;f.life-=0.025;});
-    floaters=floaters.filter(f=>f.life>0);
-    ripples.forEach(r=>{r.scale+=0.12;r.life-=0.06;});
-    ripples=ripples.filter(r=>r.life>0);
-
-    draw();
-    gameAnimFrame = requestAnimationFrame(update);
-  }
-
-  function draw() {
-    // Sky gradient — changes with hunger
-    const sky = ctx.createLinearGradient(0,0,0,H);
-    if(hunger > 50) { sky.addColorStop(0,'#0d1a30'); sky.addColorStop(1,'#1a0535'); }
-    else if(hunger > 25) { sky.addColorStop(0,'#1a1008'); sky.addColorStop(1,'#2a0535'); }
-    else { sky.addColorStop(0,'#200808'); sky.addColorStop(1,'#350510'); }
-    ctx.fillStyle=sky; ctx.fillRect(0,0,W,H);
-
-    // Stars
-    stars.forEach(s=>{
-      const op=0.2+Math.sin(frame*0.025+s.twinkle)*0.15;
-      ctx.fillStyle=`rgba(255,255,255,${op})`;
-      ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,Math.PI*2);ctx.fill();
-    });
-
-    // Ground
-    const ground = ctx.createLinearGradient(0,H-40,0,H);
-    ground.addColorStop(0,'rgba(74,124,47,0.3)'); ground.addColorStop(1,'rgba(74,124,47,0.05)');
-    ctx.fillStyle=ground; ctx.fillRect(0,H-40,W,40);
-
-    // Ripples on catch
-    ripples.forEach(r=>{
-      ctx.strokeStyle=`rgba(212,175,55,${r.life*0.5})`;
-      ctx.lineWidth=1.5;
-      ctx.beginPath();ctx.arc(r.x,r.y,r.scale*30,0,Math.PI*2);ctx.stroke();
-    });
-
-    // Dove (bobs up/down, tilts toward nearest branch)
-    const doveY = DOVE_Y + Math.sin(frame*0.05)*5;
-    let nearBranch = branches.length ? branches.reduce((a,b)=>Math.abs(b.x-DOVE_X)<Math.abs(a.x-DOVE_X)?b:a,branches[0]) : null;
-    const tilt = nearBranch ? Math.atan2(nearBranch.x-DOVE_X, 60)*0.2 : 0;
-    ctx.save(); ctx.translate(DOVE_X, doveY); ctx.rotate(tilt);
-    ctx.font='44px serif'; ctx.textAlign='center';
-    ctx.shadowColor='rgba(212,175,55,0.5)'; ctx.shadowBlur=16;
-    ctx.fillText('🕊️',0,0); ctx.shadowBlur=0;
-    ctx.restore();
-
-    // Branches falling
-    branches.forEach(b=>{
-      ctx.save(); ctx.translate(b.x,b.y); ctx.rotate(b.rot);
-      ctx.font='28px serif'; ctx.textAlign='center';
-      ctx.shadowColor='rgba(74,180,47,0.4)'; ctx.shadowBlur=8;
-      ctx.fillText('🫒',0,0); ctx.shadowBlur=0;
-      ctx.restore();
-    });
-
-    // Particles (gold on catch)
-    particles.forEach(p=>{
-      ctx.fillStyle=`rgba(212,175,55,${p.life.toFixed(2)})`;
-      ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();
-    });
-
-    // Floaters
-    floaters.forEach(f=>{
-      ctx.fillStyle=`rgba(240,204,85,${f.life.toFixed(2)})`;
-      ctx.font='bold 15px Georgia'; ctx.textAlign='center';
-      ctx.fillText(f.txt,f.x,f.y);
-    });
-
-    // Hunger bar
-    const barX=20, barY=H-22, barW=W-40, barH=10;
-    ctx.fillStyle='rgba(255,255,255,0.08)';
-    ctx.beginPath(); ctx.roundRect(barX,barY,barW,barH,5); ctx.fill();
-    const hColor = hunger>50?'#4af0a0':hunger>25?'#ffd166':'#ff4d6d';
-    ctx.fillStyle=hColor;
-    ctx.shadowColor=hColor; ctx.shadowBlur=hunger>25?0:8;
-    ctx.beginPath(); ctx.roundRect(barX,barY,barW*(hunger/100),barH,5); ctx.fill();
-    ctx.shadowBlur=0;
-
-    // Label
-    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='10px Georgia'; ctx.textAlign='left';
-    ctx.fillText(hunger>50?'well fed 🟢':hunger>25?'getting hungry 🟡':'HUNGRY! 🔴', barX, barY-4);
-
-    // Score HUD
-    ctx.fillStyle='#f0cc55'; ctx.font='bold 15px Georgia'; ctx.textAlign='right';
-    ctx.fillText(`${score}`, W-10, 28);
-    ctx.fillStyle='rgba(255,255,255,0.3)'; ctx.font='11px Georgia';
-    ctx.fillText(`best ${Math.max(score,prevBest)}`, W-10, 44);
-
-    // Tier announce
-    if (doveTierTimer > 0) {
-      const alpha = Math.min(1, doveTierTimer/20) * Math.min(1, (doveTierTimer)/90*3);
-      ctx.fillStyle = `rgba(212,175,55,${alpha*0.15})`;
-      ctx.fillRect(0, H/2-28, W, 42);
-      ctx.fillStyle = `rgba(240,204,85,${alpha})`;
-      ctx.font = 'bold 17px Georgia'; ctx.textAlign = 'center';
-      ctx.fillText(doveTierAnnounce, W/2, H/2+6);
-    }
-
-    // Speed dots
-    const dTierIdx = DOVE_TIERS.filter(x => score >= x.at).length - 1;
-    const dotColors2 = ['#4af0a0','#ffd166','#ff9900','#ff4d6d','#ff00ff','#fff'];
-    for(let i=0;i<DOVE_TIERS.length;i++){
-      ctx.beginPath(); ctx.arc(W/2-25+i*10, 38, 4, 0, Math.PI*2);
-      ctx.fillStyle = i<=dTierIdx ? dotColors2[i] : 'rgba(255,255,255,0.12)';
-      ctx.fill();
-    }
-
-    document.getElementById('gameScore').textContent=`Fed: ${score}  ·  Best: ${Math.max(score,prevBest)}`;
-  }
-
-  canvas.ontouchstart = canvas.onmousedown = (e) => {
-    e.preventDefault();
-    if(gameOver) return;
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=W/rect.width, scaleY=H/rect.height;
-    const src=e.touches?e.touches[0]:e;
-    const tx=(src.clientX-rect.left)*scaleX;
-    const ty=(src.clientY-rect.top)*scaleY;
-    let hit=-1;
-    branches.forEach((b,i)=>{ if(Math.hypot(b.x-tx,b.y-ty)<b.r+14) hit=i; });
-    if(hit!==-1){
-      spawnParticles(branches[hit].x, branches[hit].y);
-      floaters.push({x:branches[hit].x, y:branches[hit].y-10, vy:-1.2, life:1, txt:'+🫒 yum!'});
-      ripples.push({x:DOVE_X, y:DOVE_Y, scale:0.2, life:1});
-      branches.splice(hit,1);
-      score++;
-      hunger=Math.min(100,hunger+18);
-    }
-  };
-
-  requestAnimationFrame(update);
-}
-
-function endDoveGame(score, prevBest) {
-  if(gameAnimFrame){cancelAnimationFrame(gameAnimFrame);gameAnimFrame=null;}
-  const canvas=document.getElementById('gameCanvas');
-  const ctx=canvas.getContext('2d');
-  const best=Math.max(score,prevBest);
-  if(score>=prevBest && score>0) {
-    localStorage.setItem('covenant_hs_dove', best);
-    confettiBurst();
-  }
-
-  ctx.fillStyle='rgba(10,5,25,0.96)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-  ctx.textAlign='center';
-  ctx.font='52px serif'; ctx.fillText(score>20?'🌟':'🕊️', canvas.width/2, 115);
-  ctx.fillStyle='#d4af37'; ctx.font='bold 20px Georgia';
-  ctx.fillText(score>20?'The Dove is Thriving! 🌿':'Dove got hungry...', canvas.width/2, 162);
-  ctx.fillStyle='#fff'; ctx.font='15px Georgia';
-  ctx.fillText(`Fed: ${score} times`, canvas.width/2, 194);
-  if(score>=prevBest && score>0){
-    ctx.fillStyle='#f0cc55'; ctx.font='bold 13px Georgia';
-    ctx.fillText(`✨ New Best: ${best}!`, canvas.width/2, 216);
-  } else {
-    ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='13px Georgia';
-    ctx.fillText(`Best: ${best}`, canvas.width/2, 216);
-  }
-  ctx.fillStyle='rgba(249,195,211,0.85)'; ctx.font='italic 12px Georgia';
-  const msgs=['Like you feed the dove, Tito Boi feeds your heart 💕','Even doves need love. So do you, Jay 🕊️','She ate well because of you today 🫒'];
-  ctx.fillText(msgs[score%msgs.length], canvas.width/2, 255);
-  ctx.fillStyle='rgba(255,255,255,0.25)'; ctx.font='11px Georgia';
-  ctx.fillText('Close and tap again to replay', canvas.width/2, 290);
-}
-
-// ── MEMORY MATCH GAME ── (polished)
-function initMemoryGame(gridSize) {
-  const canvas=document.getElementById('gameCanvas');
-  // Parse grid size
-  const [colsS, rowsS] = (gridSize||'4x4').split('x').map(Number);
-  const cols=colsS, rows=rowsS;
-  const totalCards = cols * rows; // must be even
-  const allEmojis=['💖','🕊️','🌸','💍','✝️','👑','🌹','💌','🌟','💒'];
-  const pairsNeeded = totalCards / 2;
-  const emojis = allEmojis.slice(0, pairsNeeded);
-  const deck=[...emojis,...emojis].sort(()=>Math.random()-0.5);
-
-  // Fit canvas: make cards fill nicely
-  const W=320;
-  const gap=6, ox=10;
-  const cw = Math.floor((W - ox*2 - gap*(cols-1)) / cols);
-  const ch = Math.round(cw * 1.28);
-  const oy=36;
-  const H = oy + rows*(ch+gap) + 16;
-  canvas.width=W; canvas.height=H;
-  const ctx=canvas.getContext('2d');
-
-  let flipped=[], matched=[], moves=0, gameWon=false, lockBoard=false, frame=0;
-  let flipAnim={}, particles=[], shakeCards=[];
-  const bestKey = `covenant_hs_memory_${gridSize||'4x4'}`;
-  let prevBest=parseInt(localStorage.getItem(bestKey)||'999');
-
-  function cardX(i){ return ox+(i%cols)*(cw+gap); }
-  function cardY(i){ return oy+Math.floor(i/cols)*(ch+gap); }
-
-  // Init flip anims
-  for(let i=0;i<totalCards;i++) flipAnim[i]={scaleX:1, flipping:false, progress:0};
-
-  function spawnMatchParticles(x,y){
-    for(let i=0;i<12;i++){
-      const a=(Math.PI*2/12)*i;
-      particles.push({x:x+cw/2,y:y+ch/2,vx:Math.cos(a)*(2+Math.random()*3),vy:Math.sin(a)*(2+Math.random()*3),life:1,r:3+Math.random()*3,color:'rgba(212,175,55,'});
-    }
-  }
-
-  function drawCard(i) {
-    const x=cardX(i), y=cardY(i);
-    const isFlipped=flipped.includes(i)||matched.includes(i);
-    const isMatched=matched.includes(i);
-    const anim=flipAnim[i];
-    const shake=shakeCards.includes(i)?Math.sin(frame*0.8)*3:0;
-
-    ctx.save();
-    ctx.translate(x+cw/2+shake, y+ch/2);
-    ctx.scale(anim.scaleX||1, 1);
-    ctx.translate(-cw/2, -ch/2);
-
-    // Card shadow
-    ctx.shadowColor='rgba(0,0,0,0.4)'; ctx.shadowBlur=8; ctx.shadowOffsetY=3;
-
-    // Card bg
-    if(isMatched){
-      const g=ctx.createLinearGradient(0,0,cw,ch);
-      g.addColorStop(0,'rgba(74,160,47,0.25)'); g.addColorStop(1,'rgba(212,175,55,0.2)');
-      ctx.fillStyle=g;
-    } else if(isFlipped){
-      const g=ctx.createLinearGradient(0,0,cw,ch);
-      g.addColorStop(0,'rgba(212,175,55,0.25)'); g.addColorStop(1,'rgba(100,30,120,0.3)');
-      ctx.fillStyle=g;
-    } else {
-      const g=ctx.createLinearGradient(0,0,cw,ch);
-      g.addColorStop(0,'rgba(80,20,100,0.6)'); g.addColorStop(1,'rgba(40,8,60,0.8)');
-      ctx.fillStyle=g;
-    }
-    ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.fill();
-    ctx.shadowBlur=0;
-
-    // Border
-    ctx.strokeStyle=isMatched?'rgba(74,240,64,0.7)':isFlipped?'rgba(212,175,55,0.8)':'rgba(255,255,255,0.1)';
-    ctx.lineWidth=isMatched||isFlipped?1.8:1;
-    ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.stroke();
-
-    // Matched shimmer
-    if(isMatched){
-      ctx.fillStyle=`rgba(212,175,55,${0.06+Math.sin(frame*0.08+i)*0.04})`;
-      ctx.beginPath(); ctx.roundRect(0,0,cw,ch,10); ctx.fill();
-    }
-
-    // Content
+function endDove(score,prev){if(gFrame){cancelAnimationFrame(gFrame);gFrame=null;}var best=Math.max(score,prev);if(score>=prev&&score>0){localStorage.setItem('hs_dove',best);confetti();}var cv=document.getElementById('gameCanvas'),ctx=cv.getContext('2d');ctx.fillStyle='rgba(10,5,25,0.96)';ctx.fillRect(0,0,cv.width,cv.height);ctx.textAlign='center';ctx.font='50px serif';ctx.fillText(score>20?'🌟':'🕊️',cv.width/2,110);ctx.fillStyle='#d4af37';ctx.font='bold 19px Georgia';ctx.fillText(score>20?'The Dove is Thriving! 🌿':'Dove got hungry...',cv.width/2,158);ctx.fillStyle='#fff';ctx.font='14px Georgia';ctx.fillText('Fed: '+score+' times',cv.width/2,186);if(score>=prev&&score>0){ctx.fillStyle='#f0cc55';ctx.font='bold 12px Georgia';ctx.fillText('✨ New Best: '+best+'!',cv.width/2,207);}else{ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='13px Georgia';ctx.fillText('Best: '+best,cv.width/2,207);}ctx.fillStyle='rgba(249,195,211,0.85)';ctx.font='italic 12px Georgia';ctx.fillText(['Like you feed the dove, Tito Boi feeds your heart 💕','Even doves need love. So do you, Jay 🕊️','She ate well because of you today 🫒'][score%3],cv.width/2,248);ctx.fillStyle='rgba(255,255,255,0.22)';ctx.font='10px Georgia';ctx.fillText('Close and tap again to replay',cv.width/2,285);}
+
+// MEMORY MATCH
+function initMemory(gridSize){
+  var cv=document.getElementById('gameCanvas');var p2=gridSize.split('x').map(Number);var cols=p2[0],rows=p2[1],total=cols*rows;
+  var W=320,gap=6,ox=10;var cw=Math.floor((W-ox*2-gap*(cols-1))/cols);var ch=Math.round(cw*1.28);var oy=34;var H=oy+rows*(ch+gap)+14;
+  cv.width=W;cv.height=H;var ctx=cv.getContext('2d');
+  var allE=['💖','🕊️','🌸','💍','✝️','👑','🌹','💌','🌟','💒'];var deck=allE.slice(0,total/2).concat(allE.slice(0,total/2)).sort(function(){return Math.random()-0.5;});
+  var flipped=[],matched=[],moves=0,won=false,lock=false,frame=0;var fa={},parts2=[],shakes=[];
+  var bkey='hs_m_'+gridSize;var prev=parseInt(localStorage.getItem(bkey)||'999');
+  for(var i=0;i<total;i++)fa[i]={sx:1};
+  function cx2(i){return ox+(i%cols)*(cw+gap);}
+  function cy2(i){return oy+Math.floor(i/cols)*(ch+gap);}
+  function drawCard(i){
+    var x=cx2(i),y=cy2(i);var fl=flipped.indexOf(i)>=0||matched.indexOf(i)>=0;var mt=matched.indexOf(i)>=0;var sh=shakes.indexOf(i)>=0?Math.sin(frame*0.8)*3:0;
+    ctx.save();ctx.translate(x+cw/2+sh,y+ch/2);ctx.scale(fa[i].sx||1,1);ctx.translate(-cw/2,-ch/2);
+    ctx.shadowColor='rgba(0,0,0,0.35)';ctx.shadowBlur=7;ctx.shadowOffsetY=2;
+    if(mt){var g=ctx.createLinearGradient(0,0,cw,ch);g.addColorStop(0,'rgba(74,160,47,0.22)');g.addColorStop(1,'rgba(212,175,55,0.18)');ctx.fillStyle=g;}
+    else if(fl){var g=ctx.createLinearGradient(0,0,cw,ch);g.addColorStop(0,'rgba(212,175,55,0.22)');g.addColorStop(1,'rgba(100,30,120,0.28)');ctx.fillStyle=g;}
+    else{var g=ctx.createLinearGradient(0,0,cw,ch);g.addColorStop(0,'rgba(80,20,100,0.55)');g.addColorStop(1,'rgba(40,8,60,0.75)');ctx.fillStyle=g;}
+    rr(ctx,0,0,cw,ch,8);ctx.fill();ctx.shadowBlur=0;
+    ctx.strokeStyle=mt?'rgba(74,240,64,0.65)':fl?'rgba(212,175,55,0.75)':'rgba(255,255,255,0.09)';ctx.lineWidth=1.5;rr(ctx,0,0,cw,ch,8);ctx.stroke();
+    if(mt){ctx.fillStyle='rgba(212,175,55,'+(0.05+Math.sin(frame*0.08+i)*0.04)+')';rr(ctx,0,0,cw,ch,8);ctx.fill();}
     ctx.textAlign='center';
-    if(isFlipped||isMatched){
-      ctx.font=`${isMatched?34:30}px serif`;
-      ctx.shadowColor='rgba(255,200,100,0.4)'; ctx.shadowBlur=isMatched?12:0;
-      ctx.fillText(deck[i], cw/2, ch/2+12);
-      ctx.shadowBlur=0;
-    } else {
-      // Back design
-      ctx.fillStyle='rgba(212,175,55,0.15)';
-      ctx.font='22px serif'; ctx.fillText('💛', cw/2, ch/2+8);
-      // Decorative corners
-      ctx.fillStyle='rgba(212,175,55,0.15)';
-      ctx.font='10px serif';
-      ctx.fillText('✦', 10, 14); ctx.fillText('✦', cw-10, 14);
-      ctx.fillText('✦', 10, ch-4); ctx.fillText('✦', cw-10, ch-4);
-    }
+    if(fl||mt){ctx.font=(mt?32:28)+'px serif';ctx.shadowColor='rgba(255,200,100,0.35)';ctx.shadowBlur=mt?10:0;ctx.fillText(deck[i],cw/2,ch/2+10);ctx.shadowBlur=0;}
+    else{ctx.fillStyle='rgba(212,175,55,0.14)';ctx.font='20px serif';ctx.fillText('💛',cw/2,ch/2+8);ctx.fillStyle='rgba(212,175,55,0.13)';ctx.font='9px serif';ctx.fillText('✦',9,13);ctx.fillText('✦',cw-9,13);ctx.fillText('✦',9,ch-3);ctx.fillText('✦',cw-9,ch-3);}
     ctx.restore();
   }
-
-  function draw() {
-    frame++;
-    const grad=ctx.createLinearGradient(0,0,0,H);
-    grad.addColorStop(0,'#0d0820'); grad.addColorStop(1,'#1a0535');
-    ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
-
-    // Title bar
-    ctx.fillStyle='rgba(212,175,55,0.08)'; ctx.fillRect(0,0,W,30);
-    ctx.fillStyle='rgba(212,175,55,0.6)'; ctx.font='11px Georgia'; ctx.textAlign='center';
-    ctx.fillText(`Moves: ${moves}  ·  Pairs: ${matched.length/2}/${totalCards/2}  ·  Best: ${prevBest<999?prevBest+'m':'--'}`, W/2, 20);
-
-    for(let i=0;i<totalCards;i++) drawCard(i);
-
-    // Particles
-    particles.forEach(p=>{
-      ctx.fillStyle=`${p.color}${p.life.toFixed(2)})`;
-      ctx.beginPath(); ctx.arc(p.x,p.y,p.r,0,Math.PI*2); ctx.fill();
-    });
-    particles.forEach(p=>{p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=0.04;p.vx*=0.93;});
-    particles=particles.filter(p=>p.life>0);
-
-    document.getElementById('gameScore').textContent=`Moves: ${moves}  ·  Pairs: ${matched.length/2}/8`;
-    if(!gameWon) gameAnimFrame=requestAnimationFrame(draw);
+  function draw(){
+    frame++;var g=ctx.createLinearGradient(0,0,0,H);g.addColorStop(0,'#0d0820');g.addColorStop(1,'#1a0535');ctx.fillStyle=g;ctx.fillRect(0,0,W,H);
+    ctx.fillStyle='rgba(212,175,55,0.07)';ctx.fillRect(0,0,W,28);ctx.fillStyle='rgba(212,175,55,0.55)';ctx.font='10px Georgia';ctx.textAlign='center';ctx.fillText('Moves: '+moves+'  ·  Pairs: '+(matched.length/2)+'/'+(total/2)+'  ·  Best: '+(prev<999?prev+'m':'--'),W/2,19);
+    for(var i=0;i<total;i++)drawCard(i);
+    parts2.forEach(function(p){ctx.fillStyle='rgba(212,175,55,'+p.life.toFixed(2)+')';ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fill();});
+    parts2.forEach(function(p){p.x+=p.vx;p.y+=p.vy;p.vy+=0.1;p.life-=0.04;p.vx*=0.93;});parts2=parts2.filter(function(p){return p.life>0;});
+    document.getElementById('gameScore').textContent='Moves: '+moves+'  ·  Matched: '+(matched.length/2)+'/'+(total/2);
+    if(!won)gFrame=requestAnimationFrame(draw);
   }
-
-  canvas.ontouchstart=canvas.onmousedown=(e)=>{
-    e.preventDefault();
-    if(lockBoard||gameWon) return;
-    const rect=canvas.getBoundingClientRect();
-    const scaleX=W/rect.width, scaleY=H/rect.height;
-    const src=e.touches?e.touches[0]:e;
-    const tx=(src.clientX-rect.left)*scaleX;
-    const ty=(src.clientY-rect.top)*scaleY;
-
-    for(let i=0;i<16;i++){
-      const x=cardX(i)+10, y=cardY(i);
-      if(tx>=x&&tx<=x+cw&&ty>=y&&ty<=y+ch){
-        if(flipped.includes(i)||matched.includes(i)||lockBoard) return;
-        // Flip animation
-        flipAnim[i]={scaleX:1,flipping:true};
-        let prog=0;
-        const flipIt=setInterval(()=>{
-          prog+=0.15;
-          flipAnim[i].scaleX=Math.cos(prog);
-          if(prog>=Math.PI/2){ clearInterval(flipIt); flipAnim[i].scaleX=1; flipAnim[i].flipping=false; }
-        },16);
-
-        flipped.push(i); moves++;
-
+  cv.ontouchstart=cv.onmousedown=function(e){
+    e.preventDefault();if(lock||won)return;
+    var rc=cv.getBoundingClientRect();var src=e.touches?e.touches[0]:e;var tx=(src.clientX-rc.left)*(W/rc.width),ty=(src.clientY-rc.top)*(H/rc.height);
+    for(var i=0;i<total;i++){
+      var x=cx2(i),y=cy2(i);if(tx>=x&&tx<=x+cw&&ty>=y&&ty<=y+ch){
+        if(flipped.indexOf(i)>=0||matched.indexOf(i)>=0||lock)return;
+        var prog=0;var fi=i;var flipIt=setInterval(function(){prog+=0.18;fa[fi].sx=Math.cos(prog);if(prog>=Math.PI/2){clearInterval(flipIt);fa[fi].sx=1;}},16);
+        flipped.push(i);moves++;
         if(flipped.length===2){
-          lockBoard=true;
-          setTimeout(()=>{
-            if(deck[flipped[0]]===deck[flipped[1]]){
-              matched.push(...flipped);
-              spawnMatchParticles(cardX(flipped[0]), cardY(flipped[0]));
-              spawnMatchParticles(cardX(flipped[1]), cardY(flipped[1]));
-              if(matched.length===totalCards){ gameWon=true; endMemoryGame(moves,prevBest,bestKey,gridSize); }
-            } else {
-              // Shake wrong cards
-              shakeCards=[...flipped];
-              setTimeout(()=>shakeCards=[],400);
-            }
-            flipped=[]; lockBoard=false;
+          lock=true;var f0=flipped[0],f1=flipped[1];
+          setTimeout(function(){
+            if(deck[f0]===deck[f1]){matched.push(f0,f1);[f0,f1].forEach(function(idx){for(var j=0;j<12;j++){var a=(Math.PI*2/12)*j;parts2.push({x:cx2(idx)+cw/2,y:cy2(idx)+ch/2,vx:Math.cos(a)*(2+Math.random()*3),vy:Math.sin(a)*(2+Math.random()*3),life:1,r:3+Math.random()*3});}});if(matched.length===total){won=true;endMemory(moves,prev,bkey);}}
+            else{shakes=[f0,f1];setTimeout(function(){shakes=[];},400);}
+            flipped=[];lock=false;
           },750);
-        }
-        break;
+        }break;
       }
     }
   };
-
-  draw();
+  gFrame=requestAnimationFrame(draw);
 }
+function endMemory(moves,prev,bkey){if(gFrame){cancelAnimationFrame(gFrame);gFrame=null;}var isNew=moves<prev;var best=isNew?moves:prev;localStorage.setItem(bkey,best<999?best:moves);confetti();setTimeout(function(){var cv=document.getElementById('gameCanvas'),ctx=cv.getContext('2d');ctx.fillStyle='rgba(10,5,25,0.97)';ctx.fillRect(0,0,cv.width,cv.height);ctx.textAlign='center';ctx.font='50px serif';ctx.fillText('💌',cv.width/2,105);ctx.fillStyle='#d4af37';ctx.font='bold 19px Georgia';ctx.fillText('You found them all! 🌸',cv.width/2,150);ctx.fillStyle='#fff';ctx.font='14px Georgia';ctx.fillText('Completed in '+moves+' moves',cv.width/2,177);if(isNew){ctx.fillStyle='#f0cc55';ctx.font='bold 12px Georgia';ctx.fillText('✨ New Best: '+moves+' moves!',cv.width/2,198);}else{ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='13px Georgia';ctx.fillText('Best: '+(best<999?best+'m':'first win!'),cv.width/2,198);}ctx.fillStyle='rgba(212,175,55,0.22)';rr(ctx,28,220,cv.width-56,90,12);ctx.fill();ctx.strokeStyle='rgba(212,175,55,0.35)';ctx.lineWidth=1;rr(ctx,28,220,cv.width-56,90,12);ctx.stroke();ctx.fillStyle='rgba(249,195,211,0.92)';ctx.font='italic 12px Georgia';['Just like you matched every pair,','God matched Tito Boi with you.','You are each other\'s perfect pair. 💍'].forEach(function(l,i){ctx.fillText(l,cv.width/2,247+i*22);});ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='10px Georgia';ctx.fillText('Close and tap again to replay',cv.width/2,338);},350);}
 
-function endMemoryGame(moves, prevBest, bestKey, gridSize) {
-  if(gameAnimFrame){cancelAnimationFrame(gameAnimFrame);gameAnimFrame=null;}
-  const canvas=document.getElementById('gameCanvas');
-  const ctx=canvas.getContext('2d');
-  const isNew=moves<prevBest;
-  const best=isNew?moves:prevBest;
-  const bk = bestKey || 'covenant_hs_memory_4x4';
-  if(best<999) localStorage.setItem(bk, best);
-  else localStorage.setItem(bk, moves);
-  confettiBurst();
+// SERVICE WORKER
+if('serviceWorker' in navigator){var sw="const C='cov-v3';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>caches.match('./'))));});";var blob=new Blob([sw],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});}
 
-  setTimeout(()=>{
-    ctx.fillStyle='rgba(10,5,25,0.97)'; ctx.fillRect(0,0,canvas.width,canvas.height);
-    ctx.textAlign='center';
-    ctx.font='52px serif'; ctx.fillText('💌', canvas.width/2, 110);
-    ctx.fillStyle='#d4af37'; ctx.font='bold 20px Georgia';
-    ctx.fillText('You found them all! 🌸', canvas.width/2, 155);
-    ctx.fillStyle='#fff'; ctx.font='15px Georgia';
-    ctx.fillText(`Completed in ${moves} moves`, canvas.width/2, 182);
-    if(isNew){
-      ctx.fillStyle='#f0cc55'; ctx.font='bold 13px Georgia';
-      ctx.fillText(`✨ New Best: ${moves} moves!`, canvas.width/2, 204);
-    } else {
-      ctx.fillStyle='rgba(255,255,255,0.4)'; ctx.font='13px Georgia';
-      ctx.fillText(`Best: ${best<999?best+'moves':'first win!'}`, canvas.width/2, 204);
-    }
-    // Love letter reveal
-    ctx.fillStyle='rgba(212,175,55,0.3)';
-    ctx.beginPath(); ctx.roundRect(30, 225, canvas.width-60, 90, 12); ctx.fill();
-    ctx.strokeStyle='rgba(212,175,55,0.4)'; ctx.lineWidth=1;
-    ctx.beginPath(); ctx.roundRect(30, 225, canvas.width-60, 90, 12); ctx.stroke();
-    ctx.fillStyle='rgba(249,195,211,0.95)'; ctx.font='italic 12px Georgia';
-    const lines=['Just like you matched every pair,','God matched Tito Boi with you.','You are each other\'s perfect pair. 💍'];
-    lines.forEach((l,i)=>ctx.fillText(l, canvas.width/2, 250+i*22));
-    ctx.fillStyle='rgba(255,255,255,0.2)'; ctx.font='11px Georgia';
-    ctx.fillText('Close and tap again to replay', canvas.width/2, 340);
-  },400);
-}
-
-// ═══════════════════════════════════════════════
-//  SERVICE WORKER (inline)
-// ═══════════════════════════════════════════════
-if ('serviceWorker' in navigator) {
-  const swCode = `
-    const CACHE='covenant-v1';
-    self.addEventListener('install',e=>{
-      e.waitUntil(caches.open(CACHE).then(c=>c.addAll(['./'])));
-      self.skipWaiting();
-    });
-    self.addEventListener('activate',e=>{
-      e.waitUntil(clients.claim());
-    });
-    self.addEventListener('fetch',e=>{
-      e.respondWith(
-        caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{
-          const clone=res.clone();
-          caches.open(CACHE).then(c=>c.put(e.request,clone));
-          return res;
-        }).catch(()=>caches.match('./'))
-      );
-    });
-  `;
-  const blob = new Blob([swCode], { type: 'application/javascript' });
-  const swUrl = URL.createObjectURL(blob);
-  navigator.serviceWorker.register(swUrl).catch(() => {});
-}
+// PWA ICON (deferred after load)
+window.addEventListener('load',function(){setTimeout(function(){
+  var sz=512,cv=document.createElement('canvas');cv.width=sz;cv.height=sz;var x=cv.getContext('2d');
+  var rd=sz*0.18;x.beginPath();x.moveTo(rd,0);x.lineTo(sz-rd,0);x.quadraticCurveTo(sz,0,sz,rd);x.lineTo(sz,sz-rd);x.quadraticCurveTo(sz,sz,sz-rd,sz);x.lineTo(rd,sz);x.quadraticCurveTo(0,sz,0,sz-rd);x.lineTo(0,rd);x.quadraticCurveTo(0,0,rd,0);x.closePath();
+  var bg=x.createLinearGradient(0,0,sz,sz);bg.addColorStop(0,'#2a0630');bg.addColorStop(1,'#4a0e4f');x.fillStyle=bg;x.fill();
+  var cx=sz/2,cy=sz/2+20;x.fillStyle='#f0cc55';x.beginPath();x.ellipse(cx,cy+10,95,68,-0.2,0,Math.PI*2);x.fill();x.fillStyle='#f0cc55';x.beginPath();x.arc(cx+50,cy-65,55,0,Math.PI*2);x.fill();x.fillStyle='#d4af37';x.beginPath();x.moveTo(cx-10,cy-10);x.bezierCurveTo(cx-130,cy-90,cx-170,cy+50,cx-80,cy+90);x.bezierCurveTo(cx-40,cy+65,cx-5,cy+30,cx-10,cy-10);x.fill();x.fillStyle='#e8c040';x.beginPath();x.moveTo(cx+20,cy-20);x.bezierCurveTo(cx+110,cy-100,cx+160,cy+20,cx+80,cy+75);x.bezierCurveTo(cx+45,cy+55,cx+15,cy+15,cx+20,cy-20);x.fill();x.fillStyle='#1a0820';x.beginPath();x.arc(cx+68,cy-72,10,0,Math.PI*2);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(cx+72,cy-76,3.5,0,Math.PI*2);x.fill();x.fillStyle='#c8a020';x.beginPath();x.moveTo(cx+98,cy-60);x.lineTo(cx+135,cy-54);x.lineTo(cx+98,cy-46);x.closePath();x.fill();x.strokeStyle='#4a7c2f';x.lineWidth=6;x.beginPath();x.moveTo(cx-30,cy+82);x.bezierCurveTo(cx-65,cy+62,cx-85,cy+95,cx-120,cy+78);x.stroke();x.fillStyle='#5a9c3f';[[cx-58,cy+68],[cx-75,cy+80],[cx-95,cy+74],[cx-115,cy+80]].forEach(function(p){x.beginPath();x.ellipse(p[0],p[1],9,6,Math.PI/4,0,Math.PI*2);x.fill();});
+  var icon=cv.toDataURL('image/png');var al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;document.head.appendChild(al);
+  var mf={name:'Covenant',short_name:'Covenant',description:'Tito Boi + Jay Eternal Streak',start_url:'./',display:'standalone',background_color:'#4a0e4f',theme_color:'#4a0e4f',orientation:'portrait',icons:[{src:icon,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
+  var ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));document.head.appendChild(ml);
+},1500);});
 </script>
-<!-- ══ GAME MODAL ══ -->
-<div id="gameModal">
-  <div class="gm-title" id="gmTitle">Catch the Hearts 💖</div>
-  <div id="gameScore">Score: 0 | Best: 0</div>
-  <canvas id="gameCanvas" width="320" height="420"></canvas>
-  <button id="gameClose" onclick="closeGame()">✕ Close</button>
-</div>
 </body>
 </html>
