@@ -36,6 +36,8 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 #nav{position:fixed;bottom:0;left:0;right:0;background:rgba(10,5,22,0.98);border-top:1px solid rgba(212,175,55,0.18);display:flex;justify-content:space-around;align-items:center;padding:6px 0 max(6px,env(safe-area-inset-bottom));z-index:100;}
 .nb{display:flex;flex-direction:column;align-items:center;gap:1px;background:none;border:none;cursor:pointer;color:rgba(255,255,255,0.3);font-family:Georgia,serif;padding:4px 10px;border-radius:10px;transition:color 0.2s,background 0.2s;}
 .nb.on{color:var(--gold);background:rgba(212,175,55,0.1);}
+.nb.locked{color:rgba(255,255,255,0.18);cursor:not-allowed;}
+.nb.locked span:first-child{filter:grayscale(1);opacity:0.5;}
 .nb span:first-child{font-size:1.25rem;}.nb span:last-child{font-size:0.46rem;letter-spacing:0.1em;text-transform:uppercase;}
 #topBanner{background:linear-gradient(90deg,rgba(212,175,55,0.15),rgba(255,105,180,0.12),rgba(212,175,55,0.15));border-bottom:1px solid rgba(212,175,55,0.25);padding:max(12px,env(safe-area-inset-top)) 16px 10px;text-align:center;}
 #dayCounter{font-size:0.65rem;letter-spacing:0.2em;color:var(--gold2);text-transform:uppercase;margin-bottom:2px;}
@@ -76,6 +78,8 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 #secretBtnWrap button{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.28);border-radius:100px;color:rgba(212,175,55,0.75);font-family:Georgia,serif;font-size:0.73rem;padding:6px 18px;cursor:pointer;}
 #tapHint{text-align:center;font-size:0.56rem;letter-spacing:0.14em;color:rgba(255,255,255,0.2);text-transform:uppercase;padding-bottom:12px;animation:hint 2.5s ease-in-out infinite;}
 @keyframes hint{0%,100%{opacity:0.3;}50%{opacity:0.7;}}
+@keyframes toastIn{from{opacity:0;transform:translateX(-50%) translateY(10px);}to{opacity:1;transform:translateX(-50%) translateY(0);}}
+@keyframes toastOut{to{opacity:0;transform:translateX(-50%) translateY(10px);}}
 #jarScreen{padding:14px 14px 16px;gap:10px;align-items:stretch;}
 .sec-hdr{text-align:center;padding:6px 0 2px;}
 .sec-hdr h2{font-family:Georgia,serif;font-size:1rem;color:var(--gold);letter-spacing:0.1em;}
@@ -181,6 +185,83 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 @keyframes cfFall{0%{opacity:1;transform:translateY(-10px) rotate(0);}100%{opacity:0;transform:translateY(105vh) rotate(720deg);}}
 @keyframes slideUp2{from{opacity:0;transform:translateY(20px);}to{opacity:1;transform:translateY(0);}}
 @keyframes milePop{0%{transform:scale(0.3) rotate(-5deg);opacity:0;}70%{transform:scale(1.08) rotate(1deg);}100%{transform:scale(1) rotate(0);opacity:1;}}
+
+/* ── STORY TAB ── */
+#storyScreen{padding:0;align-items:stretch;}
+.story-list{padding:14px 14px 80px;display:flex;flex-direction:column;gap:12px;}
+.chapter-card{background:linear-gradient(160deg,rgba(10,15,35,0.97),rgba(15,20,50,0.97));border:1px solid rgba(212,175,55,0.25);border-radius:16px;overflow:hidden;cursor:pointer;transition:transform 0.2s;}
+.chapter-card:active{transform:scale(0.98);}
+.chapter-card.unlocked{border-color:rgba(212,175,55,0.5);}
+.ch-banner{height:5px;background:linear-gradient(90deg,#0a1628,#d4af37,#0a1628);}
+.ch-body{padding:14px 16px;}
+.ch-num{font-size:0.58rem;letter-spacing:0.18em;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:4px;}
+.ch-title{font-family:Georgia,serif;font-size:1rem;color:#f0e6d0;margin-bottom:6px;}
+.ch-preview{font-size:0.75rem;color:rgba(255,255,255,0.4);line-height:1.5;font-style:italic;}
+.ch-footer{display:flex;justify-content:space-between;align-items:center;margin-top:10px;}
+.ch-status{font-size:0.62rem;letter-spacing:0.1em;text-transform:uppercase;}
+.ch-status.done{color:#4af0a0;}
+.ch-status.open{color:rgba(212,175,55,0.7);}
+.ch-status.lock{color:rgba(255,255,255,0.25);}
+.ch-arrow{font-size:0.85rem;color:rgba(212,175,55,0.5);}
+
+/* ── CHAPTER READER ── */
+#chapterReader{display:none;position:fixed;inset:0;z-index:700;background:linear-gradient(160deg,#060d1f,#0a1628,#060d1f);flex-direction:column;overflow:hidden;}
+#chapterReader.show{display:flex;}
+.reader-header{display:flex;align-items:center;gap:10px;padding:max(14px,env(safe-area-inset-top)) 16px 12px;background:rgba(6,13,31,0.98);border-bottom:1px solid rgba(212,175,55,0.15);}
+.reader-back{background:none;border:none;color:rgba(212,175,55,0.7);font-size:1.4rem;cursor:pointer;padding:4px 8px;}
+.reader-title{font-family:Georgia,serif;font-size:0.9rem;color:#f0e6d0;flex:1;}
+.reader-body{flex:1;overflow-y:auto;padding:24px 20px;-webkit-overflow-scrolling:touch;}
+.reader-chapter-num{font-size:0.6rem;letter-spacing:0.2em;color:rgba(212,175,55,0.5);text-transform:uppercase;margin-bottom:8px;text-align:center;}
+.reader-chapter-title{font-family:Georgia,serif;font-size:1.4rem;color:#d4af37;text-align:center;margin-bottom:6px;text-shadow:0 0 20px rgba(212,175,55,0.3);}
+.reader-divider{text-align:center;font-size:1rem;color:rgba(212,175,55,0.3);margin:10px 0 20px;letter-spacing:0.3em;}
+.reader-text{font-size:0.88rem;color:rgba(240,230,208,0.88);line-height:2;font-style:italic;}
+.reader-text p{margin-bottom:1.2em;}
+.reader-text .highlight{color:#d4af37;font-style:normal;font-weight:bold;}
+.reader-text .quote{border-left:2px solid rgba(212,175,55,0.4);padding-left:14px;color:rgba(212,175,55,0.85);margin:1em 0;font-style:italic;}
+.reader-footer{padding:14px 16px max(14px,env(safe-area-inset-bottom));background:rgba(6,13,31,0.98);border-top:1px solid rgba(212,175,55,0.15);text-align:center;}
+.reader-next-btn{background:linear-gradient(135deg,#d4af37,#f0cc55);color:#060d1f;font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.8rem 2.5rem;font-size:0.88rem;cursor:pointer;}
+
+/* ── QUIZ ── */
+#quizModal{display:none;position:fixed;inset:0;z-index:750;background:rgba(0,0,0,0.9);flex-direction:column;align-items:center;justify-content:center;padding:1.5rem;}
+#quizModal.show{display:flex;}
+.quiz-box{background:linear-gradient(160deg,#060d1f,#0d1835);border:1.5px solid rgba(212,175,55,0.4);border-radius:20px;padding:1.8rem 1.6rem;max-width:360px;width:100%;}
+.quiz-header{text-align:center;margin-bottom:1.2rem;}
+.qh-icon{font-size:2rem;display:block;margin-bottom:6px;}
+.qh-title{font-family:Georgia,serif;font-size:0.85rem;color:#d4af37;letter-spacing:0.1em;}
+.qh-sub{font-size:0.65rem;color:rgba(255,255,255,0.3);margin-top:3px;}
+.quiz-progress{display:flex;gap:6px;margin-bottom:1.2rem;justify-content:center;}
+.qp-dot{width:8px;height:8px;border-radius:50%;background:rgba(255,255,255,0.15);transition:background 0.3s;}
+.qp-dot.done{background:#4af0a0;}
+.qp-dot.current{background:#d4af37;}
+.quiz-q{font-size:0.85rem;color:rgba(240,230,208,0.9);line-height:1.6;margin-bottom:1rem;font-style:italic;text-align:center;}
+.quiz-options{display:flex;flex-direction:column;gap:8px;}
+.quiz-opt{background:rgba(255,255,255,0.05);border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:10px 14px;font-family:Georgia,serif;font-size:0.82rem;color:rgba(255,255,255,0.8);cursor:pointer;text-align:left;transition:background 0.2s;}
+.quiz-opt.correct{background:rgba(74,240,160,0.15);border-color:#4af0a0;color:#4af0a0;}
+.quiz-opt.wrong{background:rgba(255,77,109,0.15);border-color:#ff4d6d;color:#ff4d6d;}
+.strikes-row{display:flex;gap:6px;justify-content:center;margin-top:10px;}
+
+/* ── CODE REVEAL ── */
+#codeReveal{display:none;position:fixed;inset:0;z-index:760;background:rgba(0,0,0,0.92);flex-direction:column;align-items:center;justify-content:center;padding:2rem;text-align:center;gap:1rem;}
+#codeReveal.show{display:flex;}
+.cr-emoji{font-size:3.5rem;animation:petFloat 2s ease-in-out infinite;}
+.cr-title{font-family:Georgia,serif;font-size:1.2rem;color:#d4af37;}
+.cr-sub{font-size:0.8rem;color:rgba(255,255,255,0.5);font-style:italic;}
+.cr-code-box{background:rgba(212,175,55,0.1);border:2px solid rgba(212,175,55,0.5);border-radius:14px;padding:16px 28px;}
+.cr-code-label{font-size:0.6rem;letter-spacing:0.18em;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:6px;}
+.cr-code{font-family:'Press Start 2P',monospace;font-size:1.2rem;color:#f0cc55;letter-spacing:0.2em;text-shadow:0 0 20px rgba(212,175,55,0.6);}
+.cr-hint{font-size:0.72rem;color:rgba(255,255,255,0.4);font-style:italic;}
+.cr-btn{background:linear-gradient(135deg,#d4af37,#f0cc55);color:#060d1f;font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.8rem 2.5rem;font-size:0.88rem;cursor:pointer;}
+
+/* ── NARRATOR ── */
+.narrator-tag{display:flex;flex-direction:column;align-items:flex-start;gap:3px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.2);border-radius:10px;padding:10px 14px;margin-bottom:20px;}
+.nt-badge{font-family:'Press Start 2P',monospace;font-size:0.55rem;color:#d4af37;letter-spacing:0.05em;}
+.nt-note{font-size:0.65rem;color:rgba(255,255,255,0.35);font-style:italic;}
+.narrator-close{background:rgba(212,175,55,0.06);border-left:3px solid rgba(212,175,55,0.5);border-radius:0 10px 10px 0;padding:12px 16px;margin-top:20px;font-size:0.82rem;color:rgba(212,175,55,0.85);font-style:italic;line-height:1.8;}
+
+.cr-letter-box{background:rgba(212,175,55,0.06);border:1px solid rgba(212,175,55,0.25);border-radius:14px;padding:16px 18px;max-width:320px;width:100%;text-align:left;}
+.cr-letter-text{font-family:Georgia,serif;font-size:0.82rem;color:rgba(240,230,208,0.9);line-height:1.8;font-style:italic;margin-bottom:8px;}
+.cr-letter-from{font-size:0.7rem;color:rgba(212,175,55,0.7);letter-spacing:0.08em;text-align:right;}
+.cr-divider{font-size:0.58rem;letter-spacing:0.2em;color:rgba(212,175,55,0.4);text-transform:uppercase;margin:4px 0 2px;}
 </style>
 </head>
 <body>
@@ -193,10 +274,11 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 </div>
 <div id="app">
 <div id="nav">
-  <button class="nb on"  id="nb-home"  onclick="goTab('home')" ><span>🕊️</span><span>Home</span></button>
+  <button class="nb on"  id="nb-home"  onclick="goTab('home')" ><span>🏠</span><span>Home</span></button>
+  <button class="nb"     id="nb-pet"   onclick="onPetTabClick()"><span id="nb-pet-icon">🔒</span><span>Pet</span></button>
   <button class="nb"     id="nb-jar"   onclick="goTab('jar')"  ><span>📸</span><span>Memory</span></button>
-  <button class="nb"     id="nb-devot" onclick="goTab('devot')"><span>🙏</span><span>Devotion</span></button>
   <button class="nb"     id="nb-games" onclick="goTab('games')"><span>🎮</span><span>Games</span></button>
+  <button class="nb"     id="nb-story" onclick="goTab('story')"><span>📖</span><span>Story</span></button>
   <button class="nb"     id="nb-night" onclick="goTab('night')"><span>🌙</span><span>Night</span></button>
 </div>
 <div class="screen active" id="homeScreen">
@@ -267,6 +349,87 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
   <div class="gn-card"><span class="gn-moon" id="gnMoon">🌙</span><div class="gn-title">Goodnight, Jay 🕊️</div><div class="gn-sub">Before you sleep, let the dove tuck you in.<br/>Tito Boi is thinking of you right now.</div><div class="gn-verse" id="gnVerse"></div><button class="gn-btn" id="gnBtn" onclick="doGoodnight()">🌙 Tuck in the Dove</button><div class="gn-status" id="gnStatus"></div></div>
 </div>
 </div>
+
+<!-- PET SCREEN -->
+<div class="screen" id="petScreen">
+  <canvas id="petCanvas" width="360" height="320"></canvas>
+  <div id="petHUD">
+    <div id="petAgeTag">Baby Dove · Day 1</div>
+    <div id="petMsg">Tap me! I just hatched 🐣</div>
+    <div class="stat-row">
+      <div class="stat-line"><span class="stat-icon">❤️</span><span class="stat-label">Health</span><div class="stat-bar-wrap"><div class="stat-bar health" id="sb-health" style="width:100%"></div></div><span class="stat-val" id="sv-health">100</span></div>
+      <div class="stat-line"><span class="stat-icon">🍽️</span><span class="stat-label">Hunger</span><div class="stat-bar-wrap"><div class="stat-bar hunger" id="sb-hunger" style="width:100%"></div></div><span class="stat-val" id="sv-hunger">100</span></div>
+      <div class="stat-line"><span class="stat-icon">😊</span><span class="stat-label">Happy</span><div class="stat-bar-wrap"><div class="stat-bar happy" id="sb-happy" style="width:100%"></div></div><span class="stat-val" id="sv-happy">100</span></div>
+      <div class="stat-line"><span class="stat-icon">✨</span><span class="stat-label">Clean</span><div class="stat-bar-wrap"><div class="stat-bar clean" id="sb-clean" style="width:100%"></div></div><span class="stat-val" id="sv-clean">100</span></div>
+    </div>
+    <div class="action-row">
+      <button class="act-btn" id="ab-feed"  onclick="petAction('feed')" ><span class="ab-icon">🫒</span><span class="ab-lbl">Feed</span></button>
+      <button class="act-btn" id="ab-bath"  onclick="petAction('bath')" ><span class="ab-icon">🛁</span><span class="ab-lbl">Bathe</span></button>
+      <button class="act-btn" id="ab-pet"   onclick="petAction('pet')"  ><span class="ab-icon">💖</span><span class="ab-lbl">Pet</span></button>
+      <button class="act-btn" id="ab-play"  onclick="petAction('play')" ><span class="ab-icon">🎮</span><span class="ab-lbl">Play</span></button>
+      <button class="act-btn" id="ab-sleep" onclick="petAction('sleep')"><span class="ab-icon">🌙</span><span class="ab-lbl">Sleep</span></button>
+    </div>
+  </div>
+</div>
+
+<!-- HATCH OVERLAY -->
+<div id="hatchOverlay">
+  <canvas id="hatchCanvas" width="220" height="220"></canvas>
+  <div class="hatch-msg" id="hatchMsg">She hatched! 🐣</div>
+  <div class="hatch-sub" id="hatchSub">Your dove is finally here...</div>
+  <button class="hatch-btn" onclick="closeHatch()">Meet her 💕</button>
+</div>
+
+<!-- STORY SCREEN -->
+<div class="screen" id="storyScreen">
+  <div class="story-list" id="storyList"></div>
+</div>
+
+<!-- CHAPTER READER -->
+<div id="chapterReader">
+  <div class="reader-header">
+    <button class="reader-back" onclick="closeReader()">&#8592;</button>
+    <div class="reader-title" id="readerTitle">Chapter 1</div>
+  </div>
+  <div class="reader-body" id="readerBody"></div>
+  <div class="reader-footer">
+    <button class="reader-next-btn" id="readerNextBtn" onclick="startQuiz()">I'm ready — Quiz me! 📝</button>
+  </div>
+</div>
+
+<!-- QUIZ MODAL -->
+<div id="quizModal">
+  <div class="quiz-box">
+    <div class="quiz-header">
+      <span class="qh-icon">📝</span>
+      <div class="qh-title">How well did you read?</div>
+      <div class="qh-sub">3 questions · 3 strikes max</div>
+    </div>
+    <div class="quiz-progress" id="quizProgress"></div>
+    <div class="quiz-q" id="quizQ"></div>
+    <div class="quiz-options" id="quizOpts"></div>
+    <div class="strikes-row" id="strikesRow"></div>
+  </div>
+</div>
+
+<!-- CODE REVEAL -->
+<div id="codeReveal">
+  <span class="cr-emoji">🎉</span>
+  <div class="cr-title">Chapter Complete!</div>
+  <div class="cr-sub">A message from Tito Boi 💌</div>
+  <div class="cr-letter-box" id="cr-code-box-wrap">
+    <div class="cr-letter-text" id="crLetterMsg"></div>
+    <div class="cr-letter-from" id="crLetterFrom"></div>
+  </div>
+  <div class="cr-divider">✦ Your unlock code ✦</div>
+  <div class="cr-code-box">
+    <div class="cr-code-label">Save this code</div>
+    <div class="cr-code" id="crCode">CHP1</div>
+  </div>
+  <div class="cr-hint">Go to Home → "Got a code from Tito Boi?" and enter it 💕</div>
+  <button class="cr-btn" onclick="closeCodeReveal()">Got it! 💌</button>
+</div>
+
 <div class="modal" id="prayerModal">
   <div class="prayer-inner"><span class="prayer-dove">🕊️</span><h2>Lord's Prayer</h2><p class="prayer-sub">Tito Boi + Jay · Praying As One</p>
   <div class="prayer-text"><strong>Our Father,</strong> who art in heaven,<br/>hallowed be Thy name.<br/>Thy kingdom come, Thy will be done,<br/>on earth as it is in heaven.<br/><br/>Give us this day our daily bread,<br/>and forgive us our trespasses,<br/>as we forgive those who trespass against us.<br/><br/>And lead us not into temptation,<br/>but deliver us from evil.<br/><br/>For Thine is the kingdom,<br/>the power and the glory,<br/>forever and ever.<br/><br/><strong>Amen. 🕊️</strong></div>
@@ -286,7 +449,7 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 </div>
 <div class="modal" id="secretModal">
   <div class="modal-box"><h3>💌 Secret Message</h3><p>Enter the code Tito Boi sent you</p>
-  <input id="secretInput" type="text" maxlength="10" placeholder="Enter code..." autocomplete="off" autocorrect="off" spellcheck="false"/>
+  <input id="secretInput" type="text" maxlength="30" placeholder="Enter code..." autocomplete="off" autocorrect="off" spellcheck="false"/>
   <button id="secretSubmit" onclick="checkSecret()">Open Message 💌</button>
   <div id="secretResult"><span class="sr-emoji" id="srEmoji">💌</span><div class="sr-msg" id="srMsg"></div><div class="sr-from" id="srFrom"></div></div>
   <div id="secretError">❌ Wrong code... ask Tito Boi! 😄</div>
@@ -304,6 +467,12 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
   <div class="final-verse">"Egg → Dove → Phoenix"<br/>Dec 30 + Dec 31 = New Year Forever<br/>Like Christ rose — Tito Boi + Jay rise eternal.<br/><br/><em>"Many waters cannot quench love."</em><br/>Song of Solomon 8:7</div>
 </div>
 <script>
+// ── DOVE IMAGE (embedded PNG, transparent bg) ──
+var DOVE_IMG = new Image();
+DOVE_IMG.src = 'data:image/png;base64,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';
+var DOVE_LOADED = false;
+DOVE_IMG.onload = function(){ DOVE_LOADED = true; };
+
 // Safe roundRect polyfill (ctx.roundRect not supported in older Safari/Android)
 function rr(ctx,x,y,w,h,r){ctx.beginPath();ctx.moveTo(x+r,y);ctx.lineTo(x+w-r,y);ctx.quadraticCurveTo(x+w,y,x+w,y+r);ctx.lineTo(x+w,y+h-r);ctx.quadraticCurveTo(x+w,y+h,x+w-r,y+h);ctx.lineTo(x+r,y+h);ctx.quadraticCurveTo(x,y+h,x,y+h-r);ctx.lineTo(x,y+r);ctx.quadraticCurveTo(x,y,x+r,y);ctx.closePath();}
 
@@ -326,12 +495,26 @@ var VERSES=[{t:'"My beloved is mine and I am his; he grazes among the lilies."',
 var EGG_MSGS=['Hi mom! I cannot hatch yet 🥚','Knock knock... not yet! 😄','I can hear you! Still growing 🌱','Shhh I am sleeping... jk hi! 👋','It is warm in here, I do not wanna leave 🥚💕','Come back on Day 30, I promise I will be cute 🐣','Did someone say tap? That was me. Hi! 🥚','I am a golden egg. That means I am special 👑','Tito Boi says hi too btw 💌','Every tap makes me grow a little more 🌟','Almost there... Day 30 is the big day! 🎉','God is watching over us both in here 🙏','Patient heart, golden egg. Like you, Jay 💛','Saving my wings for the right moment 🕊️','Can you feel me wiggling? That means I love you 🥚💗','Day {{d}} of 30 until I hatch! 🐣','Every day you open this = one more feather 🪶'];
 var MISSED=[{d:[1,2],e:'😏',t:'Missed me, Jay? 😏 I kept the light on for you.'},{d:[1,2],e:'🌸',t:'Look who is back! Welcome home, Jay 🌸'},{d:[1,2],e:'💌',t:'One day away felt like forever, Jay 💌'},{d:[1,2],e:'✨',t:'You always come back. That is why I love you, Jay ✨'},{d:[1,2],e:'🕊️',t:'The dove waited. The dove is happy now, Jay 🕊️'},{d:[3,6],e:'💕',t:'Heart kept your spot warm, Jay. It is still yours 💕'},{d:[3,6],e:'🌙',t:'I counted the nights, Jay. Every single one 🌙'},{d:[3,6],e:'💛',t:'A few days gone but my love did not move an inch, Jay 💛'},{d:[3,6],e:'🌿',t:'Like an olive branch, I still offer peace, Jay 🌿'},{d:[3,6],e:'🙏',t:'Prayed for you every day you were gone, Jay 🙏'},{d:[7,9999],e:'💍',t:'I would wait 10 years. A few days was just practice, Jay 💍'},{d:[7,9999],e:'✝️',t:'Love endures all things. We endure, Jay. Always 💕'},{d:[7,9999],e:'🕊️',t:'The dove does not leave. She circles back. Like you, Jay 🕊️'},{d:[7,9999],e:'🌹',t:'Worth the wait. Always. Come back whenever, Jay 🌹'},{d:[7,9999],e:'👑',t:'Queens do not quit. And neither do I, Jay 👑'}];
 var MILESTONES={7:{e:'👑',t:'Week 1 Legend!',s:'7 days of showing up. That is real love, Jay.'},30:{e:'🏆',t:'Month 1 Queen!',s:'30 days strong. The dove is so proud of you 🕊️'},100:{e:'💯',t:'Triple Digits!',s:'100 days. You are not just dating — you are building, Jay.'},365:{e:'🎉',t:'Year 1 Forever!',s:'365 days. One full year of choosing each other 💍'},1000:{e:'💍',t:'3+ Years Legends',s:'1000 days. Tito Boi + Jay. Nothing stops this love 💕'},3652:{e:'🔥',t:'TITO BOI + JAY = ETERNAL',s:'10 years. The covenant is complete. ✝️💍'}};
-var SECRETS={'TITO01':{e:'💌',m:'Hey Jay... just wanted you to know I think about you every single day. This egg is proof. 🥚✝️',f:'— Tito Boi, always'},'ILOVEU':{e:'💕',m:'I love you, Jay. There. I said it. Now the app knows too. 🕊️',f:'— Tito Boi 💍'},'DEC30':{e:'👑',m:'Happy Birthday Queen. Dec 30 is the best day God ever made. You are proof of that. 🎂✨',f:'— Your Tito Boi 👑'},'PRAY':{e:'🙏',m:'I prayed for you today. I prayed for us. I prayed that God keeps you safe and brings us closer every day. 💕',f:'— Tito Boi ✝️'},'SORRY':{e:'🌸',m:'I am sorry, Jay. Whatever it is, I am sorry. You deserve nothing but kindness from me. Always. 🕊️',f:'— Tito Boi 🤍'},'GANDA':{e:'🌟',m:'You are so beautiful, Jay. I hope you know that. Like actually. The kind of beautiful that stays. 💛',f:'— Tito Boi'},'PROUD':{e:'🏆',m:'I am so proud of you Jay. Everything you carry, everything you push through — it is extraordinary. 💪✝️',f:'— Tito Boi 👑'},'MISS':{e:'🥺',m:'I miss you, Jay. Even when you are near. Is that weird? Maybe. But it is true. 💗',f:'— Tito Boi 🥺'},'FAITH':{e:'✝️',m:'"For I know the plans I have for you" — Jeremiah 29:11. God planned you for something beautiful. I believe you are part of mine. 🕊️',f:'— Tito Boi ✝️'},'COURT':{e:'🌹',m:'It took me a month of courage to ask. And I would wait a thousand more days just for the chance. Thank you for saying yes, Jay. 🌹💍',f:'— Tito Boi, forever courting you'}};
+var SECRETS={
+  'TITO01':{e:'💌',m:'Hey Jay... just wanted you to know I think about you every single day. This egg is proof. 🥚✝️',f:'— Tito Boi, always'},
+  'ILOVEU':{e:'💕',m:'I love you, Jay. There. I said it. Now the app knows too. 🕊️',f:'— Tito Boi 💍'},
+  'DEC30':{e:'👑',m:'Happy Birthday Queen. Dec 30 is the best day God ever made. You are proof of that. 🎂✨',f:'— Your Tito Boi 👑'},
+  'SORRY':{e:'🌸',m:'I am sorry, Jay. Whatever it is, I am sorry. You deserve nothing but kindness from me. Always. 🕊️',f:'— Tito Boi 🤍'},
+  'GANDA':{e:'🌟',m:'You are so beautiful, Jay. I hope you know that. Like actually. The kind of beautiful that stays. 💛',f:'— Tito Boi'},
+  'PROUD':{e:'🏆',m:'I am so proud of you Jay. Everything you carry, everything you push through — it is extraordinary. 💪✝️',f:'— Tito Boi 👑'},
+  'MISS':{e:'🥺',m:'I miss you, Jay. Even when you are near. Is that weird? Maybe. But it is true. 💗',f:'— Tito Boi 🥺'},
+  'COURT':{e:'🌹',m:'It took me a month of courage to ask. And I would wait a thousand more days just for the chance. Thank you for saying yes, Jay. 🌹💍',f:'— Tito Boi, forever courting you'},
+  'CHP1':{e:'📖',m:'Hello Jay, If you are reading this then you have probably read chapter one of my story. It is just a part of my life and there is gonna be more than 3 chapters soon — only for you :> Here is another code for you to open: TITO01 💌',f:'— Tito Boi 🕊️'},
+  'CHAPTER2COMPLETED':{e:'📖',m:'Whoa going fast with my stories huh? Very well Jay, then I suppose you will know my past relationships soon enough. Here is another code for you to open: SpecialJay 💕',f:'— Tito Boi 😄'},
+  'SPECIALJAY':{e:'💛',m:'Hello Jay. Just wanted to say that you are really important to me and always know that Tito Boi is always here — no matter what, no matter when. You are not a burden, you are not too much, you are not hard to love. You are exactly who I prayed for. Always remember that. 💕✝️',f:'— Tito Boi, always here 🕊️'},
+  'STORYLINECOMPLETED':{e:'🎉',m:'You completed the 1st Storyline! Wow, now I feel like you know every single thing about me. Well, we will get into specific details in Storyline 2 so stay tuned Jay :> Here is another code for you to open: PRAY 🙏',f:'— Tito Boi 📖'},
+  'PRAY':{e:'🙏',m:'I prayed for you today, Jay. I prayed for us. I prayed that God keeps you safe, that He keeps your heart at peace, and that He brings us closer every single day. You are covered. Always. 💕✝️',f:'— Tito Boi 🙏'}
+};
 var DEVOTIONS=[{e:'✝️',t:'Faith Over Fear',b:'"Do not fear, for I am with you." — Isaiah 41:10\n\nToday, lay down one worry at God\'s feet. He is already working it out.',c:'Say out loud: "God is bigger than this." Then text Tito Boi one thing you are trusting God for today 💕'},{e:'🌿',t:'Be Still',b:'"Be still and know that I am God." — Psalm 46:10\n\nIn the noise, pause. Five deep breaths. Feel His peace.',c:'Spend 5 quiet minutes with no phone. Just you and God. 🙏'},{e:'💕',t:'Love Is Patient',b:'"Love is patient, love is kind." — 1 Cor 13:4\n\nPatience is a form of love. Today, practice it with someone who tests yours.',c:'Find one moment to choose patience over frustration. Tell Tito Boi how it went 😊'},{e:'🌸',t:'You Are Chosen',b:'"You did not choose me, but I chose you." — John 15:16\n\nGod chose you. Specifically. Intentionally. On purpose.',c:'Write one thing God loves about you. Save it in your Memory Jar 💌'},{e:'🕊️',t:'Peace Like a River',b:'"Peace I leave with you; my peace I give you." — John 14:27\n\nHis peace is not the absence of trouble — it is calm in the middle of it.',c:'Pray for peace for someone else today. Then enjoy the peace that returns 🕊️'},{e:'👑',t:'You Are Royalty',b:'"You are a chosen people, a royal priesthood." — 1 Peter 2:9\n\nYou carry a crown you cannot always see. Walk like it today.',c:'Do one thing that honors the queen God made you to be 👑'},{e:'🌙',t:'Rest Is Holy',b:'"He grants sleep to those he loves." — Psalm 127:2\n\nRest is not laziness. It is trust.',c:'Go to bed 30 minutes earlier tonight. Give that time back to God 🌙'},{e:'🌹',t:'Love Covers All',b:'"Above all, love each other deeply, because love covers a multitude of sins." — 1 Peter 4:8',c:'Think of someone who hurt you. Pray for them today, even just one sentence 🌹'},{e:'🙏',t:'Pray Without Ceasing',b:'"Pray continually." — 1 Thessalonians 5:17\n\nPrayer is a conversation. Talk to Him like He is right there.',c:'Pray three times today: morning, afternoon, before sleep 🙏'},{e:'💛',t:'Gratitude Changes Everything',b:'"Give thanks in all circumstances." — 1 Thessalonians 5:18\n\nGratitude is choosing to find God in it anyway.',c:'List 5 things you are grateful for and save them in your Memory Jar 💛'},{e:'🔥',t:'Refined by Fire',b:'"When you walk through the fire, you will not be burned." — Isaiah 43:2\n\nEvery hard season makes you stronger.',c:'Write about one hard thing that made you stronger. God used it 🔥'},{e:'🤍',t:'Grace Upon Grace',b:'"From his fullness we have all received grace upon grace." — John 1:16\n\nYou cannot run out of His grace. Not today. Not ever.',c:'Extend grace to yourself today. One mistake does not define you 🤍'}];
 var GN_VERSES=[{t:'"He grants sleep to those he loves."',r:'Psalm 127:2'},{t:'"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."',r:'Psalm 4:8'},{t:'"When you lie down, you will not be afraid; your sleep will be sweet."',r:'Proverbs 3:24'},{t:'"The Lord watches over you... he will keep you from all harm."',r:'Psalm 121:5,7'},{t:'"Cast all your anxiety on him because he cares for you."',r:'1 Peter 5:7'},{t:'"My beloved is mine and I am his."',r:'Song of Solomon 2:16'},{t:'"Peace I leave with you; my peace I give you."',r:'John 14:27'}];
 
 // STATE
-function getState(){var d={currentDay:1,lastLogin:null,msgHistory:[],verseIndex:0,eggHistory:[],shownMilestones:[]};try{return Object.assign(d,JSON.parse(localStorage.getItem('cov_v3')||'{}'));}catch(e){return d;}}
+function getState(){var d={currentDay:1,lastLogin:null,msgHistory:[],verseIndex:0,eggHistory:[],shownMilestones:[],petStats:{health:100,hunger:100,happy:100,clean:100},petLastCare:null,petSleeping:false,petHatched:false,hatchShown:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('cov_v3')||'{}'));}catch(e){return d;}}
 function saveState(s){try{localStorage.setItem('cov_v3',JSON.stringify(s));}catch(e){}}
 function todayStr(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1).toString().padStart(2,'0')+'-'+d.getDate().toString().padStart(2,'0');}
 var ST=getState(),missedDays=0,lpTimer=null;
@@ -356,6 +539,16 @@ function renderHome(){
   var t=['Day '+(d+1)+' awaits, Dec 30 Queen 🌸','Tomorrow is Day '+(d+1)+'. One step closer 💕','Day '+(d+1)+': another page in our story 📖',(TOTAL-d)+' days left. Each one worth it 🕊️'];
   document.getElementById('teaser').textContent=t[d%t.length];
   renderVerse();if(missedDays>0)showMissed(missedDays);
+  // Lock/unlock pet tab
+  var petBtn = document.getElementById('nb-pet');
+  var petIcon = document.getElementById('nb-pet-icon');
+  if(ST.currentDay >= 30){
+    if(petBtn){ petBtn.classList.remove('locked'); }
+    if(petIcon) petIcon.textContent = '🐣';
+  } else {
+    if(petBtn){ petBtn.classList.add('locked'); }
+    if(petIcon) petIcon.textContent = '🔒';
+  }
 }
 function petStage(d){if(d<=30)return{emoji:'🥚',label:'Golden Egg'};if(d<=365)return{emoji:'🐣',label:'Baby Dove'};if(d<=1000)return{emoji:'🕊️',label:'Teen Dove'};if(d<3652)return{emoji:'🤍🕊️',label:'Wedding Dove'};return{emoji:'🔥🕊️🔥',label:'Phoenix'};}
 function renderVerse(){var v=VERSES[ST.verseIndex%VERSES.length];document.getElementById('verseText').textContent=v.t;document.getElementById('verseRef').textContent=v.r+' · tap to change';}
@@ -390,8 +583,21 @@ function spawnHearts(el,n){var r=el.getBoundingClientRect(),cx=r.left+r.width/2,
 function confetti(){var c=['#d4af37','#ff69b4','#c4b5fd','#6ee7b7','#fff','#f9c3d3'];for(var i=0;i<80;i++){var el=document.createElement('div');el.className='cf';var col=c[Math.floor(Math.random()*c.length)];var w=5+Math.random()*7,h2=5+Math.random()*7;el.style.cssText='left:'+Math.random()*100+'vw;top:-8px;width:'+w+'px;height:'+h2+'px;background:'+col+';--d:'+(1.2+Math.random()*1.5)+'s;--dl:'+Math.random()*1.5+'s;border-radius:'+(Math.random()>.5?'50%':'2px')+';';document.body.appendChild(el);setTimeout(function(){el.remove();},3500);}}
 
 // TABS
-var TABS={home:'homeScreen',jar:'jarScreen',devot:'devotScreen',games:'gamesScreen',night:'nightScreen'};
-function goTab(tab){Object.keys(TABS).forEach(function(k){document.getElementById(TABS[k]).classList.toggle('active',k===tab);document.getElementById('nb-'+k).classList.toggle('on',k===tab);});if(tab==='jar')renderMemList();if(tab==='devot')renderDevot();if(tab==='night')renderNight();if(tab==='games')renderGameScores();}
+var TABS={home:'homeScreen',pet:'petScreen',jar:'jarScreen',games:'gamesScreen',story:'storyScreen',night:'nightScreen'};
+function goTab(tab){
+  Object.keys(TABS).forEach(function(k){
+    var scr=document.getElementById(TABS[k]);
+    var btn=document.getElementById('nb-'+k);
+    if(scr) scr.classList.toggle('active',k===tab);
+    if(btn) btn.classList.toggle('on',k===tab);
+  });
+  if(tab==='pet')   initPetTab();
+  if(tab==='jar')   renderMemList();
+  if(tab==='story') renderStory();
+  if(tab==='devot') renderDevot();
+  if(tab==='night') renderNight();
+  if(tab==='games') renderGameScores();
+}
 
 // MODALS
 function openModal(id){document.getElementById(id).classList.add('show');}
@@ -578,6 +784,1099 @@ function initMemory(gridSize){
   gFrame=requestAnimationFrame(draw);
 }
 function endMemory(moves,prev,bkey){if(gFrame){cancelAnimationFrame(gFrame);gFrame=null;}var isNew=moves<prev;var best=isNew?moves:prev;localStorage.setItem(bkey,best<999?best:moves);confetti();setTimeout(function(){var cv=document.getElementById('gameCanvas'),ctx=cv.getContext('2d');ctx.fillStyle='rgba(10,5,25,0.97)';ctx.fillRect(0,0,cv.width,cv.height);ctx.textAlign='center';ctx.font='50px serif';ctx.fillText('💌',cv.width/2,105);ctx.fillStyle='#d4af37';ctx.font='bold 19px Georgia';ctx.fillText('You found them all! 🌸',cv.width/2,150);ctx.fillStyle='#fff';ctx.font='14px Georgia';ctx.fillText('Completed in '+moves+' moves',cv.width/2,177);if(isNew){ctx.fillStyle='#f0cc55';ctx.font='bold 12px Georgia';ctx.fillText('✨ New Best: '+moves+' moves!',cv.width/2,198);}else{ctx.fillStyle='rgba(255,255,255,0.4)';ctx.font='13px Georgia';ctx.fillText('Best: '+(best<999?best+'m':'first win!'),cv.width/2,198);}ctx.fillStyle='rgba(212,175,55,0.22)';rr(ctx,28,220,cv.width-56,90,12);ctx.fill();ctx.strokeStyle='rgba(212,175,55,0.35)';ctx.lineWidth=1;rr(ctx,28,220,cv.width-56,90,12);ctx.stroke();ctx.fillStyle='rgba(249,195,211,0.92)';ctx.font='italic 12px Georgia';['Just like you matched every pair,','God matched Tito Boi with you.','You are each other\'s perfect pair. 💍'].forEach(function(l,i){ctx.fillText(l,cv.width/2,247+i*22);});ctx.fillStyle='rgba(255,255,255,0.2)';ctx.font='10px Georgia';ctx.fillText('Close and tap again to replay',cv.width/2,338);},350);}
+
+
+// ═══════════════════════════════════════════════
+//  PIXEL ART PET SYSTEM
+// ═══════════════════════════════════════════════
+
+// ── PIXEL ART SPRITES ──
+// Each sprite is drawn on a virtual 16x16 grid then scaled up
+// Color palette: cream #f0e8d0, white #ffffff, gold #d4af37, grey #b0a090, dark #2a1a0a, pink #ffaab0, blue #a0c8ff
+
+// ── PIXEL PALETTE ──
+var P = {
+  W :'#f8f4ee', // soft white body
+  W2:'#ede8df', // body shadow
+  W3:'#d4cfc6', // deep shadow/underwing
+  G :'#d4af37', // gold beak/feet
+  G2:'#b8942a', // dark gold
+  G3:'#f0cc55', // bright gold highlight
+  E :'#1a1a2e', // eye pupil
+  EB:'#3a3a5c', // eye outline
+  EH:'#ffffff', // eye highlight
+  EB2:'#6060aa',// iris blue
+  P1:'#ffccd5', // pink cheek blush
+  T :'#a8d8ea', // pale blue wing sheen
+  T2:'#7ec8e3', // blue sheen bright
+  BG:'#c8e6c9', // olive branch green
+  BK:'#8d6e63', // branch brown
+  _ : null
+};
+
+// ═══════════════════════════════════════
+//  BEAUTIFUL PIXEL DOVE SPRITES
+//  Designed on grids — proper anatomy:
+//  round head, plump body, swept wings,
+//  gold feet, elegant tail
+// ═══════════════════════════════════════
+
+// ── BABY (12×14) — tiny & fluffy ──
+function buildBaby(mood, frame){
+  var _=null, f=frame%4;
+  var sl=mood==='sleeping', hp=mood==='happy'||mood==='fed'||mood==='petted'||mood==='playing';
+  var sd=mood==='hungry'||mood==='sad'||mood==='sick';
+  var wf=f<2; // wing frame
+  // Eye
+  var ep=sl?P.W3:(hp?P.EB2:P.E);
+  var eh=sl?null:P.EH;
+  // Wing tips move up/down
+  var wt=wf?P.W:P.W2;
+  var wb=wf?P.W2:P.W;
+  return {w:12,h:14,pixels:[
+  //  0    1    2    3    4    5    6    7    8    9   10   11
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _  ], // 0  head top
+    [_,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _  ], // 1
+    [_,   P.W, P.W, ep,  P.W, P.W, P.G, P.G, P.W, P.W2,_,   _  ], // 2  eye + beak
+    [_,   P.W, P.W, P.W2,P.W, P.W, P.G3,P.W, P.W, P.W2,_,   _  ], // 3  cheek
+    [_,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _  ], // 4  neck
+    [_,   wt,  P.W, P.W, P.W, P.W, P.W, P.W, wt,  P.W2,_,   _  ], // 5  wing top
+    [wt,  P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,wt,  _,   _  ], // 6  wing wide
+    [_,   P.W3,P.W, P.W, P.W, P.W, P.W, P.W, P.W3,_,   _,   _  ], // 7  body
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _  ], // 8  belly
+    [_,   _,   _,   P.W2,P.W, P.W, P.W2,_,   _,   _,   _,   _  ], // 9  tail start
+    [_,   _,   _,   P.W3,P.W, P.W, P.W3,_,   _,   _,   _,   _  ], // 10 tail
+    [_,   _,   _,   P.G, P.G, P.G, P.G, _,   _,   _,   _,   _  ], // 11 feet
+    [_,   _,   P.G2,P.G, _,   _,   P.G, P.G2,_,   _,   _,   _  ], // 12 toes
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 13
+  ]};
+}
+
+// ── JUVENILE (16×18) — starting to look graceful ──
+function buildJuv(mood, frame){
+  var _=null, f=frame%4;
+  var sl=mood==='sleeping', hp=mood==='happy'||mood==='fed'||mood==='petted'||mood==='playing';
+  var sd=mood==='hungry'||mood==='sad'||mood==='sick';
+  var wf=f<2;
+  var ep=sl?P.W3:(hp?P.EB2:P.E); var wt=wf?P.W:P.W2; var wb=wf?P.W2:P.W;
+  return {w:16,h:18,pixels:[
+  //  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15
+    [_,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _  ], // 0
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _  ], // 1
+    [_,   P.W2,P.W, P.W, ep,  P.EH,P.W, P.W, P.W, P.G, P.G, P.G, P.W2,_,   _,   _  ], // 2 eye+beak
+    [_,   P.W, P.W, P.W2,P.W, P.W, P.W, P.W, P.W, P.G3,P.W, P.W2,_,   _,   _,   _  ], // 3
+    [_,   P.W, P.W, P.W, P.P1,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _  ], // 4 cheek
+    [_,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _  ], // 5 neck
+    [_,   wt,  P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, wt,  P.W2,_,   _,   _  ], // 6 wing
+    [wt,  P.W2,P.T, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.T, P.W2,wt,  _,   _,   _  ], // 7 wing sheen
+    [wt,  P.W2,P.T2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.T2,P.W2,wt,  _,   _,   _  ], // 8
+    [_,   P.W3,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _  ], // 9 body
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _  ], // 10 belly
+    [_,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _  ], // 11 tail
+    [_,   _,   _,   P.W3,P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _,   _,   _,   _  ], // 12
+    [_,   _,   _,   _,   P.W2,P.W3,P.W3,P.W2,_,   _,   _,   _,   _,   _,   _,   _  ], // 13 tail tip
+    [_,   _,   _,   _,   P.G, P.G2,P.G2,P.G, _,   _,   _,   _,   _,   _,   _,   _  ], // 14 feet
+    [_,   _,   _,   P.G, P.G2,_,   _,   P.G2,P.G, _,   _,   _,   _,   _,   _,   _  ], // 15 toes
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 16
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 17
+  ]};
+}
+
+// ── TEEN (20×22) — elegant, wings spread ──
+function buildTeen(mood, frame){
+  var _=null, f=frame%4;
+  var sl=mood==='sleeping', hp=mood==='happy'||mood==='fed'||mood==='petted'||mood==='playing';
+  var wf=f<2;
+  var ep=sl?P.W3:(hp?P.EB2:P.E); var wt=wf?P.W:P.W2; var wh=wf?P.T:P.T2;
+  return {w:20,h:22,pixels:[
+  //  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19
+    [_,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _  ], // 0
+    [_,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _  ], // 1
+    [_,   _,   P.W2,P.W, P.W, ep,  P.EH,P.W, P.W, P.W, P.W, P.W, P.W, P.G, P.G, P.G2,_,   _,   _,   _  ], // 2
+    [_,   _,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.G3,P.G, P.G2,_,   _,   _,   _,   _,   _  ], // 3 beak
+    [_,   _,   P.W, P.W, P.P1,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _  ], // 4 cheek
+    [_,   _,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _  ], // 5
+    [_,   wt,  P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, wt,  P.W2,_,   _,   _,   _,   _,   _  ], // 6 wing start
+    [wt,  P.W2,wh,  P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, wh,  P.W2,wt,  _,   _,   _,   _,   _,   _  ], // 7
+    [wt,  P.W2,wh,  P.T, P.W, P.W, P.W, P.W, P.W, P.W, P.T, wh,  P.W2,wt,  _,   _,   _,   _,   _,   _  ], // 8 sheen
+    [P.W2,P.W3,wh,  P.T2,P.W, P.W, P.W, P.W, P.W, P.W, P.T2,wh,  P.W3,P.W2,_,   _,   _,   _,   _,   _  ], // 9
+    [_,   P.W3,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _,   _,   _,   _  ], // 10 body
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _  ], // 11
+    [_,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 12 belly
+    [_,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 13 tail
+    [_,   _,   _,   _,   P.W3,P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 14
+    [_,   _,   _,   _,   P.W2,P.W3,P.W3,P.W3,P.W3,P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 15
+    [_,   _,   _,   _,   _,   P.W3,P.W3,P.W3,P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 16 tail tip
+    [_,   _,   _,   _,   _,   P.G, P.G2,P.G2,P.G, _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 17 feet
+    [_,   _,   _,   _,   P.G2,P.G, _,   _,   P.G, P.G2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 18 toes
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 19
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 20
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 21
+  ]};
+}
+
+// ── ADULT (24×26) — full gorgeous dove ──
+function buildAdult(mood, frame){
+  var _=null, f=frame%4;
+  var sl=mood==='sleeping', hp=mood==='happy'||mood==='fed'||mood==='petted'||mood==='playing';
+  var wf=f<2;
+  var ep=sl?P.W3:(hp?P.EB2:P.E);
+  var wt=wf?P.W:P.W2; var wh=wf?P.T:P.T2;
+  // Adult has olive branch in beak sometimes
+  return {w:24,h:26,pixels:[
+  //  0    1    2    3    4    5    6    7    8    9   10   11   12   13   14   15   16   17   18   19   20   21   22   23
+    [_,   _,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 0
+    [_,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 1
+    [_,   _,   _,   P.W2,P.W, P.W, ep,  P.EH,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.G, P.G, P.G, P.G2,_,   _,   _,   _,   _  ], // 2 eye+beak
+    [_,   _,   _,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.G3,P.G, P.G2,_,   _,   _,   _,   _,   _,   _,   _  ], // 3
+    [_,   _,   _,   P.W, P.W, P.P1,P.P1,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 4 cheek
+    [_,   _,   _,   P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 5
+    [_,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 6
+    [_,   wt,  P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, wt,  P.W2,_,   _,   _,   _,   _,   _,   _,   _  ], // 7 wing
+    [wt,  P.W2,wh,  P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, wh,  P.W2,wt,  _,   _,   _,   _,   _,   _,   _,   _  ], // 8
+    [wt,  P.W2,wh,  P.T, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.T, wh,  P.W2,wt,  _,   _,   _,   _,   _,   _,   _,   _  ], // 9
+    [P.W2,P.W3,wh,  P.T2,P.T, P.W, P.W, P.W, P.W, P.W, P.W, P.T, P.T2,wh,  P.W3,P.W2,_,   _,   _,   _,   _,   _,   _,   _  ], // 10 sheen
+    [_,   P.W3,P.W2,wh,  P.T2,P.W, P.W, P.W, P.W, P.W, P.W, P.T2,wh,  P.W2,P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _  ], // 11
+    [_,   _,   P.W3,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 12 body
+    [_,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 13
+    [_,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 14 belly
+    [_,   _,   _,   _,   _,   P.W2,P.W, P.W, P.W, P.W, P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 15 tail
+    [_,   _,   _,   _,   _,   P.W3,P.W, P.W, P.W, P.W, P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 16
+    [_,   _,   _,   _,   _,   P.W2,P.W3,P.W3,P.W3,P.W3,P.W2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 17
+    [_,   _,   _,   _,   _,   _,   P.W3,P.W3,P.W3,P.W3,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 18 tail tip
+    [_,   _,   _,   _,   _,   _,   P.G, P.G, P.G, P.G, _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 19 feet
+    [_,   _,   _,   _,   _,   P.G2,P.G, _,   _,   P.G, P.G2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 20 toes
+    [_,   _,   _,   _,   P.G2,_,   _,   _,   _,   _,   _,   P.G2,_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 21
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 22
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 23
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 24
+    [_,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _,   _  ], // 25
+  ]};
+}
+
+// ── DISPATCH ──
+function getDoveSprite(mood, frame, age){
+  if(age===0) return buildBaby(mood,frame);
+  if(age===1) return buildJuv(mood,frame);
+  if(age===2) return buildTeen(mood,frame);
+  return buildAdult(mood,frame);
+}
+
+function getPetAge(day){
+  if(day<10)  return 0;
+  if(day<30)  return 1;
+  if(day<100) return 2;
+  return 3;
+}
+
+function getPetAgeLabel(age){
+  return['Baby Dove','Juvenile Dove','Teen Dove','Adult Dove'][age];
+}
+
+function getPixelScale(age,canvasW){
+  // Scale so dove fills roughly 45% of canvas width nicely
+  var sizes=[12,16,20,24];
+  var target=Math.round(canvasW*0.42);
+  return Math.max(3,Math.floor(target/sizes[age]));
+}
+
+function getPetAge(day){
+  // day = days since hatching (day - 30)
+  if(day < 10)  return 0; // baby
+  if(day < 30)  return 1; // juvenile
+  if(day < 100) return 2; // teen
+  return 3;               // adult
+}
+
+function getPetAgeLabel(age){
+  return ['Baby Dove','Juvenile Dove','Teen Dove','Adult Dove'][age];
+}
+
+function getPixelScale(age){
+  return [14, 10, 7, 6][age]; // bigger age = bigger sprite = smaller scale needed
+}
+
+// ── PET CANVAS RENDERER ──
+var petAnimFrame = null;
+var petFrameCounter = 0;
+var petParticles = [];
+var petCurrentMood = 'happy';
+var petActionCooldown = {};
+
+function initPetTab(){
+  // Check if should show hatch animation
+  if(ST.currentDay >= 30 && !ST.petHatched){
+    ST.petHatched = true;
+    saveState(ST);
+    if(!ST.hatchShown){
+      ST.hatchShown = true;
+      saveState(ST);
+      setTimeout(showHatchAnimation, 400);
+      return;
+    }
+  }
+  startPetCanvas();
+  updatePetStats();
+  drainPetStats();
+}
+
+function startPetCanvas(){
+  if(petAnimFrame) cancelAnimationFrame(petAnimFrame);
+  var cv = document.getElementById('petCanvas');
+  if(!cv) return;
+  // Fit canvas to screen width
+  var W = Math.min(window.innerWidth, 420);
+  var H2 = Math.round(W * 0.95);
+  cv.width = W; cv.height = H2;
+  cv.style.width = W+'px';
+  cv.style.height = H2+'px';
+  petLoop();
+}
+
+function petLoop(){
+  var cv = document.getElementById('petCanvas');
+  if(!cv || !document.getElementById('petScreen').classList.contains('active')){ petAnimFrame=null; return; }
+  petFrameCounter++;
+  drawPet(cv);
+  petAnimFrame = requestAnimationFrame(petLoop);
+}
+
+function drawPet(cv){
+  var ctx = cv.getContext('2d');
+  var W = cv.width, H = cv.height;
+  ctx.imageSmoothingEnabled = false;
+
+  // ── Background ──
+  var sky = ctx.createLinearGradient(0,0,0,H);
+  sky.addColorStop(0,'#110822'); sky.addColorStop(1,'#1a0d35');
+  ctx.fillStyle = sky; ctx.fillRect(0,0,W,H);
+
+  // Stars bg
+  ctx.fillStyle='rgba(255,255,255,0.5)';
+  for(var i=0;i<20;i++){
+    var sx=((i*137+petFrameCounter*0.1)%W);
+    var sy=((i*97)%H*0.6);
+    ctx.fillRect(sx,sy,1,1);
+  }
+
+  // Ground
+  var gr = ctx.createLinearGradient(0,H*0.82,0,H);
+  gr.addColorStop(0,'rgba(74,124,47,0.35)'); gr.addColorStop(1,'rgba(40,70,20,0.5)');
+  ctx.fillStyle=gr; ctx.fillRect(0,H*0.82,W,H*0.18);
+  // Ground highlight
+  ctx.fillStyle='rgba(120,200,80,0.2)';
+  ctx.fillRect(0,H*0.82,W,2);
+
+  // Perch/branch - lower position
+  ctx.fillStyle='#6b3a1f';
+  ctx.fillRect(W/2-60, H*0.80, 120, 8);
+  ctx.fillStyle='#8b4a2f';
+  ctx.fillRect(W/2-60, H*0.80, 120, 3);
+
+  // Determine mood from stats
+  var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
+  var mood = 'happy';
+  if(ST.petSleeping) mood='sleeping';
+  else if(stats.health < 25) mood='sick';
+  else if(stats.hunger < 20) mood='hungry';
+  else if(stats.happy < 20)  mood='sad';
+  else if(stats.clean < 20)  mood='dirty';
+  else if(stats.hunger>85&&stats.happy>85&&stats.clean>85) mood='happy';
+  petCurrentMood = mood;
+
+  // Dove position
+  var hatchDay = Math.max(0, ST.currentDay - 30);
+  var age = getPetAge(hatchDay);
+  // Size grows with age: baby=60px, juv=80px, teen=100px, adult=120px
+  var sprW = [60, 80, 100, 120][age];
+  var sprH = sprW; // square image
+  var frame = Math.floor(petFrameCounter/8);
+  var bobY = Math.sin(petFrameCounter * 0.06) * (mood==='sleeping'?0:3);
+  var px = Math.floor(W/2 - sprW/2);
+  var py = Math.floor(H*0.80 - sprH + bobY);
+
+  // Draw dove image (scaled by age)
+  drawDoveImage(ctx, px, py, sprW, sprH, mood, frame);
+
+  // Mood effects
+  drawPetEffects(ctx, W, H, px, py, sprW, sprH, mood);
+
+  // Update age tag
+  if(ST.currentDay < 30){
+    document.getElementById('petAgeTag').textContent = 'Golden Egg · Hatches Day 30';
+  } else {
+    document.getElementById('petAgeTag').textContent = getPetAgeLabel(age) + ' · Day '+(ST.currentDay-30)+' of life';
+  }
+}
+
+function drawDoveImage(ctx, px, py, w, h, mood, frame){
+  ctx.save();
+  ctx.imageSmoothingEnabled = false;
+
+  // Mood tint
+  if(mood==='sick'||mood==='hungry'){
+    ctx.filter = 'saturate(0.4) brightness(0.8)';
+  } else if(mood==='happy'||mood==='fed'||mood==='petted'){
+    ctx.filter = 'brightness(1.1) drop-shadow(0 0 6px rgba(212,175,55,0.6))';
+  } else if(mood==='sleeping'){
+    ctx.filter = 'brightness(0.7) saturate(0.6)';
+  } else if(mood==='dirty'){
+    ctx.filter = 'sepia(0.5) brightness(0.85)';
+  }
+
+  // Bob animation
+  var bob = Math.sin(frame * 0.15) * (mood==='sleeping' ? 0 : 2);
+
+  // Wing flap - slight rotate
+  var flap = mood==='happy'||mood==='playing' ? Math.sin(frame*0.25)*0.08 : 0;
+
+  if(DOVE_LOADED){
+    ctx.translate(px + w/2, py + h/2 + bob);
+    ctx.rotate(flap);
+    ctx.drawImage(DOVE_IMG, -w/2, -h/2, w, h);
+  } else {
+    // Fallback while loading
+    ctx.fillStyle = '#f5f0e8';
+    ctx.fillRect(px, py+bob, w, h);
+  }
+  ctx.restore();
+}
+
+function drawPixelSprite(ctx, sprite, px, py, scale, mood){
+  ctx.imageSmoothingEnabled = false;
+  var rows = sprite.pixels;
+  for(var row=0; row<rows.length; row++){
+    for(var col=0; col<rows[row].length; col++){
+      var color = rows[row][col];
+      if(!color) continue;
+      // Tint based on mood
+      if(mood==='sick'||mood==='hungry'){
+        color = tintColor(color, 0.7);
+      }
+      ctx.fillStyle = color;
+      ctx.fillRect(px + col*scale, py + row*scale, scale, scale);
+    }
+  }
+}
+
+function tintColor(hex, factor){
+  var r=parseInt(hex.slice(1,3),16),g=parseInt(hex.slice(3,5),16),b=parseInt(hex.slice(5,7),16);
+  r=Math.round(r*factor); g=Math.round(g*factor+(1-factor)*50); b=Math.round(b*factor);
+  return '#'+r.toString(16).padStart(2,'0')+g.toString(16).padStart(2,'0')+b.toString(16).padStart(2,'0');
+}
+
+function drawPetEffects(ctx, W, H, px, py, sw, sh, mood){
+  var f = petFrameCounter;
+
+  if(mood==='sleeping'){
+    // zzz bubbles
+    [0,1,2].forEach(function(i){
+      var progress = ((f*0.02 + i*0.33) % 1);
+      var zx = px+sw+4 + progress*20;
+      var zy = py + sh/2 - progress*30;
+      var alpha = Math.sin(progress*Math.PI);
+      ctx.fillStyle='rgba(160,200,255,'+alpha*0.9+')';
+      ctx.font='bold '+(8+i*3)+'px monospace';
+      ctx.textAlign='left';
+      ctx.fillText('z',zx,zy);
+    });
+  }
+
+  if(mood==='hungry'){
+    // swirling dots above head
+    for(var i=0;i<3;i++){
+      var a = (f*0.04 + i*(Math.PI*2/3));
+      var hx = px+sw/2 + Math.cos(a)*14;
+      var hy = py - 8 + Math.sin(a)*6;
+      ctx.fillStyle='rgba(249,168,37,0.8)';
+      ctx.fillRect(hx,hy,3,3);
+    }
+  }
+
+  if(mood==='dirty'){
+    // dirt particles floating
+    var dirtSpots = [{x:px-4,y:py+sh*0.3},{x:px+sw+2,y:py+sh*0.5},{x:px+sw*0.3,y:py-6}];
+    dirtSpots.forEach(function(d,i){
+      var bob = Math.sin(f*0.05+i)*3;
+      ctx.fillStyle='rgba(100,60,20,0.7)';
+      ctx.fillRect(d.x, d.y+bob, 4, 4);
+      ctx.fillRect(d.x+2, d.y+bob-3, 2, 2);
+    });
+  }
+
+  if(mood==='happy'||mood==='fed'||mood==='petted'){
+    // sparkles
+    if(f%20<10){
+      [[px-6,py+4],[px+sw+4,py+6],[px+sw/2,py-8]].forEach(function(sp,i){
+        var phase = (f*0.1+i) % (Math.PI*2);
+        var alpha = (Math.sin(phase)+1)/2;
+        ctx.fillStyle='rgba(212,175,55,'+alpha+')';
+        ctx.fillRect(sp[0],sp[1],3,3);
+        ctx.fillRect(sp[0]+1,sp[1]-2,1,1);
+        ctx.fillRect(sp[0]-1,sp[1]+2,1,1);
+      });
+    }
+  }
+
+  if(mood==='sick'){
+    // red X marks
+    ctx.fillStyle='rgba(255,80,80,0.6)';
+    ctx.font='bold 10px monospace';
+    ctx.textAlign='center';
+    ctx.fillText('💔',px+sw/2,py-6);
+  }
+
+  // Action particles
+  petParticles.forEach(function(p,i){
+    p.x+=p.vx; p.y+=p.vy; p.vy+=0.15; p.life-=0.025;
+    if(p.type==='heart'){
+      ctx.fillStyle='rgba(255,105,180,'+p.life.toFixed(2)+')';
+      ctx.font=(12+p.size)+'px serif';
+      ctx.textAlign='center';
+      ctx.fillText('💖',p.x,p.y);
+    } else if(p.type==='drop'){
+      ctx.fillStyle='rgba(120,180,255,'+p.life.toFixed(2)+')';
+      ctx.fillRect(p.x,p.y,3,4);
+    } else if(p.type==='food'){
+      ctx.fillStyle='rgba(74,160,47,'+p.life.toFixed(2)+')';
+      ctx.font='10px serif';
+      ctx.textAlign='center';
+      ctx.fillText('🫒',p.x,p.y);
+    } else if(p.type==='star'){
+      ctx.fillStyle='rgba(212,175,55,'+p.life.toFixed(2)+')';
+      ctx.fillRect(p.x,p.y,3,3);
+    }
+  });
+  petParticles = petParticles.filter(function(p){return p.life>0;});
+}
+
+// ── STAT MANAGEMENT ──
+function updatePetStats(){
+  var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
+  ['health','hunger','happy','clean'].forEach(function(k){
+    var v = Math.max(0,Math.min(100,Math.round(stats[k]||0)));
+    var bar = document.getElementById('sb-'+k);
+    var val = document.getElementById('sv-'+k);
+    if(bar) bar.style.width=v+'%';
+    if(val) val.textContent=v;
+    // Color urgency
+    if(bar){
+      if(v<25) bar.style.filter='brightness(1.4)';
+      else bar.style.filter='none';
+    }
+  });
+
+  // Update pet message
+  var msg = getPetMessage(stats, ST.petSleeping, petCurrentMood);
+  var msgEl = document.getElementById('petMsg');
+  if(msgEl) msgEl.textContent = msg;
+
+  // Disable sleep button if already sleeping, disable others if sleeping
+  var sleeping = ST.petSleeping;
+  ['feed','bath','pet','play'].forEach(function(a){
+    var btn = document.getElementById('ab-'+a);
+    if(btn) btn.classList.toggle('disabled', sleeping);
+  });
+  var sleepBtn = document.getElementById('ab-sleep');
+  if(sleepBtn){
+    sleepBtn.querySelector('.ab-icon').textContent = sleeping ? '☀️' : '🌙';
+    sleepBtn.querySelector('.ab-lbl').textContent  = sleeping ? 'Wake' : 'Sleep';
+  }
+}
+
+function drainPetStats(){
+  if(ST.currentDay < 30) return; // egg hasn't hatched
+  var now = Date.now();
+  var last = ST.petLastCare || now;
+  var hoursGone = Math.min((now - last) / 3600000, 48); // cap at 48h
+  if(hoursGone < 0.5) return; // don't drain if less than 30 min
+
+  var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
+
+  // Drain rates per hour
+  stats.hunger = Math.max(0, stats.hunger - hoursGone * 4);
+  stats.happy  = Math.max(0, stats.happy  - hoursGone * 3);
+  stats.clean  = Math.max(0, stats.clean  - hoursGone * 1.5);
+  // Health drains if other stats are low
+  var avgOther = (stats.hunger + stats.happy + stats.clean) / 3;
+  if(avgOther < 30){
+    stats.health = Math.max(0, stats.health - hoursGone * 3);
+  } else {
+    stats.health = Math.min(100, stats.health + hoursGone * 0.5); // slow regen
+  }
+
+  ST.petStats = stats;
+  ST.petLastCare = now;
+  saveState(ST);
+  updatePetStats();
+
+  // Guilt message if neglected
+  if(hoursGone > 6){
+    var msgs = [
+      "She was waiting for you... 🥺",
+      "Your dove missed you so much 💔",
+      "She looked for you all day 😢",
+      "The dove's wings drooped without you 🕊️",
+      "She kept one eye open hoping you'd come 🥹"
+    ];
+    var msgEl = document.getElementById('petMsg');
+    if(msgEl) msgEl.textContent = msgs[Math.floor(Math.random()*msgs.length)];
+  }
+}
+
+function getPetMessage(stats, sleeping, mood){
+  if(sleeping) return "Shh... she is sleeping 😴 sweet dreams 🌙";
+  if(stats.health < 25)  return "She does not feel well... please take care of her 💔";
+  if(stats.hunger < 20)  return "She is really hungry! Feed her a 🫒";
+  if(stats.happy < 20)   return "She looks so sad... play with her? 🥺";
+  if(stats.clean < 20)   return "She needs a bath! She is getting dirty ✨";
+  if(stats.hunger > 90 && stats.happy > 90 && stats.clean > 90 && stats.health > 90){
+    var happyMsgs = ["She is so happy! Look at her go 💕","She loves you, Jay 🕊️","Perfect health! Tito Boi would be proud 🌟","She is thriving! Keep it up 💖","She chirps your name, Jay 🐣"];
+    return happyMsgs[Math.floor(Date.now()/10000)%happyMsgs.length];
+  }
+  return "Tap the buttons to take care of her 💕";
+}
+
+// ── ACTIONS ──
+function petAction(type){
+  if(ST.currentDay < 30){
+    setPetMsg("She has not hatched yet! Come back on Day 30 🥚"); return;
+  }
+  var now = Date.now();
+  var cooldown = petActionCooldown[type]||0;
+  if(now - cooldown < 3000){ setPetMsg("Give her a moment! 😄"); return; }
+  petActionCooldown[type] = now;
+
+  var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
+  var cv = document.getElementById('petCanvas');
+  var cx = cv?cv.width/2:100, cy = cv?cv.height*0.5:100;
+
+  if(type==='feed'){
+    stats.hunger = Math.min(100, stats.hunger + 30);
+    stats.health = Math.min(100, stats.health + 5);
+    spawnPetParticles(cx,cy,'food',6);
+    setPetMsg("Yum! She gobbled it right up 🫒😋");
+    animatePet('fed');
+  } else if(type==='bath'){
+    stats.clean = Math.min(100, stats.clean + 40);
+    stats.happy = Math.min(100, stats.happy + 10);
+    spawnPetParticles(cx,cy,'drop',10);
+    setPetMsg("Squeaky clean! She shook her feathers 💧✨");
+    animatePet('bathed');
+  } else if(type==='pet'){
+    stats.happy = Math.min(100, stats.happy + 25);
+    stats.health = Math.min(100, stats.health + 5);
+    spawnPetParticles(cx,cy,'heart',8);
+    var petMsgs=["She nuzzles into your hand 💖","She chirps happily 🐣💕","She flutters her wings for you 🕊️","She closes her eyes in bliss 🥰"];
+    setPetMsg(petMsgs[Math.floor(Math.random()*petMsgs.length)]);
+    animatePet('petted');
+  } else if(type==='play'){
+    stats.happy = Math.min(100, stats.happy + 35);
+    stats.hunger = Math.max(0, stats.hunger - 10); // playing makes her hungry
+    spawnPetParticles(cx,cy,'star',10);
+    setPetMsg("She zooms around! So much energy 🌟😄");
+    animatePet('playing');
+  } else if(type==='sleep'){
+    ST.petSleeping = !ST.petSleeping;
+    if(ST.petSleeping){
+      stats.health = Math.min(100, stats.health + 15);
+      setPetMsg("Sweet dreams little dove 🌙💤");
+    } else {
+      setPetMsg("Good morning! She stretches her wings ☀️🕊️");
+    }
+  }
+
+  ST.petStats = stats;
+  ST.petLastCare = now;
+  saveState(ST);
+  updatePetStats();
+}
+
+function animatePet(mood){
+  // temporarily override current mood for animation burst
+  petCurrentMood = mood;
+  setTimeout(function(){ petCurrentMood = null; }, 1500);
+}
+
+function spawnPetParticles(cx, cy, type, count){
+  for(var i=0;i<count;i++){
+    petParticles.push({
+      x: cx+(Math.random()-0.5)*40,
+      y: cy+(Math.random()-0.5)*20,
+      vx: (Math.random()-0.5)*3,
+      vy: -(Math.random()*4+1),
+      life: 1,
+      type: type,
+      size: Math.random()*4
+    });
+  }
+}
+
+function setPetMsg(msg){
+  var el=document.getElementById('petMsg');
+  if(el) el.textContent=msg;
+}
+
+// ── HATCH ANIMATION ──
+function showHatchAnimation(){
+  // Unlock the pet tab now that egg hatched
+  var petBtn = document.getElementById('nb-pet');
+  var petIcon = document.getElementById('nb-pet-icon');
+  if(petBtn){ petBtn.classList.remove('locked'); }
+  if(petIcon) petIcon.textContent = '🐣';
+  document.getElementById('hatchOverlay').classList.add('show');
+  var cv = document.getElementById('hatchCanvas');
+  cv.width=220; cv.height=220;
+  var ctx = cv.getContext('2d');
+  var frame = 0;
+  var phase = 0; // 0=shaking, 1=cracking, 2=hatched
+  ctx.imageSmoothingEnabled = false;
+
+  function hatchLoop(){
+    frame++;
+    ctx.fillStyle='#110822'; ctx.fillRect(0,0,220,220);
+
+    if(phase===0){
+      // Egg shaking
+      var shake = Math.sin(frame*0.4)*4;
+      drawEggPixel(ctx, 110+shake, 130, 0);
+      if(frame > 60) phase=1;
+    } else if(phase===1){
+      // Cracking
+      var crack = Math.min(1,(frame-60)/40);
+      drawEggPixel(ctx,110,130,crack);
+      if(frame > 120) phase=2;
+    } else {
+      // Baby dove emerges
+      var emerge = Math.min(1,(frame-120)/30);
+      drawEggPixel(ctx,110,140,1);
+      // Draw dove image emerging from egg
+      var dsize = Math.round(80 * emerge);
+      if(dsize > 5 && DOVE_LOADED){
+        ctx.save();
+        ctx.imageSmoothingEnabled = false;
+        ctx.filter = 'brightness(1.2) drop-shadow(0 0 8px rgba(212,175,55,0.8))';
+        ctx.drawImage(DOVE_IMG, 110-dsize/2, 130-dsize*emerge, dsize, dsize);
+        ctx.restore();
+      }
+      // sparkles
+      if(emerge>0.5){
+        var colors=['#d4af37','#ff69b4','#a0c8ff','#90d870'];
+        for(var i=0;i<6;i++){
+          var a = (frame*0.1+i*(Math.PI/3));
+          var rx = 110+Math.cos(a)*(40+emerge*20);
+          var ry = 130+Math.sin(a)*(30+emerge*15);
+          ctx.fillStyle=colors[i%colors.length];
+          ctx.fillRect(rx,ry,3,3);
+        }
+      }
+    }
+
+    if(frame < 200) requestAnimationFrame(hatchLoop);
+    else {
+      // Update message
+      document.getElementById('hatchMsg').textContent='She hatched! Your dove is here 🐣';
+      document.getElementById('hatchSub').textContent='"It\'s been 30 days, Jay. Worth every one. — Tito Boi 💕"';
+    }
+  }
+  requestAnimationFrame(hatchLoop);
+  confetti();
+}
+
+function drawEggPixel(ctx, cx, cy, crack){
+  var _ = null;
+  // 12x14 egg
+  var eggPixels = [
+    [_,_,_,P.G,P.G,P.G,P.G,_,_,_,_,_],
+    [_,_,P.G,P.W,P.W,P.W,P.W,P.G,_,_,_,_],
+    [_,P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_,_],
+    [P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_],
+    [P.G,P.W,P.W,P.S,P.W,P.W,P.W,P.W,P.W,P.G,_,_],
+    [P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_],
+    [P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_],
+    [P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_],
+    [_,P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_,_],
+    [_,P.G,P.W,P.W,P.W,P.W,P.W,P.W,P.G,_,_,_],
+    [_,_,P.G,P.W,P.W,P.W,P.W,P.G,_,_,_,_],
+    [_,_,_,P.G,P.G,P.G,P.G,_,_,_,_,_],
+  ];
+  var scale = 14;
+  for(var row=0;row<eggPixels.length;row++){
+    for(var col=0;col<eggPixels[row].length;col++){
+      var color=eggPixels[row][col];
+      if(!color) continue;
+      // crack effect - shift top half
+      var shiftX = crack>0.3 && row<6 ? Math.sin(row)*crack*6 : 0;
+      ctx.fillStyle=color;
+      ctx.fillRect(cx-eggPixels[0].length*scale/2+col*scale+shiftX, cy-eggPixels.length*scale/2+row*scale, scale, scale);
+    }
+  }
+  // crack lines
+  if(crack>0.3){
+    ctx.fillStyle='rgba(42,26,10,'+Math.min(1,crack)+')';
+    ctx.fillRect(cx-4,cy-10,2,20); // vertical crack
+    ctx.fillRect(cx-8,cy,10,2);     // horizontal
+  }
+}
+
+function onPetTabClick(){
+  if(ST.currentDay < 30){
+    // Show a teaser message
+    var daysLeft = 30 - ST.currentDay;
+    var msgs = [
+      'Unlock on Day 30! '+daysLeft+' days to go 🥚',
+      'The egg is not ready yet... '+daysLeft+' more days 🥚',
+      'Something is growing inside... '+daysLeft+' days left 🐣',
+      'Patience! She hatches on Day 30 ✨'
+    ];
+    showToast(msgs[Math.floor(Math.random()*msgs.length)]);
+    // Wiggle the egg on home screen
+    var pet = document.getElementById('petEmoji');
+    if(pet){ pet.style.animation='none'; pet.style.transform='rotate(-10deg)';
+      setTimeout(function(){ pet.style.transform='rotate(10deg)'; setTimeout(function(){ pet.style.transform=''; pet.style.animation=''; },150); },150); }
+    return;
+  }
+  goTab('pet');
+}
+
+function showToast(msg){
+  var old = document.getElementById('toastMsg');
+  if(old) old.remove();
+  var t = document.createElement('div');
+  t.id = 'toastMsg';
+  t.textContent = msg;
+  t.style.cssText = 'position:fixed;bottom:80px;left:50%;transform:translateX(-50%);background:rgba(212,175,55,0.95);color:#1a0820;font-family:Georgia,serif;font-size:0.78rem;font-weight:bold;padding:8px 20px;border-radius:100px;z-index:9000;pointer-events:none;white-space:nowrap;box-shadow:0 4px 20px rgba(212,175,55,0.4);animation:toastIn 0.3s ease both;';
+  document.body.appendChild(t);
+  setTimeout(function(){ t.style.animation='toastOut 0.3s ease forwards'; setTimeout(function(){t.remove();},300); },2500);
+}
+
+function closeHatch(){
+  var petBtn = document.getElementById('nb-pet');
+  if(petBtn) petBtn.style.display = '';
+  document.getElementById('hatchOverlay').classList.remove('show');
+  goTab('pet');
+  startPetCanvas();
+  updatePetStats();
+}
+
+// Hatch check is handled inside initPetTab, no override needed
+
+
+// ═══════════════════════════════════════════════
+//  STORY SYSTEM — Tito Boi's Background
+// ═══════════════════════════════════════════════
+
+var CHAPTERS = [
+  {
+    id: 1,
+    title: "Where I Came From",
+    preview: "A place called HappyLand that was anything but happy...",
+    code: "Chp1",
+    unlockKey: "story_ch1_unlocked",
+    quizLockKey: "story_ch1_lock",
+    content: [
+      {type:'narrator-intro'},
+      {type:'p', text:'Tito Boi\'s story started like this.'},
+      {type:'p', text:'There is a place in Tondo called <span class="highlight">HappyLand</span>. The name sounds like something out of a fairy tale. The reality was anything but.'},
+      {type:'p', text:'Growing up there meant walking past drug users every single day. The streets were their home, the corners their kingdom. It was the kind of place where making the wrong friends at the wrong time could cost you everything — your future, your freedom, your life.'},
+      {type:'quote', text:'"I am thankful that I picked the right choice."'},
+      {type:'p', text:'And he did. When the world around him made it easy to go the wrong way, he chose differently. That is not something to take lightly. That takes character.'},
+      {type:'p', text:'He grew up first with his <span class="highlight">Lola</span> — one of the most important people in his life. A woman he prays for every day, hoping that when the season of abundance finally comes, she will still be there to share it. That prayer alone tells you everything about his heart.'},
+      {type:'p', text:'Later he grew up with his <span class="highlight">Mom</span>. His family was gentle. They corrected him with love, not harshness. In a place like HappyLand, that kind of home was a rare and precious thing.'},
+      {type:'p', text:'He was the kind of kid who understood things faster than most. Outgoing, outstanding, sharp in a way that stood out. But he will tell you himself — it is a gift and a curse. To understand complex things easily means you also feel the weight of the world earlier than you should.'},
+      {type:'quote', text:'"Sometimes I wish I was dumber, to not understand a specific thing."'},
+      {type:'p', text:'The moment that shaped him most? He was <span class="highlight">five years old</span> sitting with his Dad, talking about life. Not cartoons. Not games. Life. And he understood. Every word.'},
+      {type:'p', text:'His father taught him that nothing should be taken for granted. That a single accident can change everything. That you carry yourself with awareness because the world does not owe you safety.'},
+      {type:'quote', text:'"Dad\'s advice is the main reason what made me who I am now — because without it, I doubt I\'d still be alive by now."'},
+      {type:'narrator-close', text:'That is where it all began. A hard place, a wise father, a gentle family — and a boy who chose right when he could have chosen wrong.'},
+    ],
+    questions: [
+      {
+        q: "What is the name of the place in Tondo where Tito Boi grew up?",
+        opts: ["SunnyLand", "HappyLand", "GreenLand", "SafePlace"],
+        ans: 1
+      },
+      {
+        q: "Who is one of the most important people in Tito Boi's life that he prays for every day?",
+        opts: ["His Mom", "His Dad", "His Lola", "His bestfriend"],
+        ans: 2
+      },
+      {
+        q: "How old was Tito Boi when he had that life-changing talk with his Dad about how the world works?",
+        opts: ["3 years old", "7 years old", "10 years old", "5 years old"],
+        ans: 3
+      }
+    ]
+  },
+  {
+    id: 2,
+    title: "The Faith That Shaped Me",
+    preview: "He ran to God when he had no one else to run to...",
+    code: "Chapter2completed",
+    unlockKey: "story_ch2_unlocked",
+    quizLockKey: "story_ch2_lock",
+    content: [
+      {type:'narrator-intro'},
+      {type:'p', text:'This is the part of Tito Boi\'s story that required the most courage to tell.'},
+      {type:'p', text:'There is a version of faith that is inherited — passed down like a family name, worn like a uniform on Sundays. And then there is the kind that is forged in fire.'},
+      {type:'p', text:'For most of his life, Tito Boi was honest about where he stood. He believed there was a <span class="highlight">Creator</span> — something behind the universe, some force that set it all in motion. But he did not know who to believe in. He did not call himself religious. He called himself real.'},
+      {type:'p', text:'Then his <span class="highlight">Dad died</span>.'},
+      {type:'quote', text:'"I ran and cried to God when Dad died — because out of all the people, why Dad?"'},
+      {type:'p', text:'That question. <em>Why Dad?</em> It is the kind of question that breaks people. The kind that sends some running away from God entirely. But not him. He ran toward God. Not because he had the answers — but because he had nowhere else to go with the weight of it.'},
+      {type:'p', text:'That is what real faith looks like. Not the clean, comfortable kind. The kind born in the middle of the night when you are asking why and the silence is unbearable and you fall to your knees anyway.'},
+      {type:'p', text:'Even now, years later, the question still lives in him. <span class="highlight">"Why Dad?"</span> still echoes. He does not pretend to have made peace with it. He does not perform closure he has not reached. He carries it — honestly, openly, humanly.'},
+      {type:'quote', text:'"It\'s still something that bothers me everyday. A question left unanswered."'},
+      {type:'p', text:'And yet he still prays. Still believes. Still chases God. Not because everything makes sense — but because in the hardest moment of his life, God was the only one he could turn to. And something in that moment became unshakeable.'},
+      {type:'p', text:'He also carries the weight of the <span class="highlight">"what ifs."</span> What if his Dad had not died? What turns would his life have taken? These are questions he still seeks answers for — and maybe that seeking is itself a form of faith.'},
+      {type:'narrator-close', text:'His faith is not a performance. It is a wound that became a foundation. And that is the kind of faith that lasts.'},
+    ],
+    questions: [
+      {
+        q: "Before his Dad died, how would you describe Tito Boi's belief?",
+        opts: ["He was a devout Christian", "He believed in a Creator but was not sure who", "He did not believe in anything", "He went to church every Sunday"],
+        ans: 1
+      },
+      {
+        q: "What did Tito Boi do when his Dad died?",
+        opts: ["He lost his faith completely", "He ran and cried to God", "He became angry and distant", "He moved away from home"],
+        ans: 1
+      },
+      {
+        q: "What question still bothers Tito Boi every single day?",
+        opts: ["Why did I grow up in Tondo?", "Why did God let me suffer?", "Why Dad — out of all people?", "Why didn't I say goodbye?"],
+        ans: 2
+      }
+    ]
+  },
+  {
+    id: 3,
+    title: "Before You",
+    preview: "Three names. Three lessons. One realization that changed everything...",
+    code: "StorylineCompleted",
+    unlockKey: "story_ch3_unlocked",
+    quizLockKey: "story_ch3_lock",
+    content: [
+      {type:'narrator-intro'},
+      {type:'p', text:'Before you, there were three. Tito Boi asked me to tell you this part honestly. So here it is.'},
+      {type:'p', text:'The first was <span class="highlight">Francheska</span>. She was great. Beautiful, same goals, the kind of person you could see a future with — if you were older, more grounded, more ready. But they were young. Too young to hold something that needed steadiness. She ghosted him. No explanation. Just silence where a person used to be.'},
+      {type:'p', text:'The second was <span class="highlight">Cassandra</span> — an LDR. What was remarkable about this one is that despite their age, they were both unusually mature. They understood how the world worked. It lasted a year. Then she found someone closer — a classmate. Distance won.'},
+      {type:'quote', text:'"We were both mature enough and we still were young, but we understood how the world works and how it revolves."'},
+      {type:'p', text:'The third was the hardest. <span class="highlight">Angel</span>. It seemed perfect at first. Until, slowly, he began to realize — he was a rebound. Not a choice. A placeholder for someone else\'s healing.'},
+      {type:'p', text:'That one left a mark. Not just hurt — but a quiet decision. To keep his circle small. To stop letting people in so easily. To guard his heart a little more carefully.'},
+      {type:'quote', text:'"Most people come and go. After that I try to not get attached to people."'},
+      {type:'p', text:'So he grew quieter around strangers. Distant. Careful. The kind of person who barely talks when you first meet him — but when he trusts you? When he feels <span class="highlight">safe</span> with you? His mouth can barely stop talking. His goofy side comes out. The real him shows up.'},
+      {type:'p', text:'After everything, he knew exactly what he wanted. Not a feeling. A <span class="highlight">choice</span>.'},
+      {type:'quote', text:'"Loving someone means choosing them everyday — no matter how hard it is, or no matter how unlovable they become."'},
+      {type:'p', text:'He wanted someone simple. Someone he can trust, lean on, be himself with. Someone who chases God with him. Someone who will love him for who he is — not who he is <em>with</em> them.'},
+      {type:'narrator-close', text:'He waited. He healed. He chose wisely. And then — he found you, Jay. 🕊️'},
+    ],
+    questions: [
+      {
+        q: "What was the name of Tito Boi's first relationship?",
+        opts: ["Cassandra", "Angel", "Francheska", "Jay"],
+        ans: 2
+      },
+      {
+        q: "Why did his relationship with Cassandra end?",
+        opts: ["They had different goals", "She found someone closer — a classmate", "He moved away", "They fought constantly"],
+        ans: 1
+      },
+      {
+        q: "How does Tito Boi describe love?",
+        opts: ["A feeling that comes and goes", "A choice you make every single day", "Something that happens naturally", "A game you have to win"],
+        ans: 1
+      }
+    ]
+  }
+];
+
+// ─── STATE ───
+var currentChapter = null;
+var quizState = { chIdx:0, qIdx:0, strikes:0, answers:[] };
+
+// ─── RENDER STORY LIST ───
+function renderStory(){
+  var el = document.getElementById('storyList');
+  if(!el) return;
+  el.innerHTML = CHAPTERS.map(function(ch){
+    var unlocked = localStorage.getItem(ch.unlockKey) === '1';
+    var lockedToday = isQuizLockedToday(ch);
+    var statusTxt = unlocked ? '✓ Letter unlocked' : (lockedToday ? '🔒 Try again tomorrow' : '→ Read to unlock');
+    var statusCls = unlocked ? 'done' : (lockedToday ? 'lock' : 'open');
+    return '<div class="chapter-card '+(unlocked?'unlocked':'')+'" onclick="openChapter('+ch.id+')">'
+      +'<div class="ch-banner"></div>'
+      +'<div class="ch-body">'
+      +'<div class="ch-num">Chapter '+ch.id+'</div>'
+      +'<div class="ch-title">'+ch.title+'</div>'
+      +'<div class="ch-preview">'+ch.preview+'</div>'
+      +'<div class="ch-footer">'
+      +'<span class="ch-status '+statusCls+'">'+statusTxt+'</span>'
+      +'<span class="ch-arrow">›</span>'
+      +'</div>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+}
+
+function isQuizLockedToday(ch){
+  var lockData = localStorage.getItem(ch.quizLockKey);
+  if(!lockData) return false;
+  try{
+    var obj = JSON.parse(lockData);
+    return obj.date === todayStr() && obj.strikes >= 3;
+  } catch(e){ return false; }
+}
+
+// ─── OPEN CHAPTER ───
+function openChapter(id){
+  var ch = null;
+  for(var ci=0;ci<CHAPTERS.length;ci++){ if(CHAPTERS[ci].id===id){ ch=CHAPTERS[ci]; break; } }
+  if(!ch) return;
+  currentChapter = ch;
+  // Build reader
+  document.getElementById('readerTitle').textContent = 'Chapter '+ch.id+' — '+ch.title;
+  var body = document.getElementById('readerBody');
+  body.innerHTML = '<div class="reader-chapter-num">Chapter '+ch.id+'</div>'
+    +'<div class="reader-chapter-title">'+ch.title+'</div>'
+    +'<div class="reader-divider">✦ ✦ ✦</div>'
+    +'<div class="reader-text">'
+    + ch.content.map(function(block){
+        if(block.type==='narrator-intro') return '<div class="narrator-tag"><span class="nt-badge">🤖 Narrator</span><span class="nt-note">A bot that transcribed Tito Boi' + String.fromCharCode(39) + 's story for you</span></div>';
+        if(block.type==='narrator-close') return '<div class="narrator-close">'+block.text+'</div>';
+        if(block.type==='p')     return '<p>'+block.text+'</p>';
+        if(block.type==='quote') return '<div class="quote">'+block.text+'</div>';
+        return '';
+      }).join('')
+    +'</div>';
+  body.scrollTop = 0;
+
+  // Change button if already unlocked
+  var unlocked = localStorage.getItem(ch.unlockKey)==='1';
+  var btn = document.getElementById('readerNextBtn');
+  if(unlocked){
+    btn.textContent = 'Re-read · Letter already unlocked 💌';
+    btn.onclick = function(){ closeReader(); goTab('story'); };
+  } else if(isQuizLockedToday(ch)){
+    btn.textContent = '🔒 Quiz locked until tomorrow';
+    btn.onclick = function(){ showToast('Come back tomorrow to try again! 💪'); };
+  } else {
+    btn.textContent = "I'm ready — Quiz me! 📝";
+    btn.onclick = function(){ startQuiz(); };
+  }
+
+  document.getElementById('chapterReader').classList.add('show');
+}
+
+function closeReader(){
+  document.getElementById('chapterReader').classList.remove('show');
+}
+
+// ─── QUIZ ───
+function startQuiz(){
+  if(!currentChapter) return;
+  quizState = { chIdx: currentChapter.id-1, qIdx: 0, strikes: 0, answers: [] };
+  renderQuizQuestion();
+  document.getElementById('quizModal').classList.add('show');
+}
+
+function renderQuizQuestion(){
+  var ch = CHAPTERS[quizState.chIdx];
+  var q  = ch.questions[quizState.qIdx];
+
+  // Progress dots
+  var prog = document.getElementById('quizProgress');
+  prog.innerHTML = ch.questions.map(function(_,i){
+    var cls = i < quizState.qIdx ? 'done' : (i===quizState.qIdx ? 'current' : '');
+    return '<div class="qp-dot '+cls+'"></div>';
+  }).join('');
+
+  // Question
+  document.getElementById('quizQ').textContent = '"' + q.q + '"';
+
+  // Options
+  var opts = document.getElementById('quizOpts');
+  opts.innerHTML = q.opts.map(function(opt, i){
+    return '<button class="quiz-opt" onclick="answerQuiz('+i+')">' + opt + '</button>';
+  }).join('');
+
+  // Strikes
+  renderStrikes();
+}
+
+function renderStrikes(){
+  var row = document.getElementById('strikesRow');
+  var hearts = '';
+  for(var i=0;i<3;i++){
+    hearts += '<span class="strike-dot">' + (i < quizState.strikes ? '💔' : '❤️') + '</span>';
+  }
+  row.innerHTML = hearts;
+}
+
+function answerQuiz(idx){
+  var ch = CHAPTERS[quizState.chIdx];
+  var q  = ch.questions[quizState.qIdx];
+  var opts = document.querySelectorAll('.quiz-opt');
+  var correct = idx === q.ans;
+
+  // Disable all options
+  opts.forEach(function(b){ b.disabled=true; });
+  opts[q.ans].classList.add('correct');
+  if(!correct){
+    opts[idx].classList.add('wrong');
+    quizState.strikes++;
+    renderStrikes();
+  }
+
+  setTimeout(function(){
+    if(quizState.strikes >= 3){
+      // Lock for today
+      var lockData = JSON.stringify({date: todayStr(), strikes: 3});
+      localStorage.setItem(ch.quizLockKey, lockData);
+      document.getElementById('quizModal').classList.remove('show');
+      showToast("3 strikes! Come back tomorrow 💔");
+      closeReader();
+      renderStory();
+      return;
+    }
+
+    quizState.qIdx++;
+    if(quizState.qIdx >= ch.questions.length){
+      // All answered correctly!
+      document.getElementById('quizModal').classList.remove('show');
+      // Unlock letter
+      localStorage.setItem(ch.unlockKey, '1');
+      // Also add code to SECRETS if not there already (it's already in SECRETS data)
+      showCodeReveal(ch.code, ch.id);
+      closeReader();
+      renderStory();
+      confetti();
+    } else {
+      renderQuizQuestion();
+    }
+  }, 900);
+}
+
+function showCodeReveal(code, chId){
+  // Get the letter message from SECRETS
+  var secret = SECRETS[code.toUpperCase()];
+  var crBox = document.getElementById('cr-code-box-wrap');
+  var crMsg = document.getElementById('crLetterMsg');
+  var crFrom = document.getElementById('crLetterFrom');
+  document.getElementById('crCode').textContent = code;
+  if(secret && crMsg){
+    crMsg.textContent = secret.m;
+    crMsg.style.display = 'block';
+    if(crFrom) crFrom.textContent = secret.f;
+  }
+  document.getElementById('codeReveal').classList.add('show');
+  confetti();
+}
+
+function closeCodeReveal(){
+  document.getElementById('codeReveal').classList.remove('show');
+  goTab('home');
+}
+
 
 // SERVICE WORKER
 if('serviceWorker' in navigator){var sw="const C='cov-v3';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>caches.match('./'))));});";var blob=new Blob([sw],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});}
