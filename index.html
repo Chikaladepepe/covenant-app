@@ -65,15 +65,15 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 .egg-bub{position:fixed;left:50%;transform:translateX(-50%);background:rgba(240,204,85,0.97);color:#1a0820;font-family:Georgia,serif;font-size:0.85rem;font-weight:bold;padding:10px 18px;border-radius:20px;max-width:80vw;text-align:center;z-index:9997;box-shadow:0 4px 20px rgba(212,175,55,0.5);pointer-events:none;animation:ebIn 0.3s cubic-bezier(.36,.07,.19,.97) both;}
 @keyframes ebIn{from{opacity:0;transform:translateX(-50%) scale(0.7);}to{opacity:1;transform:translateX(-50%) scale(1);}}
 @keyframes ebOut{to{opacity:0;transform:translateX(-50%) scale(0.85) translateY(-8px);}}
-#verseCard{margin:4px 16px 6px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.22);border-radius:14px;padding:12px 16px;text-align:center;cursor:pointer;transition:transform 0.2s;}
+#verseCard{margin:12px 16px 10px;background:rgba(212,175,55,0.07);border:1px solid rgba(212,175,55,0.22);border-radius:14px;padding:12px 16px;text-align:center;cursor:pointer;transition:transform 0.2s;}
 #verseCard:active{transform:scale(0.98);}
 #verseText{font-style:italic;font-size:0.8rem;line-height:1.7;color:rgba(255,255,255,0.85);margin-bottom:4px;}
 #verseRef{font-size:0.62rem;letter-spacing:0.1em;color:var(--gold2);text-transform:uppercase;}
-#streakRow{display:flex;gap:8px;margin:0 16px 6px;}
+#streakRow{display:flex;gap:8px;margin:0 16px 10px;}
 .sb{flex:1;background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.18);border-radius:10px;padding:8px 6px;text-align:center;}
 .sb .sv{font-size:1.2rem;font-weight:bold;color:var(--gold);display:block;}
 .sb .sl{font-size:0.52rem;letter-spacing:0.1em;color:rgba(255,255,255,0.4);text-transform:uppercase;}
-#teaser{margin:0 16px 6px;text-align:center;font-size:0.7rem;color:rgba(212,175,55,0.55);font-style:italic;line-height:1.6;}
+#teaser{margin:0 16px 10px;text-align:center;font-size:0.7rem;color:rgba(212,175,55,0.55);font-style:italic;line-height:1.6;}
 #secretBtnWrap{text-align:center;padding:4px 0 2px;}
 #secretBtnWrap button{background:rgba(212,175,55,0.08);border:1px solid rgba(212,175,55,0.28);border-radius:100px;color:rgba(212,175,55,0.75);font-family:Georgia,serif;font-size:0.73rem;padding:6px 18px;cursor:pointer;}
 #tapHint{text-align:center;font-size:0.56rem;letter-spacing:0.14em;color:rgba(255,255,255,0.2);text-transform:uppercase;padding-bottom:12px;animation:hint 2.5s ease-in-out infinite;}
@@ -272,6 +272,16 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 .chapter-locked{opacity:0.5;cursor:not-allowed!important;}
 .chapter-locked:active{transform:none!important;}
 .ch-banner-locked{background:linear-gradient(90deg,#0a1628,rgba(255,255,255,0.1),#0a1628);}
+
+/* ── COUNTDOWN ── */
+#countdownBox{margin:0 16px 10px;background:rgba(255,255,255,0.04);border:1px solid rgba(212,175,55,0.2);border-radius:14px;padding:12px 14px;text-align:center;}
+#cdLabel{font-size:0.58rem;letter-spacing:0.15em;color:rgba(212,175,55,0.5);text-transform:uppercase;margin-bottom:8px;}
+#cdTimer{display:flex;align-items:center;justify-content:center;gap:2px;}
+.cd-unit{display:flex;flex-direction:column;align-items:center;gap:1px;min-width:36px;}
+.cd-val{font-family:'Press Start 2P',monospace;font-size:0.8rem;color:var(--gold);text-shadow:0 0 10px rgba(212,175,55,0.4);line-height:1.2;}
+.cd-lbl{font-size:0.42rem;letter-spacing:0.12em;color:rgba(212,175,55,0.45);text-transform:uppercase;}
+.cd-sep{font-family:'Press Start 2P',monospace;font-size:0.8rem;color:rgba(212,175,55,0.3);padding-bottom:10px;align-self:flex-start;margin-top:2px;}
+#cdSub{font-size:0.62rem;color:rgba(255,255,255,0.25);font-style:italic;margin-top:6px;letter-spacing:0.08em;transition:opacity 0.3s ease;}
 </style>
 </head>
 <body>
@@ -303,7 +313,24 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
     </svg>
     <div id="petWrap"><span id="petEmoji">🥚</span><div id="petLabel">Golden Egg</div><div id="petPct">0.0%</div></div>
   </div></div>
-  <div id="verseCard" onclick="nextVerse()"><div id="verseText">"My beloved is mine and I am his..."</div><div id="verseRef">Song of Solomon 2:16 · tap to change</div></div>
+  <!-- COUNTDOWN -->
+<div id="countdownBox">
+  <div id="cdLabel">⏳ 10 Year Covenant Countdown</div>
+  <div id="cdTimer">
+    <div class="cd-unit"><span class="cd-val" id="cd-y">0</span><span class="cd-lbl">Y</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-val" id="cd-d">000</span><span class="cd-lbl">D</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-val" id="cd-h">00</span><span class="cd-lbl">H</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-val" id="cd-m">00</span><span class="cd-lbl">M</span></div>
+    <div class="cd-sep">:</div>
+    <div class="cd-unit"><span class="cd-val" id="cd-s">00</span><span class="cd-lbl">S</span></div>
+  </div>
+  <div id="cdSub">left until forever 🕊️</div>
+</div>
+
+<div id="verseCard" onclick="nextVerse()"><div id="verseText">"My beloved is mine and I am his..."</div><div id="verseRef">Song of Solomon 2:16 · tap to change</div></div>
   <div id="streakRow">
     <div class="sb"><span class="sv" id="sDays">1</span><span class="sl">Streak</span></div>
     <div class="sb"><span class="sv" id="sLeft">3651</span><span class="sl">Days Left</span></div>
@@ -485,12 +512,48 @@ const FACTS=['Did you know this app was created by Tito Boi with a little help f
 (function(){
   var bar=document.getElementById('ldBar'),fact=document.getElementById('ldFact'),pct=document.getElementById('ldPct');
   var sh=FACTS.slice().sort(function(){return Math.random()-0.5;});
-  var fi=0,prog=0;
+  var fi=0,prog=0,appReady=false,minTimeDone=false;
+
+  // Rotate facts every 3.5s so she can read them
   function nf(){fact.classList.add('fade');setTimeout(function(){fact.textContent=sh[fi++%sh.length];fact.classList.remove('fade');},350);}
-  nf();var ft=setInterval(nf,2200);
-  var tgts=[30,60,82,94],ti=0;
-  var pt=setInterval(function(){var t=tgts[Math.min(ti,tgts.length-1)];if(prog<t)prog=Math.min(t,prog+1.2);else ti++;if(bar)bar.style.width=prog+'%';if(pct)pct.textContent=Math.round(prog)+'%';},50);
-  window.addEventListener('load',function(){setTimeout(function(){clearInterval(pt);clearInterval(ft);if(bar)bar.style.width='100%';if(pct)pct.textContent='100%';setTimeout(function(){var ls=document.getElementById('loadScreen');ls.classList.add('out');setTimeout(function(){ls.style.display='none';},700);},350);},500);});
+  nf();
+  var ft=setInterval(nf,3500);
+
+  // Slow progress bar — spreads naturally over 8 seconds
+  var tgts=[10,30,55,80];var ti=0;
+  var pt=setInterval(function(){
+    var t=tgts[Math.min(ti,tgts.length-1)];
+    if(prog<t) prog=Math.min(t,prog+0.35);
+    else ti++;
+    if(bar) bar.style.width=prog+'%';
+    if(pct) pct.textContent=Math.round(prog)+'%';
+  },50);
+
+  function tryHide(){
+    if(!appReady||!minTimeDone) return;
+    clearInterval(pt);clearInterval(ft);
+    prog=100;
+    if(bar) bar.style.width='100%';
+    if(pct) pct.textContent='100%';
+    setTimeout(function(){
+      var ls=document.getElementById('loadScreen');
+      if(ls){ls.classList.add('out');setTimeout(function(){ls.style.display='none';},700);}
+    },400);
+  }
+
+  // Minimum 8 seconds so she reads the facts
+  setTimeout(function(){minTimeDone=true;tryHide();},8000);
+
+  // Also wait for full page load
+  window.addEventListener('load',function(){
+    if(typeof DOVE_IMG!=='undefined'&&!DOVE_LOADED){
+      DOVE_IMG.onload=function(){DOVE_LOADED=true;appReady=true;tryHide();};
+      DOVE_IMG.onerror=function(){appReady=true;tryHide();};
+      if(DOVE_IMG.complete){appReady=true;tryHide();}
+    } else {
+      appReady=true;tryHide();
+    }
+  });
 })();
 
 // DATA
@@ -515,7 +578,33 @@ var SECRETS={
   'PRAY':{e:'🙏',m:'I prayed for you today, Jay. I prayed for us. I prayed that God keeps you safe, that He keeps your heart at peace, and that He brings us closer every single day. You are covered. Always. 💕✝️',f:'— Tito Boi 🙏'}
 };
 var DEVOTIONS=[{e:'✝️',t:'Faith Over Fear',b:'"Do not fear, for I am with you." — Isaiah 41:10\n\nToday, lay down one worry at God\'s feet. He is already working it out.',c:'Say out loud: "God is bigger than this." Then text Tito Boi one thing you are trusting God for today 💕'},{e:'🌿',t:'Be Still',b:'"Be still and know that I am God." — Psalm 46:10\n\nIn the noise, pause. Five deep breaths. Feel His peace.',c:'Spend 5 quiet minutes with no phone. Just you and God. 🙏'},{e:'💕',t:'Love Is Patient',b:'"Love is patient, love is kind." — 1 Cor 13:4\n\nPatience is a form of love. Today, practice it with someone who tests yours.',c:'Find one moment to choose patience over frustration. Tell Tito Boi how it went 😊'},{e:'🌸',t:'You Are Chosen',b:'"You did not choose me, but I chose you." — John 15:16\n\nGod chose you. Specifically. Intentionally. On purpose.',c:'Write one thing God loves about you. Save it in your Memory Jar 💌'},{e:'🕊️',t:'Peace Like a River',b:'"Peace I leave with you; my peace I give you." — John 14:27\n\nHis peace is not the absence of trouble — it is calm in the middle of it.',c:'Pray for peace for someone else today. Then enjoy the peace that returns 🕊️'},{e:'👑',t:'You Are Royalty',b:'"You are a chosen people, a royal priesthood." — 1 Peter 2:9\n\nYou carry a crown you cannot always see. Walk like it today.',c:'Do one thing that honors the queen God made you to be 👑'},{e:'🌙',t:'Rest Is Holy',b:'"He grants sleep to those he loves." — Psalm 127:2\n\nRest is not laziness. It is trust.',c:'Go to bed 30 minutes earlier tonight. Give that time back to God 🌙'},{e:'🌹',t:'Love Covers All',b:'"Above all, love each other deeply, because love covers a multitude of sins." — 1 Peter 4:8',c:'Think of someone who hurt you. Pray for them today, even just one sentence 🌹'},{e:'🙏',t:'Pray Without Ceasing',b:'"Pray continually." — 1 Thessalonians 5:17\n\nPrayer is a conversation. Talk to Him like He is right there.',c:'Pray three times today: morning, afternoon, before sleep 🙏'},{e:'💛',t:'Gratitude Changes Everything',b:'"Give thanks in all circumstances." — 1 Thessalonians 5:18\n\nGratitude is choosing to find God in it anyway.',c:'List 5 things you are grateful for and save them in your Memory Jar 💛'},{e:'🔥',t:'Refined by Fire',b:'"When you walk through the fire, you will not be burned." — Isaiah 43:2\n\nEvery hard season makes you stronger.',c:'Write about one hard thing that made you stronger. God used it 🔥'},{e:'🤍',t:'Grace Upon Grace',b:'"From his fullness we have all received grace upon grace." — John 1:16\n\nYou cannot run out of His grace. Not today. Not ever.',c:'Extend grace to yourself today. One mistake does not define you 🤍'}];
-var GN_VERSES=[{t:'"He grants sleep to those he loves."',r:'Psalm 127:2'},{t:'"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."',r:'Psalm 4:8'},{t:'"When you lie down, you will not be afraid; your sleep will be sweet."',r:'Proverbs 3:24'},{t:'"The Lord watches over you... he will keep you from all harm."',r:'Psalm 121:5,7'},{t:'"Cast all your anxiety on him because he cares for you."',r:'1 Peter 5:7'},{t:'"My beloved is mine and I am his."',r:'Song of Solomon 2:16'},{t:'"Peace I leave with you; my peace I give you."',r:'John 14:27'}];
+var GN_VERSES=[
+  {t:'"He grants sleep to those he loves."',r:'Psalm 127:2'},
+  {t:'"I will lie down and sleep in peace, for you alone, Lord, make me dwell in safety."',r:'Psalm 4:8'},
+  {t:'"When you lie down, you will not be afraid; your sleep will be sweet."',r:'Proverbs 3:24'},
+  {t:'"The Lord watches over you... he will keep you from all harm."',r:'Psalm 121:5,7'},
+  {t:'"Cast all your anxiety on him because he cares for you."',r:'1 Peter 5:7'},
+  {t:'"My beloved is mine and I am his."',r:'Song of Solomon 2:16'},
+  {t:'"Peace I leave with you; my peace I give you."',r:'John 14:27'},
+  {t:'"He will not let your foot slip — he who watches over you will not slumber."',r:'Psalm 121:3'},
+  {t:'"The Lord your God is with you, the Mighty Warrior who saves. He will take great delight in you."',r:'Zephaniah 3:17'},
+  {t:'"Come to me, all you who are weary and burdened, and I will give you rest."',r:'Matthew 11:28'},
+  {t:'"Do not be anxious about anything — the peace of God will guard your heart and mind."',r:'Philippians 4:6-7'},
+  {t:'"The Lord bless you and keep you; the Lord make his face shine on you and be gracious to you."',r:'Numbers 6:24-25'},
+  {t:'"God is our refuge and strength, an ever-present help in trouble."',r:'Psalm 46:1'},
+  {t:'"I praise you because I am fearfully and wonderfully made."',r:'Psalm 139:14'},
+  {t:'"Trust in the Lord with all your heart and lean not on your own understanding."',r:'Proverbs 3:5'},
+  {t:'"The Lord is close to the brokenhearted and saves those who are crushed in spirit."',r:'Psalm 34:18'},
+  {t:'"His left arm is under my head, and his right arm embraces me."',r:'Song of Solomon 2:6'},
+  {t:'"You are altogether beautiful, my darling; there is no flaw in you."',r:'Song of Solomon 4:7'},
+  {t:'"For I know the plans I have for you — plans to prosper you and not to harm you."',r:'Jeremiah 29:11'},
+  {t:'"The steadfast love of the Lord never ceases; his mercies are new every morning."',r:'Lamentations 3:22-23'},
+  {t:'"Let the morning bring me word of your unfailing love, for I have put my trust in you."',r:'Psalm 143:8'},
+  {t:'"Love never fails."',r:'1 Corinthians 13:8'},
+  {t:'"The Lord is your keeper; the Lord is your shade on your right hand."',r:'Psalm 121:5'},
+  {t:'"Even in darkness light dawns for the upright, for those who are gracious and compassionate."',r:'Psalm 112:4'},
+  {t:'"Be still and know that I am God."',r:'Psalm 46:10'},
+];
 
 // STATE
 function getState(){var d={currentDay:1,lastLogin:null,msgHistory:[],verseIndex:0,eggHistory:[],shownMilestones:[],petStats:{health:100,hunger:100,happy:100,clean:100},petLastCare:null,petSleeping:false,petHatched:false,hatchShown:false};try{return Object.assign(d,JSON.parse(localStorage.getItem('cov_v3')||'{}'));}catch(e){return d;}}
@@ -524,10 +613,44 @@ function todayStr(){var d=new Date();return d.getFullYear()+'-'+(d.getMonth()+1)
 var ST=getState(),missedDays=0,lpTimer=null;
 
 // INIT
+// ── PAGE VISIBILITY — pause loops when app is hidden ──
+document.addEventListener('visibilitychange',function(){
+  if(document.hidden){
+    // App went to background - cancel all animation frames
+    if(typeof petAnimFrame!=='undefined'&&petAnimFrame){
+      cancelAnimationFrame(petAnimFrame);petAnimFrame=null;
+    }
+    if(typeof gFrame!=='undefined'&&gFrame){
+      cancelAnimationFrame(gFrame);gFrame=null;
+    }
+    if(typeof countdownInterval!=='undefined'&&countdownInterval){
+      clearInterval(countdownInterval);countdownInterval=null;
+    }
+  } else {
+    // App came back to foreground - restart what's needed
+    if(document.getElementById('petScreen')&&
+       document.getElementById('petScreen').classList.contains('active')){
+      startPetCanvas();
+    }
+    if(typeof startCountdown==='function') startCountdown();
+    // Re-check state in case date changed
+    var today=todayStr();
+    if(ST.lastLogin!==today){
+      var diff=Math.round((new Date(today)-new Date(ST.lastLogin))/86400000);
+      if(diff>0){
+        missedDays=diff-1;
+        ST.currentDay=Math.min(ST.currentDay+diff,TOTAL);
+        ST.lastLogin=today;saveState(ST);
+        renderHome();
+      }
+    }
+  }
+});
+
 window.addEventListener('DOMContentLoaded',function(){
   for(var i=0;i<55;i++){var s=document.createElement('div');s.className='star';var sz=Math.random()*1.8+0.3;s.style.cssText='width:'+sz+'px;height:'+sz+'px;left:'+Math.random()*100+'vw;top:'+Math.random()*100+'vh;--d:'+(2+Math.random()*4)+'s;--dl:'+(Math.random()*4)+'s;--op:'+(0.35+Math.random()*0.55)+';';document.body.appendChild(s);}
   var today=todayStr();
-  if(!ST.lastLogin){ST.lastLogin=today;ST.currentDay=1;saveState(ST);}
+  if(!ST.lastLogin){ST.lastLogin=today;ST.firstLogin=today;ST.currentDay=1;saveState(ST);}
   else if(ST.lastLogin!==today){var diff=Math.round((new Date(today)-new Date(ST.lastLogin))/86400000);missedDays=diff-1;ST.currentDay=Math.min(ST.currentDay+diff,TOTAL);ST.lastLogin=today;saveState(ST);}
   renderHome();setupPet();checkBday();checkMilestone();
   document.getElementById('secretInput').addEventListener('keydown',function(e){if(e.key==='Enter')checkSecret();});
@@ -543,6 +666,7 @@ function renderHome(){
   var t=['Day '+(d+1)+' awaits, Dec 30 Queen 🌸','Tomorrow is Day '+(d+1)+'. One step closer 💕','Day '+(d+1)+': another page in our story 📖',(TOTAL-d)+' days left. Each one worth it 🕊️'];
   document.getElementById('teaser').textContent=t[d%t.length];
   renderVerse();if(missedDays>0)showMissed(missedDays);
+  startCountdown();
   // Lock/unlock pet tab
   var petBtn = document.getElementById('nb-pet');
   var petIcon = document.getElementById('nb-pet-icon');
@@ -1039,7 +1163,10 @@ function startPetCanvas(){
 
 function petLoop(){
   var cv = document.getElementById('petCanvas');
-  if(!cv || !document.getElementById('petScreen').classList.contains('active')){ petAnimFrame=null; return; }
+  var petScr = document.getElementById('petScreen');
+  if(!cv || !petScr || !petScr.classList.contains('active') || document.hidden){
+    petAnimFrame=null; return;
+  }
   petFrameCounter++;
   drawPet(cv);
   petAnimFrame = requestAnimationFrame(petLoop);
@@ -1749,19 +1876,38 @@ function renderStory(){
       +'</div></div></div>';
   });
 
-  // Storyline 2 — locked section
-  html += '<div class="sl-header sl-locked-header"><span class="sl-badge sl-badge-locked">Storyline 2</span><span class="sl-title">🔒 Coming Soon</span></div>';
+  // Storyline 2 — unlocks after Day 5
+  var sl2Unlocked = ST.currentDay >= 5;
+  var sl2Title = sl2Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 5';
+  var sl2HeaderCls = sl2Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
+  var sl2BadgeCls  = sl2Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
+  html += '<div class="'+sl2HeaderCls+'"><span class="'+sl2BadgeCls+'">Storyline 2</span><span class="sl-title">'+sl2Title+'</span></div>';
   CHAPTERS.filter(function(ch){ return ch.storyline===2; }).forEach(function(ch){
-    html += '<div class="chapter-card chapter-locked">'
-      +'<div class="ch-banner ch-banner-locked"></div>'
-      +'<div class="ch-body">'
-      +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
-      +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
-      +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
-      +'<div class="ch-footer">'
-      +'<span class="ch-status lock">🔒 Locked — Storyline 2</span>'
-      +'<span class="ch-arrow" style="opacity:0.2">›</span>'
-      +'</div></div></div>';
+    if(sl2Unlocked){
+      // Show as normal locked-chapter (content coming soon)
+      html += '<div class="chapter-card chapter-locked">'
+        +'<div class="ch-banner"></div>'
+        +'<div class="ch-body">'
+        +'<div class="ch-num">Chapter '+ch.id+'</div>'
+        +'<div class="ch-title">'+ch.title+'</div>'
+        +'<div class="ch-preview">'+ch.preview+'</div>'
+        +'<div class="ch-footer">'
+        +'<span class="ch-status lock">📝 Content coming soon</span>'
+        +'<span class="ch-arrow">›</span>'
+        +'</div></div></div>';
+    } else {
+      // Fully greyed out until day 5
+      html += '<div class="chapter-card chapter-locked">'
+        +'<div class="ch-banner ch-banner-locked"></div>'
+        +'<div class="ch-body">'
+        +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
+        +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
+        +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
+        +'<div class="ch-footer">'
+        +'<span class="ch-status lock">🔒 Unlocks on Day 5</span>'
+        +'<span class="ch-arrow" style="opacity:0.2">›</span>'
+        +'</div></div></div>';
+    }
   });
 
   el.innerHTML = html;
@@ -1781,7 +1927,14 @@ function openChapter(id){
   var ch = null;
   for(var ci=0;ci<CHAPTERS.length;ci++){ if(CHAPTERS[ci].id===id){ ch=CHAPTERS[ci]; break; } }
   if(!ch) return;
-  if(ch.locked){ showToast('This chapter is part of Storyline 2 — coming soon! 🔒'); return; }
+  if(ch.locked){
+    if(ST.currentDay < 5){
+      showToast('Storyline 2 unlocks on Day 5! ' + (5 - ST.currentDay) + ' days to go 🔒');
+    } else {
+      showToast('This chapter is coming soon! Check back later 📖');
+    }
+    return;
+  }
   // Enforce reading order within Storyline 1
   if(ch.storyline === 1 && ch.id > 1){
     var prevCh = null;
@@ -1937,8 +2090,85 @@ function closeCodeReveal(){
 }
 
 
+// ── COUNTDOWN ──
+var countdownInterval = null;
+function startCountdown(){
+  if(countdownInterval) clearInterval(countdownInterval);
+  function tick(){
+    // Target = 3652 days from first login
+    var firstLogin = ST.firstLogin || ST.lastLogin;
+    if(!firstLogin){ updateCountdownDisplay(3652*24*3600); return; }
+    var start = new Date(firstLogin);
+    var target = new Date(start.getTime() + 3652*24*3600*1000);
+    var now = new Date();
+    var diff = Math.max(0, target - now);
+    updateCountdownDisplay(Math.floor(diff/1000));
+  }
+  tick();
+  countdownInterval = setInterval(tick, 1000);
+}
+
+var CD_SUBS = [
+  'left until forever 🕊️',
+  'more to go! 💕',
+  'getting closer! 🥹',
+  'going closer! 🌸',
+  'and counting down for you 💌',
+  'until our forever begins ✝️',
+  'left — every second worth it 💛',
+  'ticking just for you, Jay 🕊️',
+  'of love still ahead 💍',
+  'left to keep choosing you 🌹',
+  'and Tito Boi is not giving up 💪',
+  'closer every single day ✨',
+  'until the covenant is complete 🔥',
+  'left — stay with me, Jay 🥺',
+  'and I would wait every single one 💕',
+];
+var lastSubIdx = -1;
+
+function updateCountdownDisplay(totalSecs){
+  var y  = Math.floor(totalSecs / (365.25*24*3600));
+  var rem = totalSecs % Math.round(365.25*24*3600);
+  var d  = Math.floor(rem / (24*3600));
+  rem    = rem % (24*3600);
+  var h  = Math.floor(rem / 3600);
+  var m  = Math.floor((rem % 3600) / 60);
+  var s  = rem % 60;
+  var el = function(id,val,pad){ var e=document.getElementById(id); if(e) e.textContent=String(val).padStart(pad,'0'); };
+  el('cd-y', y,  1);
+  el('cd-d', d,  3);
+  el('cd-h', h,  2);
+  el('cd-m', m,  2);
+  el('cd-s', s,  2);
+  // Rotate subtitle every 10 seconds
+  if(s % 10 === 0){
+    var pool = CD_SUBS.filter(function(_,i){ return i !== lastSubIdx; });
+    var newIdx = Math.floor(Math.random() * pool.length);
+    var sub = pool[newIdx];
+    lastSubIdx = CD_SUBS.indexOf(sub);
+    var subEl = document.getElementById('cdSub');
+    if(subEl){
+      subEl.style.opacity = '0';
+      setTimeout(function(){ subEl.textContent = sub; subEl.style.opacity = '1'; }, 300);
+    }
+  }
+}
+
 // SERVICE WORKER
-if('serviceWorker' in navigator){var sw="const C='cov-v3';self.addEventListener('install',e=>{e.waitUntil(caches.open(C).then(c=>c.addAll(['./'])));self.skipWaiting();});self.addEventListener('activate',e=>{e.waitUntil(clients.claim());});self.addEventListener('fetch',e=>{e.respondWith(caches.match(e.request).then(r=>r||fetch(e.request).then(res=>{const cl=res.clone();caches.open(C).then(c=>c.put(e.request,cl));return res;}).catch(()=>caches.match('./'))));});";var blob=new Blob([sw],{type:'application/javascript'});navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(function(){});}
+// Service worker registration — deferred to avoid blocking
+window.addEventListener('load',function(){
+  if('serviceWorker' in navigator){
+    var sw="const C='cov-v3';self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./']);}));self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).then(function(res){var cl=res.clone();caches.open(C).then(function(c){c.put(e.request,cl);});return res;}).catch(function(){return caches.match('./');});})  );});";
+    try{
+      var blob=new Blob([sw],{type:'application/javascript'});
+      var url=URL.createObjectURL(blob);
+      navigator.serviceWorker.register(url).then(function(){
+        setTimeout(function(){URL.revokeObjectURL(url);},5000);
+      }).catch(function(){});
+    }catch(e){}
+  }
+});
 
 // PWA ICON (deferred after load)
 window.addEventListener('load',function(){setTimeout(function(){
