@@ -9,18 +9,84 @@
 <meta name="theme-color" content="#4a0e4f"/>
 <title>Covenant 🕊️</title>
 
-<!-- PWA Manifest inline -->
-<link rel="manifest" href="data:application/manifest+json,{
-  %22name%22:%22Covenant%22,
-  %22short_name%22:%22Covenant%22,
-  %22description%22:%22Tito+Boi+%2B+Jay+Eternal+Streak%22,
-  %22start_url%22:%22.%22,
-  %22display%22:%22standalone%22,
-  %22background_color%22:%22%234a0e4f%22,
-  %22theme_color%22:%22%234a0e4f%22,
-  %22orientation%22:%22portrait%22,
-  %22icons%22:[{%22src%22:%22data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'%3E%3Crect width='192' height='192' rx='36' fill='%234a0e4f'/%3E%3Cellipse cx='96' cy='105' rx='38' ry='28' fill='%23d4af37'/%3E%3Cellipse cx='96' cy='95' rx='22' ry='20' fill='%23f0cc55'/%3E%3Ccircle cx='96' cy='82' r='13' fill='%23f0cc55'/%3E%3Ccircle cx='101' cy='79' r='2.5' fill='%234a0e4f'/%3E%3Cellipse cx='83' cy='97' rx='18' ry='8' fill='%23d4af37' transform='rotate(-30 83 97)'/%3E%3Cellipse cx='109' cy='97' rx='18' ry='8' fill='%23d4af37' transform='rotate(30 109 97)'/%3E%3Crect x='88' y='115' width='16' height='8' rx='2' fill='%23c8a020'/%3E%3Cellipse cx='88' cy='127' rx='10' ry='5' fill='%234a7c2f'/%3E%3Cellipse cx='100' cy='130' rx='8' ry='4' fill='%235a9c3f'/%3E%3C/svg%3E%22,%22sizes%22:%22192x192%22,%22type%22:%22image/svg+xml%22}]
-}"/>
+<!-- PWA icon + manifest injected via script for max iOS/Android compatibility -->
+<script>
+(function(){
+  // Draw dove icon on canvas -> real PNG base64 (required for iOS home screen icon)
+  const sz=512;
+  const cv=document.createElement('canvas');
+  cv.width=sz;cv.height=sz;
+  const x=cv.getContext('2d');
+  // Rounded rect background
+  x.beginPath();
+  const rd=sz*0.18;
+  x.moveTo(rd,0);x.lineTo(sz-rd,0);x.quadraticCurveTo(sz,0,sz,rd);
+  x.lineTo(sz,sz-rd);x.quadraticCurveTo(sz,sz,sz-rd,sz);
+  x.lineTo(rd,sz);x.quadraticCurveTo(0,sz,0,sz-rd);
+  x.lineTo(0,rd);x.quadraticCurveTo(0,0,rd,0);x.closePath();
+  const bg=x.createLinearGradient(0,0,sz,sz);
+  bg.addColorStop(0,'#2a0630');bg.addColorStop(1,'#4a0e4f');
+  x.fillStyle=bg;x.fill();
+  const cx=sz/2,cy=sz/2+20;
+  // Body
+  x.fillStyle='#f0cc55';
+  x.beginPath();x.ellipse(cx,cy+10,95,68,-0.2,0,Math.PI*2);x.fill();
+  // Head
+  x.fillStyle='#f0cc55';
+  x.beginPath();x.arc(cx+50,cy-65,55,0,Math.PI*2);x.fill();
+  // Left wing
+  x.fillStyle='#d4af37';
+  x.beginPath();
+  x.moveTo(cx-10,cy-10);
+  x.bezierCurveTo(cx-130,cy-90,cx-170,cy+50,cx-80,cy+90);
+  x.bezierCurveTo(cx-40,cy+65,cx-5,cy+30,cx-10,cy-10);
+  x.fill();
+  // Right wing
+  x.fillStyle='#e8c040';
+  x.beginPath();
+  x.moveTo(cx+20,cy-20);
+  x.bezierCurveTo(cx+110,cy-100,cx+160,cy+20,cx+80,cy+75);
+  x.bezierCurveTo(cx+45,cy+55,cx+15,cy+15,cx+20,cy-20);
+  x.fill();
+  // Eye
+  x.fillStyle='#1a0820';x.beginPath();x.arc(cx+68,cy-72,10,0,Math.PI*2);x.fill();
+  x.fillStyle='#ffffff';x.beginPath();x.arc(cx+72,cy-76,3.5,0,Math.PI*2);x.fill();
+  // Beak
+  x.fillStyle='#c8a020';
+  x.beginPath();x.moveTo(cx+98,cy-60);x.lineTo(cx+135,cy-54);x.lineTo(cx+98,cy-46);x.closePath();x.fill();
+  // Olive branch
+  x.strokeStyle='#4a7c2f';x.lineWidth=6;
+  x.beginPath();x.moveTo(cx-30,cy+82);x.bezierCurveTo(cx-65,cy+62,cx-85,cy+95,cx-120,cy+78);x.stroke();
+  x.fillStyle='#5a9c3f';
+  [[cx-58,cy+68],[cx-75,cy+80],[cx-95,cy+74],[cx-115,cy+80]].forEach(function(p){
+    x.beginPath();x.ellipse(p[0],p[1],9,6,Math.PI/4,0,Math.PI*2);x.fill();
+  });
+  // Gold sparkles
+  x.fillStyle='rgba(255,220,80,0.7)';
+  [[cx+10,cy-40],[cx-35,cy+5],[cx+55,cy+15]].forEach(function(p){
+    x.beginPath();x.arc(p[0],p[1],5,0,Math.PI*2);x.fill();
+  });
+  const icon=cv.toDataURL('image/png');
+  // Apple touch icon (iOS)
+  var al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;
+  document.head.appendChild(al);
+  // Manifest with real PNG
+  var manifest={
+    name:'Covenant',short_name:'Covenant',
+    description:'Tito Boi + Jay Eternal Streak',
+    start_url:'./',display:'standalone',
+    background_color:'#4a0e4f',theme_color:'#4a0e4f',
+    orientation:'portrait',
+    icons:[
+      {src:icon,sizes:'512x512',type:'image/png',purpose:'any maskable'},
+      {src:icon,sizes:'192x192',type:'image/png',purpose:'any maskable'}
+    ]
+  };
+  var blob=new Blob([JSON.stringify(manifest)],{type:'application/manifest+json'});
+  var ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(blob);
+  document.head.appendChild(ml);
+})();
+</script>
 
 <style>
   :root {
