@@ -250,6 +250,8 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 .cr-code-label{font-size:0.6rem;letter-spacing:0.18em;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:6px;}
 .cr-code{font-family:'Press Start 2P',monospace;font-size:1.2rem;color:#f0cc55;letter-spacing:0.2em;text-shadow:0 0 20px rgba(212,175,55,0.6);}
 .cr-hint{font-size:0.72rem;color:rgba(255,255,255,0.4);font-style:italic;}
+.cr-code-label{font-size:0.6rem;letter-spacing:0.18em;color:rgba(212,175,55,0.6);text-transform:uppercase;margin-bottom:6px;}
+.cr-code{font-family:'Press Start 2P',monospace;font-size:1.1rem;color:#f0cc55;letter-spacing:0.2em;text-shadow:0 0 20px rgba(212,175,55,0.6);margin-bottom:6px;}
 .cr-btn{background:linear-gradient(135deg,#d4af37,#f0cc55);color:#060d1f;font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.8rem 2.5rem;font-size:0.88rem;cursor:pointer;}
 
 /* ── NARRATOR ── */
@@ -512,6 +514,11 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
     <div class="cr-letter-text" id="crLetterMsg"></div>
     <div class="cr-letter-from" id="crLetterFrom"></div>
   </div>
+  <div class="cr-divider" id="crCodeWrap" style="display:none">
+    <div class="cr-code-label">Your unlock code</div>
+    <div class="cr-code" id="crCode"></div>
+    <div class="cr-hint">Go to Home → tap "Got a code from Tito Boi?" 💕</div>
+  </div>
   <button class="cr-btn" onclick="closeCodeReveal()">Got it! 💌</button>
 </div>
 
@@ -631,6 +638,9 @@ var SECRETS={
   'STILLGROWING':{e:'💪',m:'You know my struggles now, Jay. All of them. And yet here you are still reading. That means more to me than you know. Chapter 6 is unlocked — go read it. Here is the code: WhyYouJay 💕',f:'— Tito Boi'},
   'S3CHAPTER1':{e:'💙',m:'You read Chapter 7, Jay. Now you know my fears. All of them. And you are still here. That already means more than you know. Here is another code: S3Chapter2 💕',f:'— Tito Boi 🕊️'},
   'S3CHAPTER2':{e:'💛',m:'You see it now — what I see in you. One more chapter left, Jay. The last one. Here is the code: S3Final 🕊️',f:'— Tito Boi 💕'},
+  'S4CHAPTER1':{e:'🌙',m:'You just read the questions I never said out loud, Jay. And I hope you felt how real they are. Here is the next code: S4Chapter2 💕',f:'— Tito Boi 🕊️'},
+  'S4CHAPTER2':{e:'💛',m:'This chapter was all about you, Jay. I hope you felt it. One last chapter. Here is the code: S4Final 🕊️',f:'— Tito Boi 💕'},
+  'S4FINAL':{e:'💕',m:'You finished all four storylines, Jay. Every single chapter. Every single word was written for you. I am rooting for you. Always. 🕊️✝️💕',f:'— Tito Boi, always rooting for you'},
   'S3FINAL':{e:'🕊️',m:'You made it to the end. All three storylines. Every word was written for you, Jay. Every single one. I Love You. 🕊️✝️💕',f:'— Tito Boi, always'},
   'WHYYOUJAY':{e:'🕊️',m:'You read it. You know why now. I chose you, Jay — not by accident, not by feelings alone, but by choice. Every single day. That is my answer. That will always be my answer. 🕊️✝️',f:'— Tito Boi, all in 💍'},
 
@@ -2278,6 +2288,122 @@ var CHAPTERS = [
         ans: 2
       }
     ]
+  },
+
+  // ═══ STORYLINE 4 — LOCKED UNTIL DAY 20 ═══
+  {
+    id: 10,
+    storyline: 4,
+    locked: false,
+    title: "Questions I Never Said Out Loud",
+    preview: "Things I always wanted to ask but never did. Until now...",
+    code: "S4Chapter1",
+    unlockKey: "story_ch10_unlocked",
+    quizLockKey: "story_ch10_lock",
+    content: [
+      {type:'p', text:"There are things I have wanted to ask for a long time. Questions I kept to myself because I did not know how they would land. But this is a safe place. And you have read everything else. So here they are."},
+      {type:'p', text:"Do you ever feel like you have to perform being okay? Like, not just for other people but for yourself too — as if feeling things too deeply is somehow a flaw? Because I do. All the time. And I wonder if you do too."},
+      {type:'quote', text:'"Do you ever get tired of being strong? Because I do. More often than I show."'},
+      {type:'p', text:"Do you ever look at the future and feel both excited and terrified at the same time? Like you want it so badly but the wanting itself feels dangerous because what if it does not work out? I think about that more than I let on."},
+      {type:'p', text:"Do you ever talk to God and feel like He is listening — truly listening — but then wonder why the answer takes so long? Or wonder if silence is the answer? Because I have those conversations. Late at night. More than anyone knows."},
+      {type:'quote', text:'"I talk to God about you more than I have ever admitted. I just wanted you to know that."'},
+      {type:'p', text:"And the one I think about most — do you think we can actually do this? Not in a doubtful way. But in the honest, eyes-open, knowing-it-will-be-hard kind of way. Do you believe in us the way I believe in us?"},
+      {type:'p', text:"I do not need you to answer these right now. They are not questions that need fast answers. They are questions I wanted you to sit with. Because I sit with them too. Every day. And somehow, thinking about facing them with you makes them lighter. 🕊️"},
+    ],
+    questions: [
+      {
+        q: "What kind of questions does Tito Boi share in this chapter?",
+        opts: ["Questions about the past","Questions he kept to himself but never said out loud","Questions about work and career","Questions about his family"],
+        ans: 1
+      },
+      {
+        q: "Who does Tito Boi admit he talks to about Jay more than anyone knows?",
+        opts: ["His friends","His Lola","God","His Mom"],
+        ans: 2
+      },
+      {
+        q: "What does Tito Boi say happens to his heavy questions when he thinks about facing them with Jay?",
+        opts: ["They disappear","They get bigger","They become lighter","They stop mattering"],
+        ans: 2
+      }
+    ]
+  },
+  {
+    id: 11,
+    storyline: 4,
+    locked: false,
+    title: "If I Could Ask You Anything",
+    preview: "Not about me this time. About you. The real you...",
+    code: "S4Chapter2",
+    unlockKey: "story_ch11_unlocked",
+    quizLockKey: "story_ch11_lock",
+    content: [
+      {type:'p', text:"This chapter is different. It is not about me. It is about you, Jay."},
+      {type:'p', text:"If I could ask you anything — and I mean really ask, no filters, no awkwardness — here is what I would want to know."},
+      {type:'p', text:"What does your happiest day look like? Not the Instagram version. The real one. The one where nothing is performed and everything just feels right. I want to know what that looks like for you."},
+      {type:'quote', text:'"What does your happiest day look like? I genuinely want to know."'},
+      {type:'p', text:"What is the thing you are most proud of about yourself that you never say out loud? Because I think there is something. I think there is something you carry quietly that deserves to be celebrated — and I want to be the one who knows what it is."},
+      {type:'p', text:"What do you need most from the people you love? Not what you ask for. What you actually need. Because I want to love you right. Not just in the way that feels natural to me — in the way that actually lands for you."},
+      {type:'quote', text:'"I want to love you the way YOU need to be loved. Not just the way that feels easy for me."'},
+      {type:'p', text:"And the last one — do you know how far you have come? Because from where I am standing, I see someone who has been through things, carried weight, and still shows up. Still tries. Still laughs. Still moves forward. Do you see that in yourself?"},
+      {type:'p', text:"You do not have to answer these here. But I hope one day you will. Over coffee maybe. Or a random Tuesday night. I will be listening. 💕"},
+    ],
+    questions: [
+      {
+        q: "Who is this chapter focused on?",
+        opts: ["Tito Boi","God","Jay","Their relationship"],
+        ans: 2
+      },
+      {
+        q: "How does Tito Boi say he wants to love Jay?",
+        opts: ["The way that feels natural to him","The way that is easiest","The way SHE needs to be loved","The way he was taught"],
+        ans: 2
+      },
+      {
+        q: "What does Tito Boi say he sees when he looks at Jay?",
+        opts: ["Someone perfect","Someone who has been through things but still shows up","Someone who needs help","Someone easy to love"],
+        ans: 1
+      }
+    ]
+  },
+  {
+    id: 12,
+    storyline: 4,
+    locked: false,
+    title: "Things I Want To Say But Always Stop Myself",
+    preview: "The ones that get stuck. The ones I swallow. Until now...",
+    code: "S4Final",
+    unlockKey: "story_ch12_unlocked",
+    quizLockKey: "story_ch12_lock",
+    content: [
+      {type:'p', text:"There are things I stop myself from saying. Not because they are not true. But because the timing never feels right, or because I worry how they will land, or because I am protecting myself from being too much."},
+      {type:'p', text:"But here, in this app I built for you, I do not have to worry about that. So here they are. The unsaid ones."},
+      {type:'quote', text:'"I stop myself from saying things a lot. These are some of them."'},
+      {type:'p', text:"I want to tell you that you make the hard days easier just by existing. Not by doing anything specific. Just by being someone I can think about and feel something good. That is rarer than people realize."},
+      {type:'p', text:"I want to tell you that I pray for you. Regularly. Not just in the big moments — in the ordinary ones too. I pray that your day is lighter than the last. That the things weighing on you get smaller. That God keeps you."},
+      {type:'p', text:"I want to tell you that I am rooting for you. Even in the things that have nothing to do with me. Your dreams, your healing, your peace — I want all of it for you. Genuinely. Without conditions."},
+      {type:'quote', text:'"I am rooting for you, Jay. In everything. Not just the parts that include me."'},
+      {type:'p', text:"I want to tell you that choosing to be patient — to wait, to trust the process, to show up anyway — has been one of the hardest and most worthwhile things I have done. Because of you."},
+      {type:'p', text:"And the last thing I keep stopping myself from saying — you deserve to be loved well. Not just okay. Not just fine. Well. Intentionally. Consistently. Honestly. You deserve someone who shows up for you the way you show up for others."},
+      {type:'p', text:"I want to be that person, Jay. I am working on it every day. 🕊️✝️💕"},
+    ],
+    questions: [
+      {
+        q: "Why does Tito Boi say he stops himself from saying these things?",
+        opts: ["He does not care enough","He worries about timing and being too much","He is not sure they are true","He is waiting for the right person"],
+        ans: 1
+      },
+      {
+        q: "What does Tito Boi say Jay makes the hard days feel like?",
+        opts: ["Harder","Easier just by existing","Longer","More bearable with effort"],
+        ans: 1
+      },
+      {
+        q: "What does Tito Boi say Jay deserves?",
+        opts: ["A simple life","To be loved okay","To be loved well — intentionally, consistently, honestly","To be left alone"],
+        ans: 2
+      }
+    ]
   }];
 
 // ─── STATE ───
@@ -2318,8 +2444,8 @@ function renderStory(){
   });
 
   // Storyline 3 — locked until day 15
-  var sl3Unlocked = ST.currentDay >= 15;
-  var sl3Title = sl3Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 15';
+  var sl3Unlocked = true;
+  var sl3Title = 'Unlocked ✓';
   var sl3HeaderCls = sl3Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
   var sl3BadgeCls  = sl3Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
 
@@ -2415,6 +2541,45 @@ function renderStory(){
     }
   });
 
+  // Storyline 4 — unlocks after Day 20
+  var sl4Unlocked = ST.currentDay >= 20;
+  var sl4HeaderCls = sl4Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
+  var sl4BadgeCls  = sl4Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
+  var sl4Title     = sl4Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 20';
+  html += '<div class="'+sl4HeaderCls+'"><span class="'+sl4BadgeCls+'">Storyline 4</span><span class="sl-title">'+sl4Title+'</span></div>';
+  CHAPTERS.filter(function(ch){ return ch.storyline===4; }).forEach(function(ch){
+    if(!sl4Unlocked){
+      // Visible but locked — shows title and preview, greyed out
+      html += '<div class="chapter-card chapter-locked" onclick="openChapter('+ch.id+')">'
+        +'<div class="ch-banner ch-banner-locked"></div>'
+        +'<div class="ch-body">'
+        +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
+        +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
+        +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
+        +'<div class="ch-footer"><span class="ch-status lock">🔒 Unlocks on Day 15</span>'
+        +'<span class="ch-arrow" style="opacity:0.2">›</span></div></div></div>';
+    } else {
+      var unlockedC4=localStorage.getItem(ch.unlockKey)==='1';
+      var lockedTodayC4=isQuizLockedToday(ch);
+      var prevUnlockedC4=true;
+      if(ch.id>10){
+        var prevKeyC4=null;
+        for(var pi5=0;pi5<CHAPTERS.length;pi5++){ if(CHAPTERS[pi5].id===ch.id-1){ prevKeyC4=CHAPTERS[pi5].unlockKey; break; } }
+        if(prevKeyC4) prevUnlockedC4=localStorage.getItem(prevKeyC4)==='1';
+      }
+      var orderLockedC4=ch.id>10&&!prevUnlockedC4;
+      var statusTxtC4=unlockedC4?'✓ Letter unlocked':(orderLockedC4?'🔒 Read previous chapter first':(lockedTodayC4?'🔒 Try again tomorrow':'→ Read to unlock'));
+      var statusClsC4=unlockedC4?'done':(orderLockedC4||lockedTodayC4?'lock':'open');
+      html += '<div class="chapter-card '+(unlockedC4?'unlocked':'')+(orderLockedC4?' chapter-locked':'')+'" onclick="openChapter('+ch.id+')">'
+        +'<div class="ch-banner"></div><div class="ch-body">'
+        +'<div class="ch-num">Chapter '+ch.id+'</div>'
+        +'<div class="ch-title">'+ch.title+'</div>'
+        +'<div class="ch-preview">'+ch.preview+'</div>'
+        +'<div class="ch-footer"><span class="ch-status '+statusClsC4+'">'+statusTxtC4+'</span>'
+        +'<span class="ch-arrow">›</span></div></div></div>';
+    }
+  });
+
   el.innerHTML = html;
 }
 
@@ -2433,13 +2598,7 @@ function openChapter(id){
   for(var ci=0;ci<CHAPTERS.length;ci++){ if(CHAPTERS[ci].id===id){ ch=CHAPTERS[ci]; break; } }
   if(!ch) return;
   if(ch.locked){
-    if(ch.storyline === 3){
-      if(ST.currentDay < 15){
-        showToast('Storyline 3 unlocks on Day 15! ' + (15-ST.currentDay) + ' days to go 🔒');
-      } else {
-        showToast('Read the previous chapter first! 📖');
-      }
-    } else if(ST.currentDay < 5){
+    if(ST.currentDay < 5){
       showToast('Storyline 2 unlocks on Day 5! ' + (5-ST.currentDay) + ' days to go 🔒');
     } else {
       showToast('This chapter is coming soon! Check back later 📖');
@@ -2456,8 +2615,9 @@ function openChapter(id){
     }
   }
   // Block SL3 if not day 15 yet
-  if(ch.storyline===3 && ST.currentDay < 15){
-    showToast('Storyline 3 unlocks on Day 15! '+(15-ST.currentDay)+' days to go 🔒');
+  // Block SL4 if not day 15 yet
+  if(ch.storyline===4 && ST.currentDay < 20){
+    showToast('Storyline 4 unlocks on Day 20! '+(20-ST.currentDay)+' days to go 🔒');
     return;
   }
   currentChapter = ch;
@@ -2600,17 +2760,24 @@ function answerQuiz(idx){
 }
 
 function showCodeReveal(code, chId){
-  // Get the letter message from SECRETS
   var secret = SECRETS[code.toUpperCase()];
-  var crBox = document.getElementById('cr-code-box-wrap');
-  var crMsg = document.getElementById('crLetterMsg');
+  var crMsg  = document.getElementById('crLetterMsg');
   var crFrom = document.getElementById('crLetterFrom');
-  document.getElementById('crCode').textContent = code;
+  var crCode = document.getElementById('crCode');
+  var crCodeWrap = document.getElementById('crCodeWrap');
+
+  // Show letter message
   if(secret && crMsg){
     crMsg.textContent = secret.m;
-    crMsg.style.display = 'block';
     if(crFrom) crFrom.textContent = secret.f;
   }
+
+  // Show code box
+  if(crCode){
+    crCode.textContent = code;
+    if(crCodeWrap) crCodeWrap.style.display = 'block';
+  }
+
   document.getElementById('codeReveal').classList.add('show');
   confetti();
 }
@@ -2690,7 +2857,7 @@ function updateCountdownDisplay(totalSecs){
 // Service worker registration — deferred to avoid blocking
 window.addEventListener('load',function(){
   if('serviceWorker' in navigator){
-    var sw="const C='cov-v3';self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./']);}));self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).then(function(res){var cl=res.clone();caches.open(C).then(function(c){c.put(e.request,cl);});return res;}).catch(function(){return caches.match('./');});})  );});";
+    var sw="const C='cov-v4';self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./']);}));self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).then(function(res){var cl=res.clone();caches.open(C).then(function(c){c.put(e.request,cl);});return res;}).catch(function(){return caches.match('./');});})  );});";
     try{
       var blob=new Blob([sw],{type:'application/javascript'});
       var url=URL.createObjectURL(blob);
@@ -3477,593 +3644,6 @@ function closeHatch(){
 // Hatch check is handled inside initPetTab, no override needed
 
 
-// ═══════════════════════════════════════════════
-//  STORY SYSTEM — Tito Boi's Background
-// ═══════════════════════════════════════════════
-
-var CHAPTERS = [
-  // ═══ STORYLINE 1 ═══
-  {
-    id: 1,
-    storyline: 1,
-    title: "Where I Came From",
-    preview: "I grew up in a place called HappyLand, Tondo...",
-    code: "CHP1",
-    unlockKey: "story_ch1_unlocked",
-    quizLockKey: "story_ch1_lock",
-    content: [
-      {type:'p', text:"I grew up in HappyLand, Tondo. It was a really dark place — basically all the drug users and dealers used the area I lived in as their hideout. You could go out and see drug users left and right, and being a rebel from your family was basically the norm. I'm thankful that I picked the right choice."},
-      {type:'p', text:"My family was lovely. They treated me with gentleness and corrected my wrongs the right way. I grew up with my Lola first, and later on with my Mom. My Lola is one of the most important people in my life, and I pray that when I finally make it, she's still here to see it."},
-      {type:'p', text:"I was the kind of kid who was outgoing and outstanding. I picked things up faster than average, and let me tell you — it's a gift and a curse to know a lot and understand complex things easily. It might sound great but I'd say otherwise, because sometimes I wish I was a little dumber just to not understand certain things."},
-      {type:'quote', text:'"Sometimes I wish I was dumber, just to not understand a specific thing."'},
-      {type:'p', text:"One thing that really shaped me was the times when me and my Dad talked about life. I was 5 years old at that time but I already understood how life worked. We never took anything for granted because we knew life was hard and a single accident could change everything. Dad's advice is the main reason I am who I am now — because without it, I honestly doubt I'd still be alive today."},
-    ],
-    questions: [
-      {
-        q: "What is the name of the place in Tondo where I grew up?",
-        opts: ["SunnyLand", "HappyLand", "GreenLand", "SafePlace"],
-        ans: 1
-      },
-      {
-        q: "Who is one of the most important people in my life that I pray for every day?",
-        opts: ["My Mom", "My Dad", "My Lola", "My bestfriend"],
-        ans: 2
-      },
-      {
-        q: "How old was I when my Dad and I had those life-changing talks?",
-        opts: ["3 years old", "7 years old", "10 years old", "5 years old"],
-        ans: 3
-      }
-    ]
-  },
-  {
-    id: 2,
-    storyline: 1,
-    title: "The Faith That Shaped Me",
-    preview: "Faith became real to me when Dad died...",
-    code: "Chapter2completed",
-    unlockKey: "story_ch2_unlocked",
-    quizLockKey: "story_ch2_lock",
-    content: [
-      {type:'p', text:"Faith became real to me when Dad died. Before that, I was basically an atheist who believed there was a Creator but wasn't quite sure who to believe in."},
-      {type:'p', text:"It changed how I live. I ran and cried to God when Dad died — because out of all people, why Dad? It's still something that bothers me every day. A question left unanswered."},
-      {type:'quote', text:'"Why Dad? Out of all people — why him?"'},
-      {type:'p', text:"And maybe — what if none of those events happened? Maybe some turns in my life would have been different. That's still something in me that I seek an answer for. I don't know if I'll ever get it. But I still believe. And I think that says something."},
-    ],
-    questions: [
-      {
-        q: "Before my Dad died, how would you describe my belief in God?",
-        opts: ["I was a devout Christian", "I believed in a Creator but wasn't sure who", "I didn't believe in anything", "I went to church every Sunday"],
-        ans: 1
-      },
-      {
-        q: "What did I do when my Dad died?",
-        opts: ["I lost my faith completely", "I ran and cried to God", "I became angry and distant", "I moved away from home"],
-        ans: 1
-      },
-      {
-        q: "What question still bothers me every single day?",
-        opts: ["Why did I grow up in Tondo?", "Why did God let me suffer?", "Why Dad — out of all people?", "Why didn't I say goodbye?"],
-        ans: 2
-      }
-    ]
-  },
-  {
-    id: 3,
-    storyline: 1,
-    title: "Before You",
-    preview: "I had 3 past relationships. Each one taught me something...",
-    code: "StorylineCompleted",
-    unlockKey: "story_ch3_unlocked",
-    quizLockKey: "story_ch3_lock",
-    content: [
-      {type:'p', text:"I had 3 past relationships. The first one was Francheska. She was great and all — we had the same goals, she was beautiful too, but we were too young to take things seriously. She ghosted me."},
-      {type:'p', text:"The second was Cassandra, my LDR. We were both mature enough — and funny enough, we were still young — but we both understood how the world works. It lasted about a year until she found someone better and more accessible, one of her classmates."},
-      {type:'p', text:"The hardest one was Angel. My third relationship. It was great and it seemed perfect — until I slowly realized I was being used as a rebound."},
-      {type:'quote', text:'"Most people come and go. After that, I try not to get too attached."'},
-      {type:'p', text:"What I learned is that most people come and go. After that I grew distant. Whenever I get to know someone, my goofy side only comes out when I feel like I can truly be ME with them. It's also one of the reasons I keep my circle small — not a lot of people understand me. When we're not close, I barely talk. But when I feel safe around you, my mouth can barely stop."},
-      {type:'p', text:"After all that, I realized I wanted someone mature enough to know that love isn't a game. That love is a choice — not just a feeling. Because I believe that loving someone means choosing them every day, no matter how hard it is, no matter how unlovable they become."},
-      {type:'quote', text:'"I wanted someone simple. Someone I can trust, lean on, be myself with. Someone who chases God with me. Someone who will love me for who I am — not who I am with them."'},
-    ],
-    questions: [
-      {
-        q: "What was the name of my first relationship?",
-        opts: ["Cassandra", "Angel", "Francheska", "Jay"],
-        ans: 2
-      },
-      {
-        q: "Why did my relationship with Cassandra end?",
-        opts: ["We had different goals", "She found someone closer — a classmate", "I moved away", "We fought constantly"],
-        ans: 1
-      },
-      {
-        q: "How do I describe love?",
-        opts: ["A feeling that comes and goes", "A choice you make every single day", "Something that happens naturally", "A game you have to win"],
-        ans: 1
-      }
-    ]
-  },
-
-  // ═══ STORYLINE 2 ═══
-  {
-    id: 4,
-    storyline: 2,
-    locked: false,
-    title: "My Dreams & Where I'm Going",
-    preview: "I have no clear road ahead — but I know I will figure it out...",
-    code: "DreamBig",
-    unlockKey: "story_ch4_unlocked",
-    quizLockKey: "story_ch4_lock",
-    content: [
-      {type:'p', text:"My dream is to become so successful in life that I feel genuinely content in my heart. Not rich for the sake of being rich — just content. At peace."},
-      {type:'p', text:"Right now, I have no clear road ahead of me. And honestly? That used to scare me. But I know I will figure it out with God by my side. I do not need to have it all mapped out. I just need to keep moving."},
-      {type:'quote', text:'"In 5 to 10 years, I see myself in a cozy house — living life to the fullest."'},
-      {type:'p', text:"That is the dream. Nothing extravagant. Just a quiet, financially stable life where I wake up and feel like I made it — not by the world's standard, but by mine."},
-      {type:'p', text:"One thing I refuse to give up on is life itself. I know I have so much potential. So much still ahead. There are things I have not built yet, places I have not been, versions of myself I have not met. I am not done."},
-      {type:'quote', text:'"I will take a quiet, financially stable life — and I will be thankful for every single day of it."'},
-    ],
-    questions: [
-      {q:"What kind of life does Tito Boi dream of?",opts:["Famous and wealthy","Quiet and financially stable","Adventurous and traveling","Busy and powerful"],ans:1},
-      {q:"What does Tito Boi refuse to give up on?",opts:["His career","His relationships","Life itself","His dreams of travel"],ans:2},
-      {q:"What keeps Tito Boi going when there is no clear road ahead?",opts:["His friends","His ambition","God by his side","His family"],ans:2}
-    ]
-  },
-  {
-    id: 5,
-    storyline: 2,
-    locked: false,
-    title: "The Man I Want to Be",
-    preview: "Still a work in progress — but working on it every single day...",
-    code: "StillGrowing",
-    unlockKey: "story_ch5_unlocked",
-    quizLockKey: "story_ch5_lock",
-    content: [
-      {type:'p', text:"I am still working on a lot. My faith. My health. My knowledge and wisdom. My relationships. I will not pretend I have it all together — I do not. But I am working on it every single day."},
-      {type:'p', text:"One thing I fight every day is lust. I am going to be honest about that because honesty matters more than looking good. It is something every guy deals with — this world makes it impossible to avoid. But I am fighting it. Actively."},
-      {type:'quote', text:'"I am slowly removing my habitual sins, one by one. It is not fast. But it is happening."'},
-      {type:'p', text:"The kind of partner I want to be is nothing complex. Just someone who understands and is patient. Someone who can handle the real me — not just the easy version. Someone who is not only there when I am winning, but also when I am taking my losses."},
-      {type:'p', text:"The kind of father I want to be one day is a father my kids can count on. Someone they can lean on and run to freely — because I grew up missing my Dad's love after he was gone, and that stays with you. It is one of my greatest missions to make sure my kids never feel that void."},
-      {type:'quote', text:'"My faith and my relationship with God is still unstable. But I am trying. And I believe He sees that."'},
-      {type:'p', text:"What God is still building in me is my faith and my trust in Him. It is not perfect. Some days I struggle more than others. But I am trying my best to grow — slowly, honestly, genuinely. And I think that is what He asks of us anyway."},
-    ],
-    questions: [
-      {q:"What does Tito Boi admit he fights every single day?",opts:["Anger","Lust","Pride","Laziness"],ans:1},
-      {q:"What kind of partner does Tito Boi want to be?",opts:["Perfect and flawless","There only in good times","Patient, understanding, present in wins and losses","Strict and disciplined"],ans:2},
-      {q:"Why is being a good father one of Tito Boi's greatest missions?",opts:["He wants a big family","He grew up missing his Dad's love","His friends inspired him","He read it in a book"],ans:1}
-    ]
-  },
-  {
-    id: 6,
-    storyline: 2,
-    locked: false,
-    title: "Why You, Jay",
-    preview: "Out of everyone — why you. Here is your answer...",
-    code: "WhyYouJay",
-    unlockKey: "story_ch6_unlocked",
-    quizLockKey: "story_ch6_lock",
-    content: [
-      {type:'p', text:"I first noticed you when we were playing Roblox. It was just Jomarie and me — we were not looking for anything, honestly. Just goofing around, talking to people, nothing serious."},
-      {type:'p', text:"And then my eyes landed on your avatar. I approached you. No plan. No strategy. It just happened."},
-      {type:'quote', text:'"I felt something pulling me in. I cannot explain it — I just know I felt it."'},
-      {type:'p', text:"What got me was that pull. Something about you made it impossible to just scroll past. Like something in me recognized something in you before I even knew what it was."},
-      {type:'p', text:"Here is the thing about me — I guard my heart. Carefully. Extra carefully, actually. After everything I have been through, I built those walls for a reason. But with you? It was easier to let them down than to keep them up. The guards guarding my heart somehow fell asleep. And I did not even try to wake them."},
-      {type:'quote', text:'"Usually I guard my heart extra carefully. But with you — somehow the walls came down without me even trying."'},
-      {type:'p', text:"I chose you not because feelings hit me fast. I chose you because of what I believe — that loving someone is a choice, not just a feeling. And when I looked at you, something in me chose. Quietly. Without force. Naturally."},
-      {type:'p', text:"I even prayed to God about it, just to make sure. Asked Him to close the door if it was not right. And He did not. He stayed quiet in that way He does when the answer is already in front of you."},
-      {type:'quote', text:'"I prayed to God just to make sure. And still — nothing. No closed doors. Just you."'},
-      {type:'p', text:"Usually I do not like waiting. I am not a patient person by nature. But here I am — willing to wait 10 years. That alone tells you something. That alone is my answer to why you, Jay."},
-      {type:'p', text:"I am all in. Not because it is easy. But because for once, being all in felt easier than holding back. 🕊️"},
-    ],
-    questions: [
-      {q:"Where did Tito Boi first notice Jay?",opts:["At school","On Roblox","At a party","Through a mutual friend"],ans:1},
-      {q:"What is unusual about how Tito Boi felt around Jay?",opts:["He talked more than usual","His walls came down naturally without trying","He became very shy","He started praying more"],ans:1},
-      {q:"What did Tito Boi do to make sure his feelings for Jay were right?",opts:["Asked his friends","Waited a long time","Prayed to God about it","Read the Bible"],ans:2}
-    ]
-  },
-
-  // ═══ STORYLINE 3 — LOCKED UNTIL DAY 15 ═══
-  {
-    id: 7,
-    storyline: 3,
-    locked: true,
-    title: "Getting Specific",
-    preview: "Storyline 3 goes deeper. The details, the moments, the things I never said out loud...",
-    code: null,
-    unlockKey: "story_ch7_unlocked",
-    quizLockKey: "story_ch7_lock",
-    content: [],
-    questions: []
-  },
-  {
-    id: 8,
-    storyline: 3,
-    locked: true,
-    title: "What I See In You",
-    preview: "Not just why I chose you — but what I see when I look at you that others might have missed...",
-    code: null,
-    unlockKey: "story_ch8_unlocked",
-    quizLockKey: "story_ch8_lock",
-    content: [],
-    questions: []
-  },
-  {
-    id: 9,
-    storyline: 3,
-    locked: true,
-    title: "Us",
-    preview: "Not just me. Not just you. Us — and everything I hope we become...",
-    code: null,
-    unlockKey: "story_ch9_unlocked",
-    quizLockKey: "story_ch9_lock",
-    content: [],
-    questions: []
-  }];
-
-// ─── STATE ───
-var currentChapter = null;
-var quizState = { chIdx:0, qIdx:0, strikes:0, answers:[] };
-
-// ─── RENDER STORY LIST ───
-function renderStory(){
-  var el = document.getElementById('storyList');
-  if(!el) return;
-  var html = '';
-
-  // Storyline 1
-  html += '<div class="sl-header"><span class="sl-badge">Storyline 1</span><span class="sl-title">The Beginning</span></div>';
-  CHAPTERS.filter(function(ch){ return ch.storyline===1; }).forEach(function(ch){
-    var unlocked = localStorage.getItem(ch.unlockKey)==='1';
-    var lockedToday = isQuizLockedToday(ch);
-    // Check if previous chapter is unlocked (reading order)
-    var prevUnlocked = true;
-    if(ch.id > 1){
-      var prevKey = null;
-      for(var pi2=0;pi2<CHAPTERS.length;pi2++){ if(CHAPTERS[pi2].id===ch.id-1){ prevKey=CHAPTERS[pi2].unlockKey; break; } }
-      if(prevKey) prevUnlocked = localStorage.getItem(prevKey)==='1';
-    }
-    var orderLocked = ch.id > 1 && !prevUnlocked;
-    var statusTxt = unlocked ? '✓ Letter unlocked' : (orderLocked ? '🔒 Read previous chapter first' : (lockedToday ? '🔒 Try again tomorrow' : '→ Read to unlock'));
-    var statusCls = unlocked ? 'done' : (orderLocked || lockedToday ? 'lock' : 'open');
-    html += '<div class="chapter-card '+(unlocked?'unlocked':'')+(orderLocked?' chapter-locked':'')+'" onclick="openChapter('+ch.id+')">'
-      +'<div class="ch-banner"></div>'
-      +'<div class="ch-body">'
-      +'<div class="ch-num">Chapter '+ch.id+'</div>'
-      +'<div class="ch-title">'+ch.title+'</div>'
-      +'<div class="ch-preview">'+ch.preview+'</div>'
-      +'<div class="ch-footer">'
-      +'<span class="ch-status '+statusCls+'">'+statusTxt+'</span>'
-      +'<span class="ch-arrow">›</span>'
-      +'</div></div></div>';
-  });
-
-  // Storyline 3 — locked until day 15
-  var sl3Unlocked = ST.currentDay >= 15;
-  var sl3Title = sl3Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 15';
-  var sl3HeaderCls = sl3Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
-  var sl3BadgeCls  = sl3Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
-
-  // Storyline 2 — unlocks after Day 5
-  var sl2Unlocked = ST.currentDay >= 5;
-  // Ch6 stays locked until day 6
-  
-  var sl2Title = sl2Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 5';
-  var sl2HeaderCls = sl2Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
-  var sl2BadgeCls  = sl2Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
-  html += '<div class="'+sl2HeaderCls+'"><span class="'+sl2BadgeCls+'">Storyline 2</span><span class="sl-title">'+sl2Title+'</span></div>';
-  CHAPTERS.filter(function(ch){ return ch.storyline===2; }).forEach(function(ch){
-    if(sl2Unlocked){
-      // Ch6 locked until day 6
-      if(!ch.locked){
-        // Normal unlockable chapter
-        var unlocked2 = localStorage.getItem(ch.unlockKey)==='1';
-        var lockedToday2 = isQuizLockedToday(ch);
-        // Enforce order within SL2
-        var prevUnlocked2 = true;
-        if(ch.id > 4){
-          var prevKey2 = null;
-          for(var pi3=0;pi3<CHAPTERS.length;pi3++){ if(CHAPTERS[pi3].id===ch.id-1){ prevKey2=CHAPTERS[pi3].unlockKey; break; } }
-          if(prevKey2) prevUnlocked2 = localStorage.getItem(prevKey2)==='1';
-        }
-        var orderLocked2 = ch.id > 4 && !prevUnlocked2;
-        var statusTxt2 = unlocked2 ? '✓ Letter unlocked' : (orderLocked2 ? '🔒 Read previous chapter first' : (lockedToday2 ? '🔒 Try again tomorrow' : '→ Read to unlock'));
-        var statusCls2 = unlocked2 ? 'done' : (orderLocked2||lockedToday2 ? 'lock' : 'open');
-        html += '<div class="chapter-card '+(unlocked2?'unlocked':'')+(orderLocked2?' chapter-locked':'')+'" onclick="openChapter('+ch.id+')">'
-          +'<div class="ch-banner"></div>'
-          +'<div class="ch-body">'
-          +'<div class="ch-num">Chapter '+ch.id+'</div>'
-          +'<div class="ch-title">'+ch.title+'</div>'
-          +'<div class="ch-preview">'+ch.preview+'</div>'
-          +'<div class="ch-footer">'
-          +'<span class="ch-status '+statusCls2+'">'+statusTxt2+'</span>'
-          +'<span class="ch-arrow">›</span>'
-          +'</div></div></div>';
-      }
-    } else {
-      // Fully greyed out until day 5
-      html += '<div class="chapter-card chapter-locked">'
-        +'<div class="ch-banner ch-banner-locked"></div>'
-        +'<div class="ch-body">'
-        +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
-        +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
-        +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
-        +'<div class="ch-footer">'
-        +'<span class="ch-status lock">🔒 Unlocks on Day 5</span>'
-        +'<span class="ch-arrow" style="opacity:0.2">›</span>'
-        +'</div></div></div>';
-    }
-  });
-
-  // Render Storyline 3
-  html += '<div class="'+sl3HeaderCls+'"><span class="'+sl3BadgeCls+'">Storyline 3</span><span class="sl-title">'+sl3Title+'</span></div>';
-  CHAPTERS.filter(function(ch){ return ch.storyline===3; }).forEach(function(ch){
-    if(!sl3Unlocked){
-      // Fully greyed out until day 15
-      html += '<div class="chapter-card chapter-locked" onclick="openChapter('+ch.id+')">'
-        +'<div class="ch-banner ch-banner-locked"></div>'
-        +'<div class="ch-body">'
-        +'<div class="ch-num" style="color:rgba(255,255,255,0.2)">Chapter '+ch.id+'</div>'
-        +'<div class="ch-title" style="color:rgba(255,255,255,0.35)">'+ch.title+'</div>'
-        +'<div class="ch-preview" style="color:rgba(255,255,255,0.2)">'+ch.preview+'</div>'
-        +'<div class="ch-footer">'
-        +'<span class="ch-status lock">🔒 Unlocks on Day 15</span>'
-        +'<span class="ch-arrow" style="opacity:0.2">›</span>'
-        +'</div></div></div>';
-    } else {
-      // Unlocked — show with reading order
-      var unlockedCh = localStorage.getItem(ch.unlockKey)==='1';
-      var lockedTodayCh = isQuizLockedToday(ch);
-      var prevUnlockedCh = true;
-      if(ch.id > 7){
-        var prevKeyCh=null;
-        for(var pi4=0;pi4<CHAPTERS.length;pi4++){ if(CHAPTERS[pi4].id===ch.id-1){ prevKeyCh=CHAPTERS[pi4].unlockKey; break; } }
-        if(prevKeyCh) prevUnlockedCh=localStorage.getItem(prevKeyCh)==='1';
-      }
-      var orderLockedCh = ch.id>7 && !prevUnlockedCh;
-      var statusTxtCh = unlockedCh?'✓ Letter unlocked':(orderLockedCh?'🔒 Read previous chapter first':(lockedTodayCh?'🔒 Try again tomorrow':'→ Read to unlock'));
-      var statusClsCh = unlockedCh?'done':(orderLockedCh||lockedTodayCh?'lock':'open');
-      html += '<div class="chapter-card '+(unlockedCh?'unlocked':'')+(orderLockedCh?' chapter-locked':'')+'" onclick="openChapter('+ch.id+')">'
-        +'<div class="ch-banner"></div>'
-        +'<div class="ch-body">'
-        +'<div class="ch-num">Chapter '+ch.id+'</div>'
-        +'<div class="ch-title">'+ch.title+'</div>'
-        +'<div class="ch-preview">'+ch.preview+'</div>'
-        +'<div class="ch-footer">'
-        +'<span class="ch-status '+statusClsCh+'">'+statusTxtCh+'</span>'
-        +'<span class="ch-arrow">›</span>'
-        +'</div></div></div>';
-    }
-  });
-
-  el.innerHTML = html;
-}
-
-function isQuizLockedToday(ch){
-  var lockData = localStorage.getItem(ch.quizLockKey);
-  if(!lockData) return false;
-  try{
-    var obj = JSON.parse(lockData);
-    return obj.date === todayStr() && obj.strikes >= 3;
-  } catch(e){ return false; }
-}
-
-// ─── OPEN CHAPTER ───
-
-function closeReader(){
-  document.getElementById('chapterReader').classList.remove('show');
-}
-
-// ─── QUIZ ───
-function startQuiz(){
-  if(!currentChapter) return;
-  // Find actual array index (not id-1, since ids aren't sequential array positions)
-  var arrIdx = 0;
-  for(var i=0;i<CHAPTERS.length;i++){ if(CHAPTERS[i].id===currentChapter.id){ arrIdx=i; break; } }
-  quizState = { chIdx: arrIdx, qIdx: 0, strikes: 0, answers: [] };
-  renderQuizQuestion();
-  var qm = document.getElementById('quizModal');
-  if(qm) qm.classList.add('show');
-}
-
-function renderQuizQuestion(){
-  var ch = CHAPTERS[quizState.chIdx];
-  if(!ch||!ch.questions||!ch.questions[quizState.qIdx]) return;
-  var q  = ch.questions[quizState.qIdx];
-
-  // Progress dots
-  var prog = document.getElementById('quizProgress');
-  if(prog) prog.innerHTML = ch.questions.map(function(_,i){
-    var cls = i < quizState.qIdx ? 'done' : (i===quizState.qIdx ? 'current' : '');
-    return '<div class="qp-dot '+cls+'"></div>';
-  }).join('');
-
-  // Question
-  var qEl = document.getElementById('quizQ');
-  if(qEl) qEl.textContent = '"' + q.q + '"';
-
-  // Options
-  var opts = document.getElementById('quizOpts');
-  if(!opts) return;
-  opts.innerHTML = q.opts.map(function(opt, i){
-    return '<button class="quiz-opt" onclick="answerQuiz('+i+')">' + opt + '</button>';
-  }).join('');
-
-  // Strikes
-  renderStrikes();
-}
-
-function renderStrikes(){
-  var row = document.getElementById('strikesRow');
-  var hearts = '';
-  for(var i=0;i<3;i++){
-    hearts += '<span class="strike-dot">' + (i < quizState.strikes ? '💔' : '❤️') + '</span>';
-  }
-  row.innerHTML = hearts;
-}
-
-function answerQuiz(idx){
-  var ch = CHAPTERS[quizState.chIdx];
-  if(!ch||!ch.questions||!ch.questions[quizState.qIdx]) return;
-  var q  = ch.questions[quizState.qIdx];
-  var opts = document.querySelectorAll('.quiz-opt');
-  var correct = idx === q.ans;
-
-  // Disable all options
-  opts.forEach(function(b){ b.disabled=true; });
-  opts[q.ans].classList.add('correct');
-  if(!correct){
-    opts[idx].classList.add('wrong');
-    quizState.strikes++;
-    renderStrikes();
-  }
-
-  setTimeout(function(){
-    if(quizState.strikes >= 3){
-      // Lock for today
-      var lockData = JSON.stringify({date: todayStr(), strikes: 3});
-      localStorage.setItem(ch.quizLockKey, lockData);
-      document.getElementById('quizModal').classList.remove('show');
-      showToast("3 strikes! Come back tomorrow 💔");
-      closeReader();
-      renderStory();
-      return;
-    }
-
-    quizState.qIdx++;
-    if(quizState.qIdx >= ch.questions.length){
-      // All answered correctly!
-      document.getElementById('quizModal').classList.remove('show');
-      // Unlock letter
-      localStorage.setItem(ch.unlockKey, '1');
-      // If she just completed Storyline 2 (ch6), skip egg hatch timer by 5 days
-      if(ch.id === 6){
-        var bonus = 5;
-        ST.eggDay = Math.min((ST.eggDay||ST.currentDay) + bonus, TOTAL);
-        saveState(ST);
-        showToast('Storyline 2 complete! +5 days on your egg! 🥚✨');
-        renderHome();
-      }
-      showCodeReveal(ch.code, ch.id);
-      closeReader();
-      renderStory();
-      confetti();
-    } else {
-      renderQuizQuestion();
-    }
-  }, 900);
-}
-
-function showCodeReveal(code, chId){
-  // Get the letter message from SECRETS
-  var secret = SECRETS[code.toUpperCase()];
-  var crBox = document.getElementById('cr-code-box-wrap');
-  var crMsg = document.getElementById('crLetterMsg');
-  var crFrom = document.getElementById('crLetterFrom');
-  document.getElementById('crCode').textContent = code;
-  if(secret && crMsg){
-    crMsg.textContent = secret.m;
-    crMsg.style.display = 'block';
-    if(crFrom) crFrom.textContent = secret.f;
-  }
-  document.getElementById('codeReveal').classList.add('show');
-  confetti();
-}
-
-function closeCodeReveal(){
-  document.getElementById('codeReveal').classList.remove('show');
-  goTab('home');
-}
-
-
-// ── COUNTDOWN ──
-var countdownInterval = null;
-function startCountdown(){
-  if(countdownInterval) clearInterval(countdownInterval);
-  function tick(){
-    // Target = 3652 days from first login
-    var firstLogin = ST.firstLogin || ST.lastLogin;
-    if(!firstLogin){ updateCountdownDisplay(3652*24*3600); return; }
-    var start = new Date(firstLogin);
-    var target = new Date(start.getTime() + 3652*24*3600*1000);
-    var now = new Date();
-    var diff = Math.max(0, target - now);
-    updateCountdownDisplay(Math.floor(diff/1000));
-  }
-  tick();
-  countdownInterval = setInterval(tick, 1000);
-}
-
-var CD_SUBS = [
-  'left until forever 🕊️',
-  'more to go! 💕',
-  'getting closer! 🥹',
-  'going closer! 🌸',
-  'and counting down for you 💌',
-  'until our forever begins ✝️',
-  'left — every second worth it 💛',
-  'ticking just for you, Jay 🕊️',
-  'of love still ahead 💍',
-  'left to keep choosing you 🌹',
-  'and Tito Boi is not giving up 💪',
-  'closer every single day ✨',
-  'until the covenant is complete 🔥',
-  'left — stay with me, Jay 🥺',
-  'and I would wait every single one 💕',
-];
-var lastSubIdx = -1;
-
-function updateCountdownDisplay(totalSecs){
-  var y  = Math.floor(totalSecs / (365.25*24*3600));
-  var rem = totalSecs % Math.round(365.25*24*3600);
-  var d  = Math.floor(rem / (24*3600));
-  rem    = rem % (24*3600);
-  var h  = Math.floor(rem / 3600);
-  var m  = Math.floor((rem % 3600) / 60);
-  var s  = rem % 60;
-  var el = function(id,val,pad){ var e=document.getElementById(id); if(e) e.textContent=String(val).padStart(pad,'0'); };
-  el('cd-y', y,  1);
-  el('cd-d', d,  3);
-  el('cd-h', h,  2);
-  el('cd-m', m,  2);
-  el('cd-s', s,  2);
-  // Rotate subtitle every 10 seconds
-  if(s % 10 === 0){
-    var pool = CD_SUBS.filter(function(_,i){ return i !== lastSubIdx; });
-    var newIdx = Math.floor(Math.random() * pool.length);
-    var sub = pool[newIdx];
-    lastSubIdx = CD_SUBS.indexOf(sub);
-    var subEl = document.getElementById('cdSub');
-    if(subEl){
-      subEl.style.opacity = '0';
-      setTimeout(function(){ subEl.textContent = sub; subEl.style.opacity = '1'; }, 300);
-    }
-  }
-}
-
-// SERVICE WORKER
-// Service worker registration — deferred to avoid blocking
-window.addEventListener('load',function(){
-  if('serviceWorker' in navigator){
-    var sw="const C='cov-v3';self.addEventListener('install',function(e){e.waitUntil(caches.open(C).then(function(c){return c.addAll(['./']);}));self.skipWaiting();});self.addEventListener('activate',function(e){e.waitUntil(clients.claim());});self.addEventListener('fetch',function(e){e.respondWith(caches.match(e.request).then(function(r){return r||fetch(e.request).then(function(res){var cl=res.clone();caches.open(C).then(function(c){c.put(e.request,cl);});return res;}).catch(function(){return caches.match('./');});})  );});";
-    try{
-      var blob=new Blob([sw],{type:'application/javascript'});
-      var url=URL.createObjectURL(blob);
-      navigator.serviceWorker.register(url).then(function(){
-        setTimeout(function(){URL.revokeObjectURL(url);},5000);
-      }).catch(function(){});
-    }catch(e){}
-  }
-});
-
-// PWA ICON (deferred after load)
-window.addEventListener('load',function(){setTimeout(function(){
-  var sz=512,cv=document.createElement('canvas');cv.width=sz;cv.height=sz;var x=cv.getContext('2d');
-  var rd=sz*0.18;x.beginPath();x.moveTo(rd,0);x.lineTo(sz-rd,0);x.quadraticCurveTo(sz,0,sz,rd);x.lineTo(sz,sz-rd);x.quadraticCurveTo(sz,sz,sz-rd,sz);x.lineTo(rd,sz);x.quadraticCurveTo(0,sz,0,sz-rd);x.lineTo(0,rd);x.quadraticCurveTo(0,0,rd,0);x.closePath();
-  var bg=x.createLinearGradient(0,0,sz,sz);bg.addColorStop(0,'#2a0630');bg.addColorStop(1,'#4a0e4f');x.fillStyle=bg;x.fill();
-  var cx=sz/2,cy=sz/2+20;x.fillStyle='#f0cc55';x.beginPath();x.ellipse(cx,cy+10,95,68,-0.2,0,Math.PI*2);x.fill();x.fillStyle='#f0cc55';x.beginPath();x.arc(cx+50,cy-65,55,0,Math.PI*2);x.fill();x.fillStyle='#d4af37';x.beginPath();x.moveTo(cx-10,cy-10);x.bezierCurveTo(cx-130,cy-90,cx-170,cy+50,cx-80,cy+90);x.bezierCurveTo(cx-40,cy+65,cx-5,cy+30,cx-10,cy-10);x.fill();x.fillStyle='#e8c040';x.beginPath();x.moveTo(cx+20,cy-20);x.bezierCurveTo(cx+110,cy-100,cx+160,cy+20,cx+80,cy+75);x.bezierCurveTo(cx+45,cy+55,cx+15,cy+15,cx+20,cy-20);x.fill();x.fillStyle='#1a0820';x.beginPath();x.arc(cx+68,cy-72,10,0,Math.PI*2);x.fill();x.fillStyle='#fff';x.beginPath();x.arc(cx+72,cy-76,3.5,0,Math.PI*2);x.fill();x.fillStyle='#c8a020';x.beginPath();x.moveTo(cx+98,cy-60);x.lineTo(cx+135,cy-54);x.lineTo(cx+98,cy-46);x.closePath();x.fill();x.strokeStyle='#4a7c2f';x.lineWidth=6;x.beginPath();x.moveTo(cx-30,cy+82);x.bezierCurveTo(cx-65,cy+62,cx-85,cy+95,cx-120,cy+78);x.stroke();x.fillStyle='#5a9c3f';[[cx-58,cy+68],[cx-75,cy+80],[cx-95,cy+74],[cx-115,cy+80]].forEach(function(p){x.beginPath();x.ellipse(p[0],p[1],9,6,Math.PI/4,0,Math.PI*2);x.fill();});
-  var icon=cv.toDataURL('image/png');var al=document.createElement('link');al.rel='apple-touch-icon';al.href=icon;document.head.appendChild(al);
-  var mf={name:'Covenant',short_name:'Covenant',description:'Tito Boi + Jay Eternal Streak',start_url:'./',display:'standalone',background_color:'#4a0e4f',theme_color:'#4a0e4f',orientation:'portrait',icons:[{src:icon,sizes:'512x512',type:'image/png',purpose:'any maskable'}]};
-  var ml=document.createElement('link');ml.rel='manifest';ml.href=URL.createObjectURL(new Blob([JSON.stringify(mf)],{type:'application/manifest+json'}));document.head.appendChild(ml);
-},1500);});
 </script>
 </body>
 </html>
