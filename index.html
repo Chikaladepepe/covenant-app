@@ -323,6 +323,25 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
 .hatch-msg{font-family:Georgia,serif;font-size:1.1rem;color:var(--gold);line-height:1.6;max-width:300px;}
 .hatch-sub{font-size:0.75rem;color:rgba(255,255,255,0.5);font-style:italic;}
 .hatch-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--purple);font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.8rem 2.5rem;font-size:0.9rem;cursor:pointer;margin-top:0.5rem;}
+
+/* ── UPDATE LOG POPUP ── */
+#updateLog{display:none;position:fixed;inset:0;z-index:8500;background:rgba(0,0,0,0.88);align-items:center;justify-content:center;padding:1.2rem;flex-direction:column;}
+#updateLog.show{display:flex;}
+.ul-box{background:linear-gradient(160deg,#0d0820,#1a0535,#0d0820);border:1.5px solid rgba(212,175,55,0.35);border-radius:20px;max-width:380px;width:100%;max-height:80vh;display:flex;flex-direction:column;overflow:hidden;box-shadow:0 0 40px rgba(212,175,55,0.15);}
+.ul-header{padding:16px 18px 12px;border-bottom:1px solid rgba(212,175,55,0.15);background:rgba(212,175,55,0.05);}
+.ul-title{font-family:Georgia,serif;font-size:1rem;color:#d4af37;letter-spacing:0.1em;margin-bottom:2px;}
+.ul-sub{font-size:0.6rem;letter-spacing:0.14em;color:rgba(255,255,255,0.3);text-transform:uppercase;}
+.ul-body{flex:1;overflow-y:auto;padding:14px 18px;-webkit-overflow-scrolling:touch;}
+.ul-version{margin-bottom:14px;}
+.ul-ver-tag{display:inline-block;font-family:'Press Start 2P',monospace;font-size:0.5rem;color:#0d0820;background:#d4af37;border-radius:4px;padding:3px 8px;margin-bottom:8px;letter-spacing:0.05em;}
+.ul-ver-tag.new{background:linear-gradient(90deg,#ff69b4,#d4af37);}
+.ul-item{display:flex;gap:8px;align-items:flex-start;margin-bottom:6px;}
+.ul-dot{width:5px;height:5px;border-radius:50%;background:rgba(212,175,55,0.6);flex-shrink:0;margin-top:6px;}
+.ul-text{font-size:0.75rem;color:rgba(255,255,255,0.72);line-height:1.6;}
+.ul-footer{padding:12px 18px;border-top:1px solid rgba(212,175,55,0.12);text-align:center;}
+.ul-close{background:linear-gradient(135deg,#d4af37,#f0cc55);color:#0d0820;font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.65rem 2rem;font-size:0.82rem;cursor:pointer;opacity:0;pointer-events:none;transition:opacity 0.5s ease;}
+.ul-close.ready{opacity:1;pointer-events:all;}
+.ul-timer{font-size:0.58rem;color:rgba(212,175,55,0.4);letter-spacing:0.1em;margin-top:6px;transition:opacity 0.5s;}
 </style>
 </head>
 <body>
@@ -595,7 +614,7 @@ const FACTS=['Did you know this app was created by Tito Boi with a little help f
     if(pct) pct.textContent='100%';
     setTimeout(function(){
       var ls=document.getElementById('loadScreen');
-      if(ls){ls.classList.add('out');setTimeout(function(){ls.style.display='none';},700);}
+      if(ls){ls.classList.add('out');setTimeout(function(){ls.style.display='none';showUpdateLog();},700);}
     },400);
   }
 
@@ -2854,6 +2873,34 @@ function updateCountdownDisplay(totalSecs){
 }
 
 // SERVICE WORKER
+
+// ── UPDATE LOG ──
+var UPDATE_VERSION = 'v_20260403'; // bump this to show log again on new updates
+function showUpdateLog(){
+  var seen = localStorage.getItem('covenant_update_seen');
+  if(seen === UPDATE_VERSION) return; // already seen this version
+  document.getElementById('updateLog').classList.add('show');
+  // Start 3 second timer before showing close button
+  var secs = 3;
+  var timerEl = document.getElementById('ulTimer');
+  var closeBtn = document.getElementById('ulCloseBtn');
+  var countdown = setInterval(function(){
+    secs--;
+    if(secs > 0){
+      if(timerEl) timerEl.textContent = 'Close button appears in ' + secs + 's...';
+    } else {
+      clearInterval(countdown);
+      if(closeBtn) closeBtn.classList.add('ready');
+      if(timerEl) timerEl.style.opacity = '0';
+    }
+  }, 1000);
+}
+function closeUpdateLog(){
+  localStorage.setItem('covenant_update_seen', UPDATE_VERSION);
+  var el = document.getElementById('updateLog');
+  if(el){ el.style.opacity='0'; el.style.transition='opacity 0.4s'; setTimeout(function(){ el.classList.remove('show'); el.style.opacity=''; el.style.transition=''; }, 400); }
+}
+
 // Service worker registration — deferred to avoid blocking
 window.addEventListener('load',function(){
   if('serviceWorker' in navigator){
@@ -3645,5 +3692,86 @@ function closeHatch(){
 
 
 </script>
+
+<!-- UPDATE LOG -->
+<div id="updateLog">
+  <div class="ul-box">
+    <div class="ul-header">
+      <div class="ul-title">🕊️ Covenant — Patch Notes</div>
+      <div class="ul-sub">What's new in your love story</div>
+    </div>
+    <div class="ul-body">
+
+      <div class="ul-version">
+        <div class="ul-ver-tag new">✨ Latest</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 3 fully unlocked — Getting Specific, What I See In You, and Us 🕊️</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 4 added — locked until Day 20, teaser chapters visible</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Chapter reward codes now properly show after completing each quiz 💌</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Quiz crash fix — no more null errors when answering questions</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Duplicate chapter system removed — app loads much cleaner now</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Story System</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">4 Storylines with 12 chapters total — Tito Boi's full life story written for Jay</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Reading order enforced — she reads each chapter before unlocking the next</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">3 questions per chapter with 3 strike system — locked for the day after 3 wrong</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Each chapter rewards a secret code that unlocks a personal love letter 💕</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Narrator bot introduction — "A bot that transcribed Tito Boi's story for you 🤖"</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Pet System</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Pixel art dove pet — hatches on Day 30 with full animation 🐣</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">4 growth stages — Baby, Juvenile, Teen, Adult (grows over 10 years)</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Stats: Health, Hunger, Happy, Clean — drain over real time ❤️</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Actions: Feed, Bathe, Pet, Play, Sleep — each with particle effects</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Mood badge system — Thriving, Happy, Hungry, Sick, Sleeping, Dirty</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Hatch animation plays on Day 30 — confetti + message from Tito Boi</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Secret Codes</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">41 total secret codes — love letters, egg skips, pet boosts, and one troll code 😄</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Egg skip codes boost only the egg timer — never the real 10-year streak</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Pet stat codes switch to Pet tab automatically so she sees the effect</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">One-time use codes — can't be reused once claimed 🔒</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">BIGSKIP — the troll code. +0 days. Nothing. Tito Boi is laughing 😂</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Home Screen</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Live 10-year countdown — Y : D : H : M : S ticking every second ⏳</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">15 rotating subtitles under the timer — fade every 10 seconds</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Olive wreath progress ring — fills over 3652 days</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Missed day messages — different guilt levels based on how long she was gone 😄</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Birthday banners — Dec 30 (Jay), Dec 31 (Tito Boi), Jan 1 (New Year Forever)</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Milestone popups — Day 7, 30, 100, 365, 1000, 3652 with confetti 🎉</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Other Tabs</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Memory Jar — write notes and save photos with mood tags 📸</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Daily Devotion — 12 rotating devotions with today's challenge 🙏</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Goodnight mode — 25 Bible verses, tuck in the dove each night 🌙</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">3 mini games — Catch the Hearts, Feed the Dove, Love Match with difficulty tiers 🎮</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Lord's Prayer — long press the dove on Home to open 🕊️</div></div>
+      </div>
+
+      <div class="ul-version">
+        <div class="ul-ver-tag">Technical</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">PWA — installable, works offline, saves progress in localStorage forever</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">8 second loading screen with rotating fun facts</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Page Visibility API — pauses all loops when app is backgrounded to prevent crashes</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Compatible with older Android WebViews — no roundRect, no ctx.filter</div></div>
+      </div>
+
+    </div>
+    <div class="ul-footer">
+      <button class="ul-close" id="ulCloseBtn" onclick="closeUpdateLog()">Got it! Let's go 🕊️</button>
+      <div class="ul-timer" id="ulTimer">Close button appears in 3s...</div>
+    </div>
+  </div>
+</div>
 </body>
 </html>
