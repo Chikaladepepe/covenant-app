@@ -484,6 +484,20 @@ html,body{width:100%;height:100%;font-family:Georgia,'Times New Roman',serif;bac
   </div>
 </div>
 
+<!-- PET BETA NOTICE -->
+<div id="petBetaModal" class="modal">
+  <div class="modal-box" style="max-width:300px;text-align:center;padding:28px 24px;">
+    <div style="font-size:2.2rem;margin-bottom:10px;">🐦</div>
+    <div style="font-family:Georgia,serif;font-size:1rem;color:#d4af37;margin-bottom:10px;">Pet Model — Beta</div>
+    <div style="font-size:0.78rem;color:rgba(255,255,255,0.65);line-height:1.7;margin-bottom:18px;">
+      Hey Jay! The dove model is still in beta 🕊️<br><br>
+      This is actually Tito Boi's first time doing animations in HTML code — so bear with him while he figures it out 😄<br><br>
+      It will get better soon, promise! 💕
+    </div>
+    <button onclick="closePetBeta()" style="background:linear-gradient(135deg,#d4af37,#f0cc55);color:#0d0820;font-family:Georgia,serif;font-weight:bold;border:none;border-radius:100px;padding:0.65rem 2rem;font-size:0.82rem;cursor:pointer;">Got it! 🕊️</button>
+  </div>
+</div>
+
 <!-- HATCH OVERLAY -->
 <div id="hatchOverlay">
   <canvas id="hatchCanvas" width="220" height="220"></canvas>
@@ -840,7 +854,7 @@ function goTab(tab){
     if(scr) scr.classList.toggle('active',k===tab);
     if(btn) btn.classList.toggle('on',k===tab);
   });
-  if(tab==='pet')   initPetTab();
+  if(tab==='pet'){ initPetTab(); showPetBeta(); }
   if(tab==='jar')   renderMemList();
   if(tab==='story') renderStory();
   if(tab==='devot') renderDevot();
@@ -1128,7 +1142,7 @@ function endMemory(moves,prev,bkey){if(gFrame){cancelAnimationFrame(gFrame);gFra
 // ── DOVE SPRITE DRAW ──
 function drawDoveImg(ctx, x, y, w, h, mood, frame){
   var anim = 'idle';
-  if(mood==='happy'||mood==='fed'||mood==='petted'||mood==='playing') anim='flapping';
+  if(mood==='playing') anim='flapping';
   else if(doveWalkAnim) anim='walk';
 
   var imgs = DOVE_IMGS[anim];
@@ -1515,6 +1529,8 @@ function drawPet(cv){
   else if(stats.clean < 20)  mood='dirty';
   else if(stats.hunger>85&&stats.happy>85&&stats.clean>85) mood='happy';
   petCurrentMood = mood;
+  // Override mood if animatePet was called (e.g. play action)
+  if(petCurrentMood) mood = petCurrentMood;
 
   // Dove position
   var hatchDay = Math.max(0, (ST.eggDay||ST.currentDay) - 30);
@@ -1759,7 +1775,7 @@ function petAction(type){
   var cooldown = petActionCooldown[type]||0;
   if(now - cooldown < 3000){ setPetMsg("Give her a moment! 😄"); return; }
   petActionCooldown[type] = now;
-  triggerDoveWalk();
+  if(type !== 'play') triggerDoveWalk();
 
   var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
   var cv = document.getElementById('petCanvas');
@@ -1809,7 +1825,7 @@ function petAction(type){
 function animatePet(mood){
   // temporarily override current mood for animation burst
   petCurrentMood = mood;
-  setTimeout(function(){ petCurrentMood = null; }, 1500);
+  setTimeout(function(){ petCurrentMood = null; }, 2500);
 }
 
 function spawnPetParticles(cx, cy, type, count){
@@ -2697,10 +2713,10 @@ function renderStory(){
   });
 
   // Storyline 5 — locked until Day 30
-  var sl5Unlocked = ST.currentDay >= 30;
+  var sl5Unlocked = true;
   var sl5HeaderCls = sl5Unlocked ? 'sl-header' : 'sl-header sl-locked-header';
   var sl5BadgeCls  = sl5Unlocked ? 'sl-badge' : 'sl-badge sl-badge-locked';
-  var sl5Title     = sl5Unlocked ? 'Unlocked ✓' : '🔒 Unlocks on Day 30';
+  var sl5Title     = 'Unlocked ✓';
   html += '<div class="'+sl5HeaderCls+'"><span class="'+sl5BadgeCls+'">Storyline 5</span><span class="sl-title">'+sl5Title+'</span></div>';
   CHAPTERS.filter(function(ch){ return ch.storyline===5; }).forEach(function(ch){
     if(!sl5Unlocked){
@@ -2774,10 +2790,7 @@ function openChapter(id){
     showToast('Storyline 4 unlocks on Day 20! '+(20-ST.currentDay)+' days to go 🔒');
     return;
   }
-  if(ch.storyline===5 && ST.currentDay < 30){
-    showToast('Storyline 5 unlocks on Day 30! '+(30-ST.currentDay)+' days to go 🔒');
-    return;
-  }
+  // SL5 unlocked
   currentChapter = ch;
   // Build reader
   document.getElementById('readerTitle').textContent = 'Chapter '+ch.id+' — '+ch.title;
@@ -2811,6 +2824,16 @@ function openChapter(id){
   }
 
   document.getElementById('chapterReader').classList.add('show');
+}
+
+function showPetBeta(){
+  // Show once per app version
+  if(localStorage.getItem('petBetaSeen_v1')) return;
+  localStorage.setItem('petBetaSeen_v1','1');
+  setTimeout(function(){ openModal('petBetaModal'); }, 300);
+}
+function closePetBeta(){
+  closeModal('petBetaModal');
 }
 
 function closeReader(){
@@ -3014,7 +3037,7 @@ function updateCountdownDisplay(totalSecs){
 // SERVICE WORKER
 
 // ── UPDATE LOG ──
-var UPDATE_VERSION = 'v_20260403'; // bump this to show log again on new updates
+var UPDATE_VERSION = 'v_20260412'; // bump this to show log again on new updates
 function showUpdateLog(){
   var seen = localStorage.getItem('covenant_update_seen');
   if(seen === UPDATE_VERSION) return; // already seen this version
@@ -3365,6 +3388,8 @@ function drawPet(cv){
   else if(stats.clean < 20)  mood='dirty';
   else if(stats.hunger>85&&stats.happy>85&&stats.clean>85) mood='happy';
   petCurrentMood = mood;
+  // Override mood if animatePet was called (e.g. play action)
+  if(petCurrentMood) mood = petCurrentMood;
 
   // Dove position
   var hatchDay = Math.max(0, (ST.eggDay||ST.currentDay) - 30);
@@ -3609,7 +3634,7 @@ function petAction(type){
   var cooldown = petActionCooldown[type]||0;
   if(now - cooldown < 3000){ setPetMsg("Give her a moment! 😄"); return; }
   petActionCooldown[type] = now;
-  triggerDoveWalk();
+  if(type !== 'play') triggerDoveWalk();
 
   var stats = ST.petStats||{health:100,hunger:100,happy:100,clean:100};
   var cv = document.getElementById('petCanvas');
@@ -3659,7 +3684,7 @@ function petAction(type){
 function animatePet(mood){
   // temporarily override current mood for animation burst
   petCurrentMood = mood;
-  setTimeout(function(){ petCurrentMood = null; }, 1500);
+  setTimeout(function(){ petCurrentMood = null; }, 2500);
 }
 
 function spawnPetParticles(cx, cy, type, count){
@@ -3843,12 +3868,13 @@ function closeHatch(){
     <div class="ul-body">
 
       <div class="ul-version">
-        <div class="ul-ver-tag new">✨ Latest</div>
-        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 3 fully unlocked — Getting Specific, What I See In You, and Us 🕊️</div></div>
-        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 4 added — locked until Day 20, teaser chapters visible</div></div>
-        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Chapter reward codes now properly show after completing each quiz 💌</div></div>
-        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Quiz crash fix — no more null errors when answering questions</div></div>
-        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Duplicate chapter system removed — app loads much cleaner now</div></div>
+        <div class="ul-ver-tag new">✨ Latest — Apr 12</div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 5 added and unlocked — Before I Asked To Court You, What Love Actually Looks Like, and This Is For You 🕊️</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Pixel art dove sprite sheet implemented — Idle, Walk, and Flapping animations 🐦</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Dove walks left and right when you interact with her 🚶</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">Storyline 3 and 4 fully working — all chapters readable with quiz rewards</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">SL4 Chapter 12 rewritten — The Real Me Nobody Sees 💕</div></div>
+        <div class="ul-item"><div class="ul-dot"></div><div class="ul-text">SL4 Chapter 11 rewritten — After Everything You Read (the one that'll make you cry 😭)</div></div>
       </div>
 
       <div class="ul-version">
